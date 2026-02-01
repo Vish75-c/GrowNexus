@@ -1,4 +1,4 @@
-# CampusConnect 🎓🤝  
+# GrowNexus 🎓🤝  
 *A mentorship and opportunity platform to bridge the gap between juniors and seniors*
 
 ---
