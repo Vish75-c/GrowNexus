@@ -6,7 +6,7 @@ const Dashboard = () => {
   const {userInfo,setUserInfo}=useAppStore();
   const navigate=useNavigate();
   useEffect(()=>{
-    if(userInfo.profileSetup){
+    if(userInfo&&!userInfo.profileSetup){
       toast("please setup profile to continue")
       navigate('/profile');
     }

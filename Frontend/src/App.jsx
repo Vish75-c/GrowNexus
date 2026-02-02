@@ -6,6 +6,7 @@ import Profile from './pages/Profile'
 import Dashboard from './pages/Dashboard'
 import apiClient from './lib/apiClient'
 import { GET_USER_INFO } from './utils/Constant'
+import { useState } from 'react'
 import { useAppStore } from './store'
 
 const PrivateRoute=({children})=>{
@@ -47,7 +48,7 @@ const App = () => {
     <Routes>
       {/* <Route path='/' element={<LandingPage/>}/> */}
       <Route path='/auth' element={<AuthRoute><Auth/></AuthRoute>}/>
-      <Route path='/profile' element={<Profile/>}/>
+      <Route path='/profile' element={<PrivateRoute><Profile/></PrivateRoute>}/>
       <Route path='/dashboard' element={<PrivateRoute><Dashboard/></PrivateRoute>}/>
 
       <Route path='*' element={<Navigate to='/auth'/>}/> 

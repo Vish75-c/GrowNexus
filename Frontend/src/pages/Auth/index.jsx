@@ -12,40 +12,43 @@ import { LOGIN_ROUTE, SIGNUP_ROUTE } from "@/utils/Constant";
 import { useAppStore } from "@/store";
 
 const Auth = () => {
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [activeTab, setActiveTab] = useState("login");
-  const {userInfo,setUserInfo}=useAppStore();
+  const { userInfo, setUserInfo } = useAppStore();
+
   const handleLogin = async () => {
     if (validateLogin()) {
       const response = await apiClient.post(
         LOGIN_ROUTE,
         { email, password },
-        { withCredentials: true },
+        { withCredentials: true }
       );
-      if(response.status===201){
+      if (response.status === 201) {
         setUserInfo(response.data);
         navigate("/dashboard");
       }
       console.log(response);
     }
   };
+
   const handleSignup = async () => {
     if (validateSignup()) {
       const response = await apiClient.post(
         SIGNUP_ROUTE,
         { email, password },
-        { withCredentials: true },
+        { withCredentials: true }
       );
-      if(response.status===201){
+      if (response.status === 201) {
         setUserInfo(response.data);
-        navigate('/dashboard');
+        navigate("/dashboard");
       }
       console.log(response);
     }
   };
+
   const validateLogin = () => {
     if (!email) {
       toast.error("College email is Required");
@@ -57,6 +60,7 @@ const Auth = () => {
     }
     return true;
   };
+
   const validateSignup = () => {
     if (!email) {
       toast.error("College email is Required");
@@ -72,8 +76,9 @@ const Auth = () => {
     }
     return true;
   };
+
   return (
-    <div className="poppins-medium h-screen w-full flex grid-cols-1 md:grid md:grid-cols-2 bg-slate-50 overflow-hidden">
+    <div className="poppins-medium h-screen w-full flex grid-cols-1 md:grid md:grid-cols-2 bg-slate-50 overflow-y-auto">
       <div className="flex flex-col justify-center items-center p-6 md:p-12 w-full">
         {/* Fixed height container to prevent jumping */}
         <div className="w-full max-w-[480px] min-h-[620px] flex flex-col bg-white p-8 md:p-12 rounded-[32px] shadow-2xl shadow-slate-200/50 border border-slate-100">
@@ -164,14 +169,14 @@ const Auth = () => {
                       placeholder="Create Password"
                       type="password"
                       value={password}
-                      onChange={(e)=>setPassword(e.target.value)}
+                      onChange={(e) => setPassword(e.target.value)}
                       className="h-14 rounded-2xl bg-slate-50 border-none px-6"
                     />
                     <Input
                       placeholder="Confirm Password"
                       type="password"
                       value={confirmPassword}
-                      onChange={(e)=>setConfirmPassword(e.target.value)}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
                       className="h-14 rounded-2xl bg-slate-50 border-none px-6"
                     />
                     <Button
@@ -197,11 +202,7 @@ const Auth = () => {
 
       {/* Image Section */}
       <div className="hidden md:block h-full w-full">
-        <img
-          src={AuthImg}
-          alt="Branding"
-          className="object-cover h-full w-full"
-        />
+        <img src={AuthImg} alt="Branding" className="object-cover h-full w-full" />
       </div>
     </div>
   );
