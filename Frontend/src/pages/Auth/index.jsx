@@ -6,15 +6,18 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 import apiClient from "@/lib/apiClient";
 import { LOGIN_ROUTE, SIGNUP_ROUTE } from "@/utils/Constant";
+import { useAppStore } from "@/store";
 
 const Auth = () => {
+  const navigate=useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [activeTab, setActiveTab] = useState("login");
-
+  const {userInfo,setUserInfo}=useAppStore();
   const handleLogin = async () => {
     if (validateLogin()) {
       const response = await apiClient.post(
@@ -22,6 +25,10 @@ const Auth = () => {
         { email, password },
         { withCredentials: true },
       );
+      if(response.status===201){
+        setUserInfo(response.data);
+        navigate("/dashboard");
+      }
       console.log(response);
     }
   };
@@ -32,6 +39,10 @@ const Auth = () => {
         { email, password },
         { withCredentials: true },
       );
+      if(response.status===201){
+        setUserInfo(response.data);
+        navigate('/dashboard');
+      }
       console.log(response);
     }
   };
