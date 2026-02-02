@@ -46,7 +46,7 @@ const Auth = () => {
     return true;
   }
   return (
-    <div className="poppins-medium min-h-screen w-full flex grid-cols-1 md:grid md:grid-cols-2 bg-slate-50 overflow-hidden">
+    <div className="poppins-medium screen w-full flex grid-cols-1 md:grid md:grid-cols-2 bg-slate-50 overflow-hidden">
       <div className="flex flex-col justify-center items-center p-6 md:p-12 w-full">
         {/* Fixed height container to prevent jumping */}
         <div className="w-full max-w-[480px] min-h-[620px] flex flex-col bg-white p-8 md:p-12 rounded-[32px] shadow-2xl shadow-slate-200/50 border border-slate-100">
@@ -165,7 +165,7 @@ const Auth = () => {
       </div>
 
       {/* Image Section */}
-      <div className="hidden md:block h-screen">
+      <div className="hidden md:block h-full w-full">
         <img src={AuthImg} alt="Branding" className="object-cover h-full w-full" />
       </div>
     </div>
