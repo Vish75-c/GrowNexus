@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
+import apiClient from "@/lib/apiClient";
+import { LOGIN_ROUTE, SIGNUP_ROUTE } from "@/utils/Constant";
 
 const Auth = () => {
   const [email, setEmail] = useState("");
@@ -14,43 +16,56 @@ const Auth = () => {
   const [activeTab, setActiveTab] = useState("login");
 
   const handleLogin = async () => {
-    if(validateLogin(email,password)){
-
+    if (validateLogin()) {
+      const response = await apiClient.post(
+        LOGIN_ROUTE,
+        { email, password },
+        { withCredentials: true },
+      );
+      console.log(response);
     }
   };
-  const handleSignup = async () => {};
-  const validateLogin=(email,password)=>{
-    if(!email){
-      toast.error("College email is Required")
+  const handleSignup = async () => {
+    if (validateSignup()) {
+      const response = await apiClient.post(
+        SIGNUP_ROUTE,
+        { email, password },
+        { withCredentials: true },
+      );
+      console.log(response);
+    }
+  };
+  const validateLogin = () => {
+    if (!email) {
+      toast.error("College email is Required");
       return false;
     }
-    if(!password){
-      toast.error("Password is Required")
-      return false;
-    }
-    return true;
-  }
-  const validateSignup=(email,password,confirmPassword)=>{
-     if(!email){
-      toast.error("College email is Required")
-      return false;
-    }
-    if(!password){
-      toast.error("Password is Required")
-      return false;
-    }
-     if(!confirmPassword||confirmPassword!=password){
-      toast.error("Password and Confirm Passwrd is not same")
+    if (!password) {
+      toast.error("Password is Required");
       return false;
     }
     return true;
-  }
+  };
+  const validateSignup = () => {
+    if (!email) {
+      toast.error("College email is Required");
+      return false;
+    }
+    if (!password) {
+      toast.error("Password is Required");
+      return false;
+    }
+    if (!confirmPassword || confirmPassword != password) {
+      toast.error("Password and Confirm Passwrd is not same");
+      return false;
+    }
+    return true;
+  };
   return (
     <div className="poppins-medium h-screen w-full flex grid-cols-1 md:grid md:grid-cols-2 bg-slate-50 overflow-hidden">
       <div className="flex flex-col justify-center items-center p-6 md:p-12 w-full">
         {/* Fixed height container to prevent jumping */}
         <div className="w-full max-w-[480px] min-h-[620px] flex flex-col bg-white p-8 md:p-12 rounded-[32px] shadow-2xl shadow-slate-200/50 border border-slate-100">
-          
           <div className="flex flex-col items-center gap-3 mb-10">
             <Logo className="w-12 h-12" />
             <div className="text-center">
@@ -63,9 +78,9 @@ const Auth = () => {
             </div>
           </div>
 
-          <Tabs 
-            value={activeTab} 
-            onValueChange={setActiveTab} 
+          <Tabs
+            value={activeTab}
+            onValueChange={setActiveTab}
             className="w-full flex-1 flex flex-col"
           >
             {/* Full-width transition bar */}
@@ -111,8 +126,8 @@ const Auth = () => {
                         onChange={(e) => setPassword(e.target.value)}
                       />
                     </div>
-                    <Button 
-                      className="w-full h-14 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg shadow-lg shadow-blue-200 mt-4 transition-all active:scale-95" 
+                    <Button
+                      className="w-full h-14 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg shadow-lg shadow-blue-200 mt-4 transition-all active:scale-95"
                       onClick={handleLogin}
                     >
                       Sign In
@@ -137,15 +152,19 @@ const Auth = () => {
                     <Input
                       placeholder="Create Password"
                       type="password"
+                      value={password}
+                      onChange={(e)=>setPassword(e.target.value)}
                       className="h-14 rounded-2xl bg-slate-50 border-none px-6"
                     />
                     <Input
                       placeholder="Confirm Password"
                       type="password"
+                      value={confirmPassword}
+                      onChange={(e)=>setConfirmPassword(e.target.value)}
                       className="h-14 rounded-2xl bg-slate-50 border-none px-6"
                     />
-                    <Button 
-                      className="w-full h-14 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg shadow-lg shadow-blue-200 mt-2 transition-all active:scale-95" 
+                    <Button
+                      className="w-full h-14 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg shadow-lg shadow-blue-200 mt-2 transition-all active:scale-95"
                       onClick={handleSignup}
                     >
                       Create Account
@@ -158,7 +177,8 @@ const Auth = () => {
 
           <div className="mt-8 pt-6 border-t border-slate-50">
             <p className="text-center text-[13px] text-slate-400 font-medium">
-              Join <span className="text-slate-600">500+ students</span> already connecting.
+              Join <span className="text-slate-600">500+ students</span> already
+              connecting.
             </p>
           </div>
         </div>
@@ -166,7 +186,11 @@ const Auth = () => {
 
       {/* Image Section */}
       <div className="hidden md:block h-full w-full">
-        <img src={AuthImg} alt="Branding" className="object-cover h-full w-full" />
+        <img
+          src={AuthImg}
+          alt="Branding"
+          className="object-cover h-full w-full"
+        />
       </div>
     </div>
   );

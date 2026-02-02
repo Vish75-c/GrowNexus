@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import bcrypt from "bcrypt"
 dotenv.config();
 const jwtMaxAge = 3 * 24 * 60 * 60
+const cookieMaxAge=jwtMaxAge*1000;
 const generateToken = (email, userId) => {
     return jwt.sign({ email, userId }, process.env.JWT_KEY, { expiresIn: jwtMaxAge })
 };
@@ -13,9 +14,12 @@ const generateToken = (email, userId) => {
 export const signup = async (req, res) => {
     try {
         const { email, password } = req.body;
+        console.log(email," ",password);
+    
         if (!email || !password) return res.status(400).send("Email and Password Required")
-        const user = new User();
-        const response = await user.save({ email, password });
+        const user = new User({ email, password });
+        
+        const response = await user.save();
         if (!response) {
             return res.status(401).send("Error while creating user");
         }
