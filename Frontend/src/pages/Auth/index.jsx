@@ -81,7 +81,7 @@ const Auth = () => {
     <div className="poppins-medium h-screen w-full flex grid-cols-1 md:grid md:grid-cols-2 bg-slate-50 overflow-y-auto">
       <div className="flex flex-col justify-center items-center p-6 md:p-12 w-full">
         {/* Fixed height container to prevent jumping */}
-        <div className="w-full max-w-[480px] min-h-[620px] flex flex-col bg-white p-8 md:p-12 rounded-[32px] shadow-2xl shadow-slate-200/50 border border-slate-100">
+        <div className="w-full max-w-120 min-h-155 flex flex-col bg-white p-8 md:p-12 rounded-[32px] shadow-2xl shadow-slate-200/50 border border-slate-100">
           <div className="flex flex-col items-center gap-3 mb-10">
             <Logo className="w-12 h-12" />
             <div className="text-center">
