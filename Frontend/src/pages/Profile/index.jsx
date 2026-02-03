@@ -9,6 +9,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { getColor, colors } from "@/lib/utils";
 import Logo from "@/Logo";
+import Footer from "@/Footer";
+import Navbar from "@/Navbar";
 
 const SKILL_CATEGORIES = [
   { name: "DSA", skills: ["Arrays", "Linked List", "Recursion", "Trees", "Graphs", "DP"] },
@@ -106,17 +108,13 @@ const Profile = () => {
     // navigate("/dashboard"); // Optional: Send them to home page after setup
   };
 
-  return (
-    <div className="poppins-medium min-h-screen w-full bg-slate-50 flex items-center justify-center p-6 py-10">
-      <div className="w-full max-w-[1150px] flex flex-col gap-6">
+  return (<><Navbar/>
+    <div className="poppins-medium min-h-screen mt-20 w-full bg-slate-50 flex items-center justify-center p-6 py-10">
+      <div className="w-full max-w-287 flex flex-col gap-6">
         <div className="bg-white rounded-[40px] shadow-2xl shadow-slate-200/60 border border-slate-100 flex flex-col lg:flex-row overflow-hidden min-h-[85vh]">
           
           {/* Left Sidebar */}
-          <div className="lg:w-[360px] bg-slate-50/50 p-10 border-r border-slate-100 flex flex-col items-center">
-            <div className="flex items-center gap-2 mb-12">
-               <Logo className="w-8 h-8" />
-               <h2 className="text-xl font-bold text-slate-900">Growth<span className="text-blue-600">Nexus</span></h2>
-            </div>
+          <div className="lg:w-90 bg-slate-50/50 p-10 border-r border-slate-100 flex flex-col items-center">
 
             <div className="relative group mb-10">
               <Avatar.Root className={`h-40 w-40 rounded-full overflow-hidden flex items-center justify-center border-8 border-white shadow-xl ${getColor(selectedColor)}`}>
@@ -195,7 +193,7 @@ const Profile = () => {
                 <h2 className="text-sm font-black uppercase text-blue-600 tracking-widest">Expertise & Skills</h2>
                 <span className="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded-md">{skills.length}/10</span>
               </div>
-              <div className="flex flex-wrap gap-2 min-h-[56px] p-3 bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200">
+              <div className="flex flex-wrap gap-2 min-h-14 p-3 bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200">
                 {skills.length === 0 && <p className="text-slate-400 text-xs italic ml-2 mt-2">Add skills below...</p>}
                 {skills.map((s) => (
                   <motion.span layout initial={{scale: 0.9}} animate={{scale: 1}} key={s} className="bg-blue-600 text-white px-4 py-1.5 rounded-xl text-[11px] font-bold flex items-center gap-2">
@@ -225,7 +223,7 @@ const Profile = () => {
           </div>
         </div>
       </div>
-    </div>
+    </div><Footer/></>
   );
 };
 
