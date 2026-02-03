@@ -7,10 +7,9 @@ const Dashboard = () => {
   const navigate=useNavigate();
   useEffect(()=>{
     if(userInfo&&!userInfo.profileSetup){
-      toast("please setup profile to continue")
-      navigate('/profile');
+      navigate('/profile')
     }
-  },[userInfo,navigate])
+  },[])
   return (
     <div>
       Dashboard

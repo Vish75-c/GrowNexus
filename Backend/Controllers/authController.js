@@ -66,8 +66,7 @@ export const login = async (req, res) => {
 export const getUserInfo = async (req, res) => {
     try {
         const id = req.user;
-        if (!id) return res.status(200).send("Your are not authenticated")
-        const user = await User.findOneById(id);
+        const user = await User.findOne({_id:id});
         if (!user) {
             return res.status(404).send("User not found");
         }
