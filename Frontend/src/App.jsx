@@ -26,7 +26,7 @@ const App = () => {
     const fetchUser = async () => {
       try {
         const response = await apiClient.get(GET_USER_INFO, { withCredentials: true });
-        console.log(response);
+        // console.log(response);
         if (response.status === 201) {
           setUserInfo(response.data);
         } else {

@@ -35,7 +35,7 @@ const userSchema = new mongoose.Schema({
     // Role & Academic Logic
     role:{
         type:String,
-        enum:["junior","senior","alunni"],
+        enum:["junior","senior","alumni"],
         default:"junior"
     },
     branch:{
