@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useAppStore } from "@/store";
-import { Sidebar } from "lucide-react";
 import MiniNav from "./MiniNav";
 import MiniFooter from "./MiniFooter";
+import LeftSidebar from "./LeftSidebar";
 
 const Layout = () => {
   const { userInfo } = useAppStore();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
+  const sidebarRef = useRef(null);
 
   useEffect(() => {
     if (userInfo && !userInfo.profileSetup) {
@@ -17,37 +18,53 @@ const Layout = () => {
   }, [userInfo, navigate]);
 
   return (
-    <div className="flex h-screen">
+    // Fixed height for the whole viewport, hidden overflow to prevent double scrollbars
+    <div className="flex h-screen overflow-hidden bg-gray-900">
+      
+      {/* --- MOBILE OVERLAY --- */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 z-40 md:hidden bg-black/60 backdrop-blur-sm transition-opacity"
+          onClick={() => setIsOpen(false)}
+          aria-hidden="true"
+        />
+      )}
 
-      {/* Sidebar */}
-      <div className={`fixed z-50 inset-0 top-0 left-0 min-h-screen w-60 bg-gray-800 ${isOpen?`translate-x-0`:`-translate-x-full`} transform-transform duration-300 md:static md:translate-x-0`}>
-        <Sidebar />
-      </div>
+      {/* --- SIDEBAR --- */}
+      <aside
+        className={`fixed z-50 inset-y-0 left-0 transform ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        } transition-transform duration-300 ease-in-out md:static md:translate-x-0 border-r border-gray-800`}
+      >
+        <div ref={sidebarRef} className="w-64 h-full">
+          <LeftSidebar setIsOpen={setIsOpen} />
+        </div>
+      </aside>
 
-      {/* Main area */}
-      <div className="flex flex-col flex-1 ">
+      {/* --- MAIN CONTENT AREA --- */}
+      <main className="flex flex-col flex-1 min-w-0 h-full">
         
-        {/* Navbar */}
-        <div className="  ">
+        {/* Navbar: Static height */}
+        <header className="shrink-0 z-30">
           <MiniNav setIsOpen={setIsOpen} isOpen={isOpen} />
-        </div>
+        </header>
 
-        {/* Content + footer wrapper */}
-        <div className="flex flex-col flex-1">
+        {/* Scrollable Zone: Outlet + Footer */}
+        {/* flex-1 here tells this div to take all remaining vertical space */}
+        <div className="flex-1 overflow-y-auto custom-scrollbar flex flex-col">
           
-          {/* Outlet (scrolls only when needed) */}
-          <div className="flex-1 overflow-y-auto custom-scrollbar border-t-neutral-300">
+          {/* Page Content */}
+          <section className="flex-1 bg-[#1f202a]">
             <Outlet />
-          </div>
+          </section>
 
-          {/* Footer sticks to bottom if content small */}
-          <div className="shrink-0">
+          {/* Footer: Sticks to the bottom of the scrollable content */}
+          <footer className="shrink-0">
             <MiniFooter />
-          </div>
+          </footer>
 
         </div>
-
-      </div>
+      </main>
     </div>
   );
 };

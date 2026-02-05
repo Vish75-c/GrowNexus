@@ -12,6 +12,7 @@ import { GET_USER_INFO } from "./utils/Constant";
 import { useAppStore } from "./store";
 import Chat from "./pages/Chat";
 import Find from "./pages/Find";
+import LandingPage from "./pages/LandingPage";
 
 const PrivateRoute = ({ children }) => {
   const { userInfo } = useAppStore();
@@ -63,6 +64,7 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<LandingPage/>}/>
         <Route
           path="/auth"
           element={
@@ -89,11 +91,11 @@ const App = () => {
           }
         >
           <Route index element={<Navigate to="dashboard" />} />
-          <Route path="myprofile" element={<MyProfile />} />
+          <Route path="profile" element={<MyProfile />} />
           <Route path="dashboard" element={<Dashboard />} />
-          <Route path="chat" element={<Chat />} />
+          <Route path="message" element={<Chat />} />
           <Route path="find" element={<Find />} />
-          <Route path="blog" element={<Blog />} />
+          <Route path="blogs" element={<Blog />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/auth" />} />

@@ -11,7 +11,7 @@ const MiniNav = ({ isOpen, setIsOpen }) => {
   const { userInfo } = useAppStore();
 
   return (
-    <div className="bg-gray-800 py-4 px-5 md:px-10 flex items-center justify-between border-b border-gray-700">
+    <div className="bg-gray-800 py-4 px-5 md:px-6 flex items-center justify-between border-b border-gray-700">
       
       {/* 1. Mobile Toggle (Left or Right - kept original logic) */}
       <div className="md:hidden flex items-center">
