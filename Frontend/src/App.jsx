@@ -2,10 +2,16 @@ import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Auth from "./pages/Auth";
 import Profile from "./pages/Profile";
+import Blog from "./pages/Blog";
+import Hiring from "./pages/Hiring";
+import MyProfile from "./pages/MyProfile";
 import Dashboard from "./pages/Dashboard";
 import apiClient from "./lib/apiClient";
+import Layout from "./Layout";
 import { GET_USER_INFO } from "./utils/Constant";
 import { useAppStore } from "./store";
+import Chat from "./pages/Chat";
+import Find from "./pages/Find";
 
 const PrivateRoute = ({ children }) => {
   const { userInfo } = useAppStore();
@@ -15,7 +21,7 @@ const PrivateRoute = ({ children }) => {
 
 const AuthRoute = ({ children }) => {
   const { userInfo } = useAppStore();
-  return !userInfo ? children : <Navigate to="/dashboard" />;
+  return !userInfo ? children : <Navigate to="/main/dashboard" />;
 };
 
 const App = () => {
@@ -25,7 +31,9 @@ const App = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await apiClient.get(GET_USER_INFO, { withCredentials: true });
+        const response = await apiClient.get(GET_USER_INFO, {
+          withCredentials: true,
+        });
         // console.log(response);
         if (response.status === 201) {
           setUserInfo(response.data);
@@ -55,9 +63,39 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/auth" element={<AuthRoute><Auth /></AuthRoute>} />
-        <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
-        <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+        <Route
+          path="/auth"
+          element={
+            <AuthRoute>
+              <Auth />
+            </AuthRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <PrivateRoute>
+              <Profile />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/main"
+          element={
+            <PrivateRoute>
+              <Layout />
+            </PrivateRoute>
+          }
+        >
+          <Route index element={<Navigate to="dashboard" />} />
+          <Route path="myprofile" element={<MyProfile />} />
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="chat" element={<Chat />} />
+          <Route path="find" element={<Find />} />
+          <Route path="blog" element={<Blog />} />
+        </Route>
+
         <Route path="*" element={<Navigate to="/auth" />} />
       </Routes>
     </BrowserRouter>

@@ -103,7 +103,7 @@ const Profile = () => {
       const response = await apiClient.post(SAVE_USER_IMAGE, formData, {
         withCredentials: true,
       });
-      if(response.status(200)){
+      if(response.status===200){
         setUserInfo((prev)=>({
           ...prev,
           image:response.data.image,
@@ -156,7 +156,7 @@ const Profile = () => {
       if (response.status === 200) {
         setUserInfo(response.data);
         toast.success("Profile Saved Successfully");
-        navigate("/dashboard");
+        navigate("/main/dashboard");
       }
     } catch (error) {
       console.log(error);
