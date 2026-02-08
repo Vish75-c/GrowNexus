@@ -144,3 +144,13 @@ export const saveUserInfo = async (req, res) => {
         res.status(500).send("server error");
     }
 }
+
+
+export const logout=async (req,res)=>{
+    try {
+        res.cookie('jwt',{maxAge:1,secure:false,httpOnly:true,sameSite:"lax"})
+    res.status(200).send("Logout Successful");
+    } catch (error) {
+        return res.status(500).send("Server Error");
+    }
+}

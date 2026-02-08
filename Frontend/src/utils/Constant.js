@@ -7,3 +7,4 @@ export const LOGIN_ROUTE=`${AUTH_ROUTES}/login`
 export const GET_USER_INFO=`${AUTH_ROUTES}/userInfo`
 export const SAVE_USER_INFO=`${AUTH_ROUTES}/saveUserInfo`
 export const SAVE_USER_IMAGE=`${AUTH_ROUTES}/saveUserImage`
+export const LOGOUT_ROUTE=`${AUTH_ROUTES}/logout`

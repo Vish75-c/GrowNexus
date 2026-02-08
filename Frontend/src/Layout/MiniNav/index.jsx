@@ -2,18 +2,22 @@ import { useAppStore } from "@/store";
 import React from "react";
 import * as Avatar from "@radix-ui/react-avatar";
 import { getColor } from "@/lib/utils";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { FiMenu, FiX } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
 
 const MiniNav = ({ isOpen, setIsOpen }) => {
   const navigate = useNavigate();
+  const location=useLocation();
   const { userInfo } = useAppStore();
-
+  const handleCancel=()=>{
+  
+  }
   return (
     <div className="bg-gray-800 py-4 px-5 md:px-6 flex items-center justify-between border-b border-gray-700">
-      
-      {/* 1. Mobile Toggle (Left or Right - kept original logic) */}
+      {/* {location.pathname==='/main/empty-screen'&&
+        <div className="text-white" onClick={handleCancel}><FiX size={24}/></div>
+      } */}
       <div className="md:hidden flex items-center">
         <button 
           onClick={() => setIsOpen((prev) => !prev)}
@@ -43,7 +47,7 @@ const MiniNav = ({ isOpen, setIsOpen }) => {
         </button>
       </div>
 
-      {/* 2. Profile Info (Right Aligned) */}
+     
       <div className="flex items-center ml-auto">
         <div
           onClick={() => navigate("/profile")}

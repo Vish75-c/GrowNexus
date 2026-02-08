@@ -30,7 +30,7 @@ const Auth = () => {
       );
       if (response.status === 201) {
         setUserInfo(response.data);
-        navigate("/dashboard");
+        navigate("/main");
       }
       console.log(response);
     }
@@ -45,7 +45,7 @@ const Auth = () => {
       );
       if (response.status === 201) {
         setUserInfo(response.data);
-        navigate("/dashboard");
+        navigate("/main");
       }
       console.log(response);
     }

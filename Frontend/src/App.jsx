@@ -13,6 +13,9 @@ import { useAppStore } from "./store";
 import Chat from "./pages/Chat";
 import Find from "./pages/Find";
 import LandingPage from "./pages/LandingPage";
+import Documentation from "./pages/Documentation";
+import Noticeboard from "./pages/Noticeboard";
+import EmptyContainer from "./pages/EmptyContainer";
 
 const PrivateRoute = ({ children }) => {
   const { userInfo } = useAppStore();
@@ -22,7 +25,7 @@ const PrivateRoute = ({ children }) => {
 
 const AuthRoute = ({ children }) => {
   const { userInfo } = useAppStore();
-  return !userInfo ? children : <Navigate to="/main/dashboard" />;
+  return !userInfo ? children : <Navigate to="/main" />;
 };
 
 const App = () => {
@@ -90,12 +93,18 @@ const App = () => {
             </PrivateRoute>
           }
         >
-          <Route index element={<Navigate to="dashboard" />} />
+          
+          <Route index element={<Navigate to="empty-screen" />} />
+          <Route path="empty-screen" element={<EmptyContainer/>}/>
           <Route path="profile" element={<MyProfile />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="message" element={<Chat />} />
           <Route path="find" element={<Find />} />
           <Route path="blogs" element={<Blog />} />
+          <Route path="docs" element={<Documentation/>}/>
+          <Route path="notices" element={<Noticeboard/>}/>
+          {/* initially not making contact page */}
+          <Route path="contact" element={<Noticeboard/>}/>
         </Route>
 
         <Route path="*" element={<Navigate to="/auth" />} />

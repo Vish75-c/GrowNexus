@@ -10,8 +10,8 @@ const MiniFooter = () => {
         <div className="flex flex-col sm:flex-row items-center sm:items-center justify-between gap-2">
           
           {/* left: small logo + brand */}
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 ">
+          <div className="flex items-center gap-3 justify-between">
+            <div className="w-10 h-10 flex items-center justify-between ">
               {/* If you prefer the Logo component, it will slot nicely here */}
               <Logo className="w-5 h-5" />
             </div>

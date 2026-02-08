@@ -2,7 +2,7 @@ import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import Logo from "@/Logo";
 import { motion } from "framer-motion"; // Added for high-level animation
-
+import { useNavigate } from "react-router-dom";
 // Import Icons from react-icons
 import { 
   FiGrid, FiList, FiUser, 
@@ -13,11 +13,15 @@ import {
   FiMail, FiBook, FiLogOut,
   FiX 
 } from "react-icons/fi";
+import apiClient from "@/lib/apiClient";
+import { LOGOUT_ROUTE } from "@/utils/Constant";
+import { useAppStore } from "@/store";
 
 const LeftSidebar = ({ setIsOpen }) => {
   const location = useLocation();
+  const {userInfo,setUserInfo}=useAppStore();
   const isActive = (path) => location.pathname === path;
-
+  const navigate=useNavigate();
   // Animation Variants
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -31,7 +35,17 @@ const LeftSidebar = ({ setIsOpen }) => {
     hidden: { x: -10, opacity: 0 },
     visible: { x: 0, opacity: 1, transition: { type: "spring", stiffness: 120 } }
   };
-
+  const handleLogout=async ()=>{
+    try {
+      const response=await apiClient.get(LOGOUT_ROUTE,{withCredentials:true});
+      if(response.status===200){
+        setUserInfo(null);
+        navigate('/auth');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
   const NavItem = ({ to, icon: Icon, label }) => (
     <motion.div variants={itemVariants}>
       <Link
@@ -108,12 +122,12 @@ const LeftSidebar = ({ setIsOpen }) => {
 
         {/* Community */}
         <SectionHeader label="Community" />
-        <NavItem to="/notices" icon={FiBell} label="Notice Board" />
+        <NavItem to="/main/notices" icon={FiBell} label="Notice Board" />
 
         {/* Support & Docs */}
         <SectionHeader label="Support" />
-        <NavItem to="/contact" icon={FiMail} label="Contact Us" />
-        <NavItem to="/docs" icon={FiBook} label="Documentation" />
+        <NavItem to="/main/contact" icon={FiMail} label="Contact Us" />
+        <NavItem to="/main/docs" icon={FiBook} label="Documentation" />
 
         <div className="h-8" />
         
@@ -122,7 +136,7 @@ const LeftSidebar = ({ setIsOpen }) => {
           variants={itemVariants}
           whileHover={{ x: 5 }}
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-red-400 hover:bg-red-500/10 hover:text-red-500 transition-all duration-200 mt-auto"
-          onClick={() => console.log("Logout Clicked")}
+          onClick={handleLogout}
         >
           <FiLogOut size={18} />
           <span className="text-sm font-bold tracking-wide">Logout</span>
