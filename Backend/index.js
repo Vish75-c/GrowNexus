@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import db from "./db.js";
 import authRoutes from "./Routes/authRoutes.js";
+import contactRoutes from "./Routes/contactRoutes.js";
 dotenv.config();
 const port=process.env.PORT||3003
 const app=express();
@@ -20,6 +21,7 @@ app.get('/',(req,res)=>{
     res.send("Hello world");
 })
 app.use('/api/auth',authRoutes);
+app.use('/api/contact',contactRoutes);
 app.listen(port,()=>{
     console.log(`Server is Running at port ${port}`);
 })

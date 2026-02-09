@@ -50,7 +50,7 @@ const Documentation = () => {
       initial="hidden"
       animate="visible"
       variants={containerVariants}
-      className="max-w-5xl mx-auto p-6 lg:p-12 font-sans"
+      className="max-w-5xl mx-auto  font-sans"
     >
       {/* --- HEADER --- */}
       <motion.div variants={itemVariants} className="mb-16 border-b border-slate-800 pb-10">
