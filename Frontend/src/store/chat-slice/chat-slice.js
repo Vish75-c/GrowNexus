@@ -12,18 +12,27 @@ export const createChatSlice=(set,get)=>({
     setSelectedChatMessages:(selectedChatMessages)=>{
         set({selectedChatMessages})
     },
-    addMessage:(message)=>{
-        const selectedChatMessages=get().selectedChatMessages||[];
-        const selectedChatType=get().selectedChatType;
-        set({
-            selectedChatMessages:[
-                ...selectedChatMessages,
-                {
-                    ...message,
-                    recipient:selectedChatType==='channel'?message.recipient:message.recipient._id,
-                    sender:selectedChatType==='channel'?message.sender:message.sender._id
-                }
-            ]
-        })
-    }
+addMessage: (message) => {
+  set((state) => {
+    const type = state.selectedChatType;
+
+    const newMessage = {
+      ...message,
+      recipient:
+        type === "channel"
+          ? message.recipient
+          : message.recipient?._id || message.recipient,
+      sender:
+        type === "channel"
+          ? message.sender
+          : message.sender?._id || message.sender,
+    };
+
+    return {
+      selectedChatMessages: [...state.selectedChatMessages, newMessage],
+    };
+  });
+}
+
+
 })

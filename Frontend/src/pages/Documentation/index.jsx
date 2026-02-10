@@ -96,7 +96,7 @@ const Documentation = () => {
       {/* --- REFERRAL CALL TO ACTION --- */}
       {(userInfo.role==='alumni')&&<motion.div 
         variants={itemVariants}
-        className="mt-16 p-8 rounded-[2rem] bg-gradient-to-br from-blue-600/10 to-transparent border border-blue-500/20 flex flex-col md:flex-row items-center justify-between gap-6"
+        className="mt-16 p-8 rounded-[2rem] bg-linear-to-br from-blue-600/10 to-transparent border border-blue-500/20 flex flex-col md:flex-row items-center justify-between gap-6"
       >
         <div className="flex items-center gap-5 text-center md:text-left">
           <div className="h-14 w-14 rounded-2xl bg-[#1b1c24] border border-slate-800 flex items-center justify-center text-blue-500">

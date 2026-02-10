@@ -1,79 +1,109 @@
-import React, { useEffect } from 'react'
-import { useRef,useState } from 'react';
-import {IoMdSend} from 'react-icons/io'
-import {GrAttachment} from 'react-icons/gr'
-import { RiEmojiStickerLine } from 'react-icons/ri'
+import React, { useEffect, useRef, useState } from 'react';
+import { IoMdSend } from 'react-icons/io';
+import { GrAttachment } from 'react-icons/gr';
+import { RiEmojiStickerLine } from 'react-icons/ri';
 import { useSocket } from '@/Context/socketContext';
 import EmojiPicker from 'emoji-picker-react';
 import { useAppStore } from '@/store';
+
 const MessageBar = () => {
-  const socket=useSocket();
-  const emojiRef=useRef();
-  const [message,setMessage]=useState("");
-  const {selectedChatData,selectedChatType,userInfo}=useAppStore();
-  const [emojiPickerOpen,setEmojiPickerOpen]=useState(false);
-  useEffect(()=>{
-    function handleClickOutSide(e){
-      if(emojiRef.current&&!emojiRef.current.contains(e.target)){
+  const socket = useSocket();
+  const emojiRef = useRef();
+  const [message, setMessage] = useState("");
+  const { selectedChatData, selectedChatType, userInfo } = useAppStore();
+  const [emojiPickerOpen, setEmojiPickerOpen] = useState(false);
+
+  useEffect(() => {
+    function handleClickOutSide(e) {
+      if (emojiRef.current && !emojiRef.current.contains(e.target)) {
         setEmojiPickerOpen(false);
       }
     }
-    document.addEventListener('mousedown',handleClickOutSide);
-    return ()=>{
-      document.removeEventListener('mousedown',handleClickOutSide)
-    }
-  },[emojiRef])
-  const handleSendMessage=async ()=>{
-    if(!socket||!socket.emit){
+    document.addEventListener('mousedown', handleClickOutSide);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutSide);
+    };
+  }, [emojiRef]);
+
+  const handleSendMessage = async () => {
+    if (!message.trim()) return; // Don't send empty messages
+
+    if (!socket || !socket.emit) {
       console.log("Socket not ready yet");
-      return
+      return;
     }
-    if(selectedChatType==='contact'){
-      socket.emit("sendMessage",{
-        sender:userInfo._id,
-        content:message,
-        recipient:selectedChatData._id,
-        messageType:"text",
-        fileUrl:undefined
-      })
+
+    if (selectedChatType === 'contact') {
+      socket.emit("sendMessage", {
+        sender: userInfo._id,
+        content: message,
+        recipient: selectedChatData._id,
+        messageType: "text",
+        fileUrl: undefined
+      });
     }
-  }
-  const handleAddEmoji=async (e)=>{
-    setMessage((msg)=>msg+e.emoji)
-  }
+    setMessage("");
+  };
+
+  // Handle "Enter" key to send
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
+
+  const handleAddEmoji = (e) => {
+    setMessage((msg) => msg + e.emoji);
+  };
+
   return (
-    <div className='h[10vh] flex justify-center items-center px-8  mb-6 gap-6 relative'>
-      <div className='flex-1 flex bg-[#2a2b33] rounded-md items-center gap-5 pr-5 relative'>
+    <div className='h-[12vh] flex justify-center items-center px-8 mb-4 gap-4 relative bg-[#1f202a]'>
+      <div className='flex-1 flex bg-[#292b36] rounded-2xl items-center gap-4 pr-5 relative border border-slate-800 focus-within:border-blue-500/50 transition-all shadow-xl'>
+        
         <input
-        type='text'
-        placeholder='Enter Message'
-        value={message}
-        onChange={(e)=>setMessage(e.target.value)}
-        className='text-neutral-400 flex-1 p-5 transparent rounded-md focus:border-none focus:outline-none' 
+          type='text'
+          placeholder='Type a message...'
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          onKeyDown={handleKeyDown}
+          className='text-slate-200 flex-1 py-5 px-6 bg-transparent rounded-2xl focus:outline-none text-base placeholder:text-slate-500 font-medium' 
         />
-        <button className='text-neutral-500 focus:border-none focus:outline-none focus:text-white duration-300 transition-all'>
-          <GrAttachment className='text-2xl'/>
-        </button>
-        <button onClick={()=>setEmojiPickerOpen(!emojiPickerOpen)} className='text-neutral-500 focus:border-none focus:outline-none duration-300 focus:text-white transition-all'>
-          <RiEmojiStickerLine className='text-2xl'/>
-        </button>
-        {
-          emojiPickerOpen&&(
-            <div ref={emojiRef}  className='absolute bottom-16 right-0 z-50'>
-              <EmojiPicker
+
+        <div className='flex items-center gap-4'>
+          <button className='text-slate-500 hover:text-blue-500 transition-colors duration-300'>
+            <GrAttachment size={22} />
+          </button>
+          
+          <button 
+            onClick={() => setEmojiPickerOpen(!emojiPickerOpen)} 
+            className={`transition-colors duration-300 ${emojiPickerOpen ? 'text-blue-500' : 'text-slate-500 hover:text-blue-500'}`}
+          >
+            <RiEmojiStickerLine size={24} />
+          </button>
+        </div>
+
+        {emojiPickerOpen && (
+          <div ref={emojiRef} className='absolute bottom-20 right-0 z-50 shadow-2xl'>
+            <EmojiPicker
               theme='dark'
               onEmojiClick={handleAddEmoji}
               autoFocusSearch={false}
-              />
-            </div>
-          )
-        }
+              width={350}
+              height={450}
+            />
+          </div>
+        )}
       </div>
-      <button onClick={handleSendMessage} className='bg-[#8417ff] rounded-md flex items-center justify-center p-5 hover:bg-[#741bda] focus:bg-[#741bda] focus:border-none'>
-        <IoMdSend className='text-2xl'/>
+
+      <button 
+        onClick={handleSendMessage} 
+        className='bg-[#8417ff] h-15 w-15 rounded-2xl flex items-center justify-center text-white hover:bg-[#741bda] hover:scale-105 active:scale-95 transition-all shadow-lg shadow-purple-900/20'
+      >
+        <IoMdSend size={28} />
       </button>
     </div>
-  )
-}
+  );
+};
 
-export default MessageBar
+export default MessageBar;
