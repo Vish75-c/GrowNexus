@@ -9,7 +9,7 @@ export const useSocket = () => useContext(SocketContext);
 export const SocketProvider = ({ children }) => {
   const socketRef = useRef(null);
   const [socket, setSocket] = useState(null);
-  const { userInfo, selectedChatData, selectedChatType } = useAppStore();
+  const { userInfo, selectedChatData, selectedChatType,addMessage } = useAppStore();
 
   useEffect(() => {
     if (!userInfo) return;
@@ -32,13 +32,15 @@ export const SocketProvider = ({ children }) => {
           selectedChatData._id === message.recipient._id)
       ) {
         console.log(message);
+        addMessage(message);
       }
+      console.log(message);
     };
-    s.on("recieveMessage", handleReceiveMessage);
+    s.on("receiveMessage", handleReceiveMessage);
     return () => {
       s.off("receiveMessage", handleReceiveMessage);
       s.disconnect();
-      socket.current = null;
+      socketRef.current = null;
       setSocket(null);
     };
   }, [userInfo]);

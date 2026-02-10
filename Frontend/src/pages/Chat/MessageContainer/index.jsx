@@ -6,15 +6,12 @@ const MessageContainer = () => {
   return (
     <div className="flex flex-col h-full">
       
-      {/* messages */}
-      <section className="flex-1 overflow-y-auto">
+      
+      <section className="flex-1 ">
         <MessageDisplay />
       </section>
 
-      {/* input
-      <div className="sticky bottom-0 bg-white">
-        <MessageBar />
-      </div> */}
+      
 
     </div>
   )

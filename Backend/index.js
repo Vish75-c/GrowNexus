@@ -5,6 +5,8 @@ import cookieParser from "cookie-parser";
 import db from "./db.js";
 import authRoutes from "./Routes/authRoutes.js";
 import contactRoutes from "./Routes/contactRoutes.js";
+import { SetupSocket } from "./Socket.js";
+import messageRoute from "./Routes/messageRoute.js";
 dotenv.config();
 const port=process.env.PORT||3003
 const app=express();
@@ -22,6 +24,8 @@ app.get('/',(req,res)=>{
 })
 app.use('/api/auth',authRoutes);
 app.use('/api/contact',contactRoutes);
-app.listen(port,()=>{
+app.use('/api/message',messageRoute)
+const server=app.listen(port,()=>{
     console.log(`Server is Running at port ${port}`);
 })
+SetupSocket(server);

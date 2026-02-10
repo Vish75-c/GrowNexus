@@ -3,10 +3,14 @@ import { useRef,useState } from 'react';
 import {IoMdSend} from 'react-icons/io'
 import {GrAttachment} from 'react-icons/gr'
 import { RiEmojiStickerLine } from 'react-icons/ri'
+import { useSocket } from '@/Context/socketContext';
 import EmojiPicker from 'emoji-picker-react';
+import { useAppStore } from '@/store';
 const MessageBar = () => {
+  const socket=useSocket();
   const emojiRef=useRef();
   const [message,setMessage]=useState("");
+  const {selectedChatData,selectedChatType,userInfo}=useAppStore();
   const [emojiPickerOpen,setEmojiPickerOpen]=useState(false);
   useEffect(()=>{
     function handleClickOutSide(e){
@@ -20,13 +24,25 @@ const MessageBar = () => {
     }
   },[emojiRef])
   const handleSendMessage=async ()=>{
-
+    if(!socket||!socket.emit){
+      console.log("Socket not ready yet");
+      return
+    }
+    if(selectedChatType==='contact'){
+      socket.emit("sendMessage",{
+        sender:userInfo._id,
+        content:message,
+        recipient:selectedChatData._id,
+        messageType:"text",
+        fileUrl:undefined
+      })
+    }
   }
   const handleAddEmoji=async (e)=>{
     setMessage((msg)=>msg+e.emoji)
   }
   return (
-    <div className='h[10vh] flex justify-center items-center px-6 mb-6 gap-6 relative'>
+    <div className='h[10vh] flex justify-center items-center px-8  mb-6 gap-6 relative'>
       <div className='flex-1 flex bg-[#2a2b33] rounded-md items-center gap-5 pr-5 relative'>
         <input
         type='text'

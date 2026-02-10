@@ -5,6 +5,7 @@ import MiniNav from "./MiniNav";
 import MiniFooter from "./MiniFooter";
 import LeftSidebar from "./LeftSidebar";
 import MessageBar from "@/pages/Chat/MessageContainer/MessageBar";
+import MessageHeader from "@/pages/Chat/MessageContainer/MessageHeader";
 const Layout = () => {
   const { userInfo } = useAppStore();
   const navigate = useNavigate();
@@ -42,14 +43,17 @@ const Layout = () => {
       </aside>
 
       {/* --- MAIN CONTENT AREA --- */}
-      <main className="flex flex-col flex-1 min-w-0 h-full">
+      <main className="flex flex-col flex-1 min-w-0 h-full bg-[#1f202a]">
         {/* Navbar: Static height */}
         <header className="shrink-0 z-30">
           <MiniNav setIsOpen={setIsOpen} isOpen={isOpen} />
         </header>
 
-        {/* Scrollable Zone: Outlet + Footer */}
-        {/* flex-1 here tells this div to take all remaining vertical space */}
+        {selectedChatType && location.pathname === "/main/message" && (
+            <div className="px-6 lg:px-9">
+              <MessageHeader />
+            </div>
+          )}
         <div className="flex-1 overflow-y-auto custom-scrollbar flex flex-col bg-[#1f202a]">
           {/* Page Content */}
           <section className="flex-1 p-6 lg:p-9 bg-[#1f202a]">
@@ -65,12 +69,13 @@ const Layout = () => {
               </div>
             )}
           </footer>
-          {selectedChatType && location.pathname === "/main/message" && (
-            <div>
+         
+        </div>
+         {selectedChatType && location.pathname === "/main/message" && (
+            <div className="px-6 pb-2 lg:px-9 lg:pb-2">
               <MessageBar />
             </div>
           )}
-        </div>
       </main>
     </div>
   );

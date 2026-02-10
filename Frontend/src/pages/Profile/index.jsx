@@ -156,7 +156,7 @@ const Profile = () => {
       if (response.status === 200) {
         setUserInfo(response.data);
         toast.success("Profile Saved Successfully");
-        navigate("/main/dashboard");
+        navigate("/main");
       }
     } catch (error) {
       console.log(error);
