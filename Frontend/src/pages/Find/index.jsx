@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   FiSearch, FiX, FiFilter, 
   FiBriefcase, FiLinkedin, 
   FiCpu, FiGlobe, FiDatabase, FiHash, FiUsers, FiAward
 } from "react-icons/fi";
+import apiClient from "@/lib/apiClient";
 
 const SKILL_CATEGORIES = [
   {
@@ -34,50 +35,33 @@ const SKILL_CATEGORIES = [
   }
 ];
 
-const MOCK_MENTORS = [
-  {
-    _id: "1",
-    firstName: "Arnav",
-    lastName: "Singh",
-    role: "alumni",
-    company: "Google",
-    batch: 2022,
-    skills: ["React", "Node.js", "System Design", "Arrays"],
-    bio: "SDE-2 at Google. Specialized in scaling frontend architectures and system optimization.",
-    linkedinUrl: "#",
-    image: null,
-    color: 0,
-  },
-  {
-    _id: "2",
-    firstName: "Priya",
-    lastName: "Sharma",
-    role: "senior",
-    company: "Microsoft",
-    batch: 2024,
-    skills: ["C++", "DP", "Graphs", "Trees"],
-    bio: "Competitive programmer and incoming SWE intern. Expert in data structures and algorithms.",
-    linkedinUrl: "#",
-    image: null,
-    color: 1,
-  },
-  {
-    _id: "3",
-    firstName: "Rohan",
-    lastName: "Das",
-    role: "senior",
-    company: "Zomato",
-    batch: 2024,
-    skills: ["React", "Next.js", "Tailwind CSS"],
-    bio: "Frontend enthusiast. Love building pixel perfect UIs and exploring modern web tech.",
-    linkedinUrl: "#",
-    image: null,
-    color: 2,
-  }
-];
-
 const Find = () => {
   const [selectedSkills, setSelectedSkills] = useState([]);
+  const [mentors, setMentors] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const handleSearch = async () => {
+    setLoading(true);
+    try {
+      const skillParam = selectedSkills.join(",");
+      const response = await apiClient.get(
+        `/api/contact/get-mentors?skills=${skillParam}`, 
+        { withCredentials: true }
+      );
+
+      if (response.status === 200) {
+        setMentors(response.data.mentors);
+      }
+    } catch (error) {
+      console.log("Search failed:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    handleSearch();
+  }, [selectedSkills]);
 
   const toggleSkill = (skill) => {
     if (selectedSkills.includes(skill)) {
@@ -87,17 +71,11 @@ const Find = () => {
     }
   };
 
-  const filteredMentors = selectedSkills.length === 0 
-    ? MOCK_MENTORS 
-    : MOCK_MENTORS.filter(mentor => 
-        mentor.skills.some(mentorSkill => selectedSkills.includes(mentorSkill))
-      );
-
   return (
-    <div className="w-full h-full bg-[#1f202a] text-slate-400 font-sans  px-3 m lg:px-3 overflow-y-auto">
+    <div className="w-full h-full bg-[#1f202a] text-slate-400 font-sans px-3 lg:px-6 overflow-y-auto custom-scrollbar">
       
       {/* --- HEADER SECTION --- */}
-      <div className="max-w-7xl mx-auto mb-10">
+      <div className="max-w-7xl mx-auto mb-10 pt-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
           <div>
             <h1 className="text-4xl font-black text-white tracking-tight">
@@ -108,12 +86,13 @@ const Find = () => {
             </p>
           </div>
           
-          {/* Stats Bar */}
           <div className="flex gap-4">
             <div className="bg-[#292b36] border border-slate-800 rounded-2xl p-4 flex items-center gap-4 shadow-xl">
-              <div className="p-3 bg-blue-500/10 rounded-xl text-blue-500"><FiUsers size={20}/></div>
+              <div className="p-3 bg-blue-500/10 rounded-xl text-blue-500">
+                <FiUsers size={20}/>
+              </div>
               <div>
-                <p className="text-white font-black leading-none text-xl">{filteredMentors.length}</p>
+                <p className="text-white font-black leading-none text-xl">{mentors.length}</p>
                 <p className="text-[10px] uppercase font-bold text-slate-500 tracking-widest mt-1">Available</p>
               </div>
             </div>
@@ -124,7 +103,7 @@ const Find = () => {
         <div className="bg-[#292b36] border border-slate-800 rounded-3xl p-4 min-h-[70px] flex flex-wrap items-center gap-3 shadow-2xl transition-all hover:border-blue-500/30">
           <FiSearch className="text-slate-500 ml-3" size={22} />
           
-          {selectedSkills.length === 0 && (
+          {selectedSkills.length === 0 && !loading && (
             <span className="text-slate-600 text-sm font-medium ml-2">Tap categories below to filter skills...</span>
           )}
 
@@ -143,6 +122,8 @@ const Find = () => {
               </motion.button>
             ))}
           </AnimatePresence>
+
+          {loading && <div className="ml-auto mr-4 animate-spin h-5 w-5 border-2 border-blue-500 border-t-transparent rounded-full"/>}
         </div>
       </div>
 
@@ -184,7 +165,7 @@ const Find = () => {
       {/* --- MENTOR CARDS GRID --- */}
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-20">
         <AnimatePresence mode="popLayout">
-          {filteredMentors.map((mentor) => (
+          {mentors.map((mentor) => (
             <motion.div
               key={mentor._id}
               layout
@@ -193,14 +174,15 @@ const Find = () => {
               exit={{ opacity: 0, scale: 0.9 }}
               className="bg-[#292b36] rounded-[2rem] p-8 border border-slate-800 hover:border-blue-500/50 transition-all duration-500 shadow-xl group flex flex-col h-full relative overflow-hidden"
             >
-              {/* Subtle background decoration */}
               <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full -mr-16 -mt-16 blur-3xl group-hover:bg-blue-500/10 transition-colors"></div>
 
               {/* Card Header */}
               <div className="flex items-start justify-between mb-6 relative z-10">
                 <div className="flex items-center gap-4">
                   <div className="h-14 w-14 rounded-2xl bg-[#1f202a] flex items-center justify-center text-blue-500 border border-slate-800 font-black text-xl shadow-inner group-hover:scale-110 transition-transform duration-500">
-                    {mentor.firstName[0]}
+                    {mentor.image ? (
+                        <img src={mentor.image} className="w-full h-full object-cover rounded-2xl" alt=""/>
+                    ) : mentor.firstName[0]}
                   </div>
                   <div>
                     <h3 className="text-white font-bold text-xl leading-tight">
@@ -218,7 +200,7 @@ const Find = () => {
                   </div>
                 </div>
                 {mentor.linkedinUrl && (
-                  <a href={mentor.linkedinUrl} className="text-slate-600 hover:text-blue-400 transition-all p-2.5 bg-[#1f202a] rounded-xl border border-slate-800 hover:border-blue-500/50">
+                  <a href={mentor.linkedinUrl} target="_blank" rel="noreferrer" className="text-slate-600 hover:text-blue-400 transition-all p-2.5 bg-[#1f202a] rounded-xl border border-slate-800 hover:border-blue-500/50">
                     <FiLinkedin size={18} />
                   </a>
                 )}
@@ -234,11 +216,10 @@ const Find = () => {
                 </div>
                 <div className="flex items-center gap-3 bg-[#1f202a] px-4 py-2 rounded-xl border border-slate-800 w-fit">
                    <FiAward className="text-amber-500 text-sm" />
-                   <span className="text-[11px] font-bold text-slate-400">Class of {mentor.batch}</span>
+                   <span className="text-[11px] font-bold text-slate-400">Batch of {mentor.batch}</span>
                 </div>
               </div>
 
-              {/* Bio */}
               <p className="text-slate-400 text-[14px] leading-relaxed mb-8 line-clamp-3 grow font-medium">
                 {mentor.bio}
               </p>
@@ -246,7 +227,7 @@ const Find = () => {
               {/* Footer: Skills + Action */}
               <div className="mt-auto space-y-6 relative z-10">
                 <div className="flex flex-wrap gap-2">
-                  {mentor.skills.slice(0, 4).map((skill, i) => (
+                  {mentor.skills?.map((skill, i) => (
                     <span 
                       key={i} 
                       className={`text-[10px] font-bold px-3 py-1 rounded-lg border uppercase tracking-wider transition-colors
@@ -264,12 +245,11 @@ const Find = () => {
                   Send Message
                 </button>
               </div>
-
             </motion.div>
           ))}
         </AnimatePresence>
 
-        {filteredMentors.length === 0 && (
+        {!loading && mentors.length === 0 && (
           <div className="col-span-full py-20 text-center border-2 border-dashed border-slate-800 rounded-[3rem]">
             <div className="bg-[#292b36] w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl">
               <FiFilter className="text-3xl text-slate-600" />

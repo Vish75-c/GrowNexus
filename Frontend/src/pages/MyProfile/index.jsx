@@ -28,7 +28,7 @@ const MyProfile = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#1f202a] text-slate-400 p-4 md:p-8 lg:p-12">
+    <div className="min-h-screen bg-[#1f202a] text-slate-400 px-3">
       {/* FIXED GRID */}
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
         

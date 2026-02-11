@@ -1,21 +1,38 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import NewDm from '../NewDm';
 import { useAppStore } from '@/store';
 import { FiHash, FiMessageSquare, FiSearch, FiPlus } from 'react-icons/fi';
 import * as Avatar from "@radix-ui/react-avatar";
 import { getColor } from '@/lib/utils';
+import apiClient from '@/lib/apiClient';
+import { GET_DM_CONTACT_ROUTE } from '@/utils/Constant';
 
 const ContactContainer = () => {
   const { 
-    directMessagesContacts, 
+    
     channels, 
     selectedChatData, 
     setSelectedChatData, 
-    setSelectedChatType 
+    setSelectedChatType,
+    setSelectedGroupContact,
+    selectedGroupContact
   } = useAppStore();
 
   const isSelected = (id) => selectedChatData?._id === id;
-
+  useEffect(()=>{
+    const getGroupContact=async ()=>{
+      try {
+        const response=await apiClient.get(GET_DM_CONTACT_ROUTE,{withCredentials:true});
+        if(response.status===200){
+          setSelectedGroupContact(response.data.contacts);
+        }
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getGroupContact();
+  },[]);
   return (
     <div className='flex flex-col h-full bg-[#1f202a] text-slate-300'>
       <div className="flex-1 overflow-y-auto custom-scrollbar px-3  space-y-8">
@@ -31,8 +48,8 @@ const ContactContainer = () => {
           </div>
 
           <div className="space-y-2">
-            {directMessagesContacts?.length > 0 ? (
-              directMessagesContacts.map((contact) => (
+            {selectedGroupContact?.length > 0 ? (
+              selectedGroupContact.map((contact) => (
                 <button
                   key={contact._id}
                   onClick={() => {
@@ -45,19 +62,18 @@ const ContactContainer = () => {
                       : "bg-transparent border-transparent hover:bg-[#292b36]"
                   }`}
                 >
-                  <Avatar.Root className={`h-11 w-11 rounded-xl shrink-0 flex items-center justify-center text-white font-bold text-lg ${getColor(contact.color)}`}>
+                  <Avatar.Root className={`h-11  w-11 rounded-xl shrink-0 flex items-center justify-center text-white font-bold text-lg ${getColor(contact.color)}`}>
                     {contact.image ? (
-                        <Avatar.Image src={contact.image} className="h-full w-full object-cover rounded-xl" />
+                        <Avatar.Image src={contact.image} className="h-full ring-1 ring-slate-700 group-hover:ring-blue-400 duration-500 transition-all w-full object-cover rounded-xl" />
                     ) : (
                         <span className="uppercase">{contact.firstName?.[0]}</span>
                     )}
                   </Avatar.Root>
                   
-                  <div className="flex-1 text-left truncate">
-                    <p className={`text-base font-bold truncate leading-tight ${isSelected(contact._id) ? "text-blue-400" : "text-slate-100"}`}>
+                  <div className="flex-1 text-left truncate group-hover:text-blue-400 duration-500 transition-all">
+                    <p className={`text-base font-bold truncate group-hover:text-blue-400 duration-500 transition-all leading-tight ${isSelected(contact._id) ? "text-blue-400" : "text-slate-100"}`}>
                       {contact.firstName} {contact.lastName}
                     </p>
-                    <p className="text-xs text-slate-500 uppercase font-bold tracking-wider mt-0.5">{contact.role}</p>
                   </div>
                 </button>
               ))

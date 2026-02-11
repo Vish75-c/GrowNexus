@@ -11,32 +11,31 @@ const MiniNav = ({ isOpen, setIsOpen }) => {
   const { userInfo } = useAppStore();
 
   return (
-    <div className="bg-gray-800/90  py-3 px-5 md:px-8 flex items-center justify-between border-b border-gray-700 h-[10vh]">
-      
+    <div className="bg-gray-800/90  py-3 px-5 md:px-6 flex items-center justify-between border-b border-gray-700 h-[10vh]">
       {/* Mobile Menu Toggle */}
       <div className="md:hidden flex items-center">
-        <button 
+        <button
           onClick={() => setIsOpen((prev) => !prev)}
-          className="text-slate-400 p-2 rounded-xl bg-[#292b36] border border-slate-800 hover:text-white transition-all flex items-center justify-center"
+          className="text-slate-400 p-2 rounded-lg hover:bg-gray-700 hover:text-white transition-all flex items-center justify-center"
         >
           <AnimatePresence mode="wait">
             {isOpen ? (
               <motion.div
                 key="close"
-                initial={{ opacity: 0, rotate: -90 }}
-                animate={{ opacity: 1, rotate: 0 }}
-                exit={{ opacity: 0, rotate: 90 }}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
               >
-                <FiX size={20} />
+                <FiX size={24} />
               </motion.div>
             ) : (
               <motion.div
                 key="menu"
-                initial={{ opacity: 0, rotate: 90 }}
-                animate={{ opacity: 1, rotate: 0 }}
-                exit={{ opacity: 0, rotate: -90 }}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
               >
-                <FiMenu size={20} />
+                <FiMenu size={24} />
               </motion.div>
             )}
           </AnimatePresence>
@@ -62,7 +61,7 @@ const MiniNav = ({ isOpen, setIsOpen }) => {
 
           <Avatar.Root
             className={`h-10 w-10 rounded-xl overflow-hidden border border-slate-700 shadow-xl group-hover:border-blue-500/50 transition-all duration-300 ${getColor(
-              userInfo?.colorIndex
+              userInfo?.colorIndex,
             )}`}
           >
             {userInfo?.image ? (

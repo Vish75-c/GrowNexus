@@ -43,7 +43,7 @@ const Layout = () => {
       </aside>
 
       {/* --- MAIN CONTENT AREA --- */}
-      <main className="flex flex-col flex-1 min-w-0 h-full bg-[#1f202a]">
+      <main className="flex flex-col flex-1 min-w-0 h-full w-full bg-[#1f202a]">
         {/* Navbar: Static height */}
         <header className="shrink-0 z-30">
           <MiniNav setIsOpen={setIsOpen} isOpen={isOpen} />
@@ -64,7 +64,7 @@ const Layout = () => {
 
           <footer className="shrink-0">
             {(!selectedChatType || location.pathname !== "/main/message") && (
-              <div>
+              <div className="w-full">
                 <MiniFooter />
               </div>
             )}

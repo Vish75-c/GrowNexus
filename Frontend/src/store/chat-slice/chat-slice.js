@@ -2,7 +2,10 @@ export const createChatSlice=(set,get)=>({
     selectedChatType:undefined,
     selectedChatData:undefined,
     selectedChatMessages:[],
-
+    selectedGroupContact:[],
+    setSelectedGroupContact:(selectedGroupContact)=>{
+      set({selectedGroupContact});
+    },
     setSelectedChatType:(selectedChatType)=>{
         set({selectedChatType})
     },

@@ -10,8 +10,7 @@ import {
   FiFileText, FiEdit3, FiLayers, 
   FiBriefcase, FiPlusCircle, 
   FiBell, 
-  FiMail, FiBook, FiLogOut,
-  FiX 
+  FiMail, FiBook, FiLogOut 
 } from "react-icons/fi";
 import apiClient from "@/lib/apiClient";
 import { LOGOUT_ROUTE } from "@/utils/Constant";
@@ -83,12 +82,7 @@ const LeftSidebar = ({ setIsOpen }) => {
           </span>
         </Link>
         
-        {/* Mobile Close Button */}
-        {setIsOpen && (
-          <button onClick={() => setIsOpen(false)} className="md:hidden text-slate-400 hover:text-white">
-            <FiX size={24} />
-          </button>
-        )}
+        
       </div>
 
       {/* --- SCROLLABLE NAV --- */}
@@ -99,37 +93,29 @@ const LeftSidebar = ({ setIsOpen }) => {
         className="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-1"
       >
         
-        {/* General */}
+        <SectionHeader label="Overview" />
         <NavItem to="/main/dashboard" icon={FiGrid} label="Dashboard" />
         <NavItem to="/main/release-notes" icon={FiList} label="Release Notes" />
         <NavItem to="/main/profile" icon={FiUser} label="My Profile" />
 
-        {/* Management Section */}
-        <SectionHeader label="Management" />
+        <SectionHeader label="Mentorship" />
         <NavItem to="/main/find" icon={FiSearch} label="Find Mentor" />
         <NavItem to="/main/message" icon={FiMessageSquare} label="Messages" />
 
-        {/* Blog Section */}
-        <SectionHeader label="Blog" />
+        <SectionHeader label="Knowledge" />
         <NavItem to="/main/blogs" icon={FiLayers} label="All Blogs" />
         <NavItem to="/blogs/my-blogs" icon={FiFileText} label="My Blogs" />
         <NavItem to="/blogs/create" icon={FiEdit3} label="Create Blog" />
 
-        {/* Hiring Section */}
-        <SectionHeader label="Hiring" />
+        <SectionHeader label="Careers" />
         <NavItem to="/hiring" icon={FiBriefcase} label="Hiring Post" />
         <NavItem to="/hiring/post" icon={FiPlusCircle} label="Post Opportunity" />
 
-        {/* Community */}
-        <SectionHeader label="Community" />
+        <SectionHeader label="System" />
         <NavItem to="/main/notices" icon={FiBell} label="Notice Board" />
-
-        {/* Support & Docs */}
-        <SectionHeader label="Support" />
         <NavItem to="/main/contact" icon={FiMail} label="Contact Us" />
-        <NavItem to="/main/docs" icon={FiBook} label="Documentation" />
-
-        <div className="h-8" />
+        <NavItem to="/main/docs" icon={FiBook} label="Docs" />
+        <div className="h-10" />
         
         {/* Logout */}
         <motion.button 
