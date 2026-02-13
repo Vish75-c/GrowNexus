@@ -6,6 +6,8 @@ import {
   FiCpu, FiGlobe, FiDatabase, FiHash, FiUsers, FiAward
 } from "react-icons/fi";
 import apiClient from "@/lib/apiClient";
+import { useNavigate } from "react-router-dom";
+import { useAppStore } from "@/store";
 
 const SKILL_CATEGORIES = [
   {
@@ -37,9 +39,15 @@ const SKILL_CATEGORIES = [
 
 const Find = () => {
   const [selectedSkills, setSelectedSkills] = useState([]);
+  const {setSelectedChatType,setSelectedChatData}=useAppStore();
   const [mentors, setMentors] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const navigate=useNavigate();
+  const handleSelectMentor=async (mentor)=>{
+    setSelectedChatType("contact");
+    setSelectedChatData(mentor);
+    navigate('/main/message');
+  }
   const handleSearch = async () => {
     setLoading(true);
     try {
@@ -100,7 +108,7 @@ const Find = () => {
         </div>
 
         {/* --- SEARCH BAR --- */}
-        <div className="bg-[#292b36] border border-slate-800 rounded-3xl p-4 min-h-[70px] flex flex-wrap items-center gap-3 shadow-2xl transition-all hover:border-blue-500/30">
+        <div className="bg-[#292b36] border border-slate-800 rounded-3xl p-4 min-h-17.5 flex flex-wrap items-center gap-3 shadow-2xl transition-all hover:border-blue-500/30">
           <FiSearch className="text-slate-500 ml-3" size={22} />
           
           {selectedSkills.length === 0 && !loading && (
@@ -241,7 +249,7 @@ const Find = () => {
                   ))}
                 </div>
 
-                <button className="w-full bg-[#1f202a] border border-slate-800 hover:bg-blue-600 hover:text-white hover:border-blue-500 text-slate-300 py-4 rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all duration-300 shadow-xl group-hover:shadow-blue-900/20 active:scale-95">
+                <button onClick={()=>handleSelectMentor(mentor)} className="w-full bg-[#1f202a] border border-slate-800 hover:bg-blue-600 hover:text-white hover:border-blue-500 text-slate-300 py-4 rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all duration-300 shadow-xl group-hover:shadow-blue-900/20 active:scale-95">
                   Send Message
                 </button>
               </div>

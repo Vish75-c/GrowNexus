@@ -11,7 +11,7 @@ export const searchContacts = async (req, res) => {
             /[.*+?^${}()|[\]\\]/g, "\\$&"
         );
         const regex = new RegExp(sanitizedSearchTerm, 'i');
-        const contacts = await User.find({
+        const raw= await User.find({
             $and: [
                 { _id: { $ne: req.user } },
                 {
@@ -19,6 +19,7 @@ export const searchContacts = async (req, res) => {
                 }
             ]
         })
+        const contacts=await raw.filter((contact)=>contact.profileSetup===true);
         return res.status(200).json({ contacts });
     } catch (error) {
         return res.status(500).send("Server Error");

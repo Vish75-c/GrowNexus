@@ -86,7 +86,7 @@ export const saveUserImage = async (req, res) => {
         }
 
         const localFilePath = req.file.path;
-
+ 
         const cloudResult = await uploadOnCloudinary(localFilePath);
         console.log(cloudResult);
         if (!cloudResult) {

@@ -15,7 +15,7 @@ const MessageDisplay = () => {
 
   const scrollRef = useRef(null);
 
-  // --- FETCH MESSAGES ---
+  // ================= FETCH MESSAGES =================
   useEffect(() => {
     const getMessage = async () => {
       try {
@@ -24,6 +24,7 @@ const MessageDisplay = () => {
           { _id: selectedChatData._id },
           { withCredentials: true }
         );
+
         if (response.data.messages) {
           setSelectedChatMessages(response.data.messages);
         }
@@ -31,18 +32,20 @@ const MessageDisplay = () => {
         console.log(error);
       }
     };
-    if (selectedChatData._id && selectedChatType === "contact") {
+
+    if (selectedChatData?._id && selectedChatType === "contact") {
       getMessage();
     }
   }, [selectedChatData, selectedChatType, setSelectedChatMessages]);
 
-  // --- SCROLL TO BOTTOM ---
+  // ================= AUTO SCROLL =================
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [selectedChatMessages]);
 
+  // ================= MESSAGE UI =================
   const renderDmMessages = (message) => {
     const isMyMessage = message.sender === userInfo._id;
 
@@ -50,25 +53,93 @@ const MessageDisplay = () => {
       <div className={`${isMyMessage ? "text-right" : "text-left"} mb-6 px-5`}>
         <div
           className={`
-            inline-block p-4 rounded-2xl max-w-[60%] wrap-break-words text-[15px] leading-relaxed shadow-lg transition-all
+            inline-block p-4 rounded-2xl max-w-[60%] break-words text-[15px] leading-relaxed shadow-lg
             ${
               isMyMessage
-                ? "bg-linear-to-br from-[#8417ff] to-[#6a11cb] text-white rounded-br-none shadow-purple-900/20" 
-                : "bg-[#292b36] text-slate-200 border border-[#3f414e]/50 rounded-bl-none shadow-black/20"
+                ? "bg-linear-to-br from-[#8417ff] to-[#6a11cb] text-white rounded-br-none"
+                : "bg-[#292b36] text-slate-200 border border-[#3f414e]/50 rounded-bl-none"
             }
           `}
         >
-          {message.content}
+          {/* ================= TEXT MESSAGE ================= */}
+          {message.messageType === "text" && message.content && (
+            <p>{message.content}</p>
+          )}
+
+          {/* ================= FILE MESSAGE ================= */}
+          {message.messageType === "file" && message.fileUrl && (
+  <div className="flex flex-col gap-2">
+    {(() => {
+      const fileUrl = message.fileUrl;
+
+      // IMAGE
+      if (fileUrl.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
+        return (
+          <img
+            src={fileUrl}
+            alt="file"
+            className="rounded-lg max-w-[260px]"
+          />
+        );
+      }
+
+      // VIDEO
+      if (fileUrl.match(/\.(mp4|webm|ogg)$/i)) {
+        return (
+          <video
+            src={fileUrl}
+            controls
+            className="rounded-lg max-w-[260px]"
+          />
+        );
+      }
+
+      // PDF
+      if (fileUrl.match(/\.(pdf)$/i)) {
+        return (
+          <a
+            href={message.fileUrl}
+
+            target="_blank"
+            rel="noreferrer"
+            className="bg-black/30 px-3 py-2 rounded-lg text-sm inline-block"
+          >
+            📄 Open PDF
+          </a>
+        );
+      }
+
+      // ZIP / OTHER FILES
+      return (
+        <a
+          href={fileUrl}
+          target="_blank"
+          rel="noreferrer"
+          download
+          className="bg-black/30 px-3 py-2 rounded-lg text-sm inline-block"
+        >
+          📦 Download file
+        </a>
+      );
+    })()}
+  </div>
+)}
+
         </div>
 
-        {/* Timestamp - Scaled up slightly for readability */}
-        <div className={`text-xs text-slate-500 font-bold uppercase tracking-tight mt-2 px-1 ${isMyMessage ? "mr-1" : "ml-1"}`}>
+        {/* TIME */}
+        <div
+          className={`text-xs text-slate-500 font-bold mt-2 px-1 ${
+            isMyMessage ? "mr-1" : "ml-1"
+          }`}
+        >
           {moment(message.timestamp).format("LT")}
         </div>
       </div>
     );
   };
 
+  // ================= DATE GROUPING =================
   const renderMessages = () => {
     let lastDate = null;
 
@@ -79,7 +150,6 @@ const MessageDisplay = () => {
 
       return (
         <div key={index}>
-          {/* Date Separator - Matching the sidebar's professional tone */}
           {showDate && (
             <div className="flex items-center justify-center gap-4 my-10 px-10">
               <div className="flex-1 h-px bg-slate-800"></div>
