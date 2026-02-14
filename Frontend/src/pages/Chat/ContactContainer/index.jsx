@@ -6,6 +6,7 @@ import * as Avatar from "@radix-ui/react-avatar";
 import { getColor } from '@/lib/utils';
 import apiClient from '@/lib/apiClient';
 import { GET_DM_CONTACT_ROUTE } from '@/utils/Constant';
+import ContactChannel from '../ContactChannel';
 
 const ContactContainer = () => {
   const { 
@@ -90,9 +91,7 @@ const ContactContainer = () => {
                <FiHash size={18} className="text-emerald-500" />
                <h6 className='uppercase tracking-[0.2em] text-slate-500 font-black text-xs'>Channels</h6>
             </div>
-            <button className="p-1.5 bg-[#292b36] rounded-lg text-slate-400 hover:text-white transition-colors border border-slate-800">
-                <FiPlus size={16} />
-            </button>
+            <ContactChannel/>
           </div>
 
           <div className="space-y-2">
