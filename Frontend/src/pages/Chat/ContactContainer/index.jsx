@@ -5,12 +5,12 @@ import { FiHash, FiMessageSquare, FiSearch, FiPlus } from 'react-icons/fi';
 import * as Avatar from "@radix-ui/react-avatar";
 import { getColor } from '@/lib/utils';
 import apiClient from '@/lib/apiClient';
-import { GET_DM_CONTACT_ROUTE } from '@/utils/Constant';
+import { GET_ALL_CHANNEL_ROUTE, GET_DM_CONTACT_ROUTE } from '@/utils/Constant';
 import ContactChannel from '../ContactChannel';
 
 const ContactContainer = () => {
   const { 
-    
+    setChannels,
     channels, 
     selectedChatData, 
     setSelectedChatData, 
@@ -18,7 +18,20 @@ const ContactContainer = () => {
     setSelectedGroupContact,
     selectedGroupContact
   } = useAppStore();
-
+  useEffect(()=>{
+    const getChannel=async ()=>{
+      try {
+        const response=await apiClient.get(GET_ALL_CHANNEL_ROUTE,{withCredentials:true});
+        console.log(response);
+        if(response.status===200){
+          setChannels(response.data.channels);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getChannel();
+  },[])
   const isSelected = (id) => selectedChatData?._id === id;
   useEffect(()=>{
     const getGroupContact=async ()=>{

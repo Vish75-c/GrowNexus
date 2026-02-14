@@ -28,9 +28,9 @@ const channelSchema=new mongoose.Schema({
     }
 })
 
-channelSchema.pre("save",function(next){
+channelSchema.pre("save",function(){
     this.updatedAt=Date.now();
-    next();
+    
 })
 channelSchema.prependOnceListener("findOneAndUpdate",function (next){
     this.set({updatedAt:Date.now()})

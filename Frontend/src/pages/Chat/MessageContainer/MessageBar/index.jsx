@@ -82,20 +82,44 @@ const MessageBar = () => {
         if (response.status === 200 && response.data) {
           fileUrl = response.data.url;
         }
+        if (selectedChatType === "contact") {
+          const payload = {
+            sender: userInfo._id,
+            recipient: selectedChatData._id,
+            messageType: "file",
+            content: undefined,
+            fileUrl: fileUrl,
+          };
+          socket.emit("sendMessage", payload);
+        } else if (selectedChatType === "channel") {
+          socket.emit("send-channel-message", {
+            sender: userInfo.id,
+            content: undefined,
+            messageType: "file",
+            fileUrl: fileUrl,
+            channelId: selectedChatData._id,
+          });
+        }
+      } else if (message.length > 0) {
+        if (selectedChatType === "contact") {
+          const payload = {
+            sender: userInfo._id,
+            recipient: selectedChatData._id,
+            messageType: "text",
+            content: message,
+            fileUrl: undefined,
+          };
+          socket.emit("sendMessage", payload);
+        } else if (selectedChatType === "channel") {
+          socket.emit("send-channel-message", {
+            sender: userInfo.id,
+            content: message,
+            messageType: "text",
+            fileUrl: undefined,
+            channelId: selectedChatData._id,
+          });
+        }
       }
-
-      // 2. Emit the message (either text or file)
-      if (selectedChatType === "contact") {
-        const payload = {
-          sender: userInfo._id,
-          recipient: selectedChatData._id,
-          messageType: fileUrl ? "file" : "text",
-          content: message || undefined,
-          fileUrl: fileUrl,
-        };
-        socket.emit("sendMessage", payload);
-      }
-
       // 3. Reset everything
       setMessage("");
       clearFile();
@@ -127,7 +151,11 @@ const MessageBar = () => {
             <div className="bg-[#292b36] border border-slate-700 p-2 rounded-2xl shadow-2xl flex items-center gap-3 pr-4 min-w-50 backdrop-blur-md bg-opacity-90">
               <div className="h-12 w-12 rounded-xl overflow-hidden bg-[#1f202a] flex items-center justify-center border border-slate-800">
                 {filePreview ? (
-                  <img src={filePreview} className="h-full w-full object-cover" alt="preview" />
+                  <img
+                    src={filePreview}
+                    className="h-full w-full object-cover"
+                    alt="preview"
+                  />
                 ) : (
                   <FiFile className="text-blue-500" size={20} />
                 )}
@@ -180,7 +208,9 @@ const MessageBar = () => {
           <button
             onClick={() => setEmojiPickerOpen(!emojiPickerOpen)}
             className={`transition-colors duration-300 ${
-              emojiPickerOpen ? "text-blue-500" : "text-slate-500 hover:text-blue-500"
+              emojiPickerOpen
+                ? "text-blue-500"
+                : "text-slate-500 hover:text-blue-500"
             }`}
           >
             <RiEmojiStickerLine size={24} />
@@ -188,7 +218,10 @@ const MessageBar = () => {
         </div>
 
         {emojiPickerOpen && (
-          <div ref={emojiRef} className="absolute bottom-24 right-0 z-50 shadow-2xl">
+          <div
+            ref={emojiRef}
+            className="absolute bottom-24 right-0 z-50 shadow-2xl"
+          >
             <EmojiPicker
               theme="dark"
               onEmojiClick={(e) => setMessage((msg) => msg + e.emoji)}
