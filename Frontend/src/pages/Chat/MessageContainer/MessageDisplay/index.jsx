@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState, useCallback } from "react";
 import { useAppStore } from "@/store";
 import moment from "moment";
 import apiClient from "@/lib/apiClient";
-import { GET_MESSAGE_ROUTE } from "@/utils/Constant";
+import { GET_CHANNEL_MESSAGE, GET_MESSAGE_ROUTE } from "@/utils/Constant";
 import { motion, AnimatePresence } from "framer-motion";
 import { MdFolderZip } from "react-icons/md";
 import { IoMdArrowRoundDown } from "react-icons/io";
@@ -32,7 +32,7 @@ const MessageDisplay = () => {
         const response = await apiClient.post(
           GET_MESSAGE_ROUTE,
           { _id: selectedChatData._id },
-          { withCredentials: true }
+          { withCredentials: true },
         );
 
         if (response.data.messages) {
@@ -42,7 +42,20 @@ const MessageDisplay = () => {
         console.log(error);
       }
     };
-
+    const getChannelMessage=async ()=>{
+      try {
+        const response=await apiClient.post(GET_CHANNEL_MESSAGE,{channelId:selectedChatData._id},{withCredentials:true});
+        if(response.status===200){
+            setSelectedChatMessages(response.data.messages);
+        }
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    if(selectedChatType==='channel'){
+      getChannelMessage();
+    }
     if (selectedChatData?._id && selectedChatType === "contact") {
       getMessage();
     }
@@ -60,7 +73,10 @@ const MessageDisplay = () => {
     try {
       const response = await fetch(url);
       const blob = await response.blob();
-      let fileName = forcedName || decodeURIComponent(url.split("/").pop().split("?")[0]) || "download";
+      let fileName =
+        forcedName ||
+        decodeURIComponent(url.split("/").pop().split("?")[0]) ||
+        "download";
       const blobUrl = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = blobUrl;
@@ -92,7 +108,7 @@ const MessageDisplay = () => {
     const isMyMessage = message.sender === userInfo._id;
 
     return (
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.2 }}
@@ -138,7 +154,13 @@ const MessageDisplay = () => {
 
                 // VIDEO PREVIEW
                 if (fileUrl.match(/\.(mp4|webm|ogg)$/i)) {
-                  return <video src={fileUrl} controls className="rounded-lg max-w-full md:max-w-75" />;
+                  return (
+                    <video
+                      src={fileUrl}
+                      controls
+                      className="rounded-lg max-w-full md:max-w-75"
+                    />
+                  );
                 }
 
                 // GENERIC FILE
@@ -149,10 +171,16 @@ const MessageDisplay = () => {
                     className="flex items-center gap-3 bg-black/20 hover:bg-black/40 px-4 py-3 rounded-xl cursor-pointer transition-colors border border-white/5"
                   >
                     <div className="p-2 bg-white/10 rounded-lg">
-                      {fileUrl.match(/\.zip$/i) ? <MdFolderZip size={20} /> : <IoMdArrowRoundDown size={20} />}
+                      {fileUrl.match(/\.zip$/i) ? (
+                        <MdFolderZip size={20} />
+                      ) : (
+                        <IoMdArrowRoundDown size={20} />
+                      )}
                     </div>
                     <span className="text-xs font-bold truncate max-w-30">
-                      {fileUrl.match(/\.pdf$/i) ? "Document.pdf" : "Download File"}
+                      {fileUrl.match(/\.pdf$/i)
+                        ? "Document.pdf"
+                        : "Download File"}
                     </span>
                   </motion.div>
                 );
@@ -168,12 +196,117 @@ const MessageDisplay = () => {
       </motion.div>
     );
   };
+  const renderChannelMessage = (message) => {
+  const isMyMessage = message.sender._id === userInfo._id;
+  const senderName = message.sender.firstName 
+    ? `${message.sender.firstName} ${message.sender.lastName}` 
+    : message.sender.email;
 
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.2 }}
+      className={`flex flex-col mb-6 px-5 ${isMyMessage ? "items-end" : "items-start"}`}
+    >
+      {/* SENDER INFO (Avatar + Name) */}
+      {!isMyMessage && (
+        <div className="flex items-center gap-3 mb-2 ml-1">
+          {/* AVATAR IMAGE */}
+          <div className="h-8 w-8 rounded-full overflow-hidden border-2 border-[#8417ff]/30 shadow-md bg-[#292b36]">
+            {message.sender.image ? (
+              <img 
+                src={message.sender.image} 
+                alt="avatar" 
+                className="h-full w-full object-cover"
+                onError={(e) => {
+                  e.target.onerror = null; 
+                  e.target.src = `https://ui-avatars.com/api/?name=${senderName}&background=random`;
+                }}
+              />
+            ) : (
+              <div className="h-full w-full flex items-center justify-center bg-blue-500/20 text-blue-400 text-[10px] font-black uppercase">
+                {senderName.charAt(0)}
+              </div>
+            )}
+          </div>
+
+          <span className="text-[11px] font-black text-slate-400 uppercase tracking-widest">
+            {senderName}
+          </span>
+        </div>
+      )}
+
+      <div
+        className={`
+          inline-block p-4 rounded-2xl max-w-[85%] md:max-w-[60%] wrap-break-words text-[15px] leading-relaxed shadow-lg
+          ${
+            isMyMessage
+              ? "bg-linear-to-br from-[#8417ff] to-[#6a11cb] text-white rounded-br-none"
+              : "bg-[#292b36] text-slate-200 border border-[#3f414e]/50 rounded-bl-none"
+          }
+        `}
+      >
+        {/* TEXT CONTENT */}
+        {message.messageType === "text" && message.content && (
+          <p>{message.content}</p>
+        )}
+
+        {/* FILE CONTENT */}
+        {message.messageType === "file" && message.fileUrl && (
+          <div className="flex flex-col gap-2">
+            {(() => {
+              const fileUrl = message.fileUrl;
+              if (fileUrl.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
+                return (
+                  <div className="relative group rounded-lg overflow-hidden">
+                    <img
+                      src={fileUrl}
+                      alt="attachment"
+                      className="rounded-lg max-w-full md:max-w-75 cursor-pointer"
+                      onClick={() => openImageModal(fileUrl)}
+                    />
+                    <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+                      <FiImage className="text-white text-2xl" />
+                    </div>
+                  </div>
+                );
+              }
+              // ... Video and Generic File logic remains same
+              return (
+                <motion.div
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => handleDownloadFile(fileUrl)}
+                  className="flex items-center gap-3 bg-black/20 hover:bg-black/40 px-4 py-3 rounded-xl cursor-pointer transition-colors border border-white/5"
+                >
+                  <div className="p-2 bg-white/10 rounded-lg">
+                    <IoMdArrowRoundDown size={20} />
+                  </div>
+                  <span className="text-xs font-bold truncate max-w-30">Download File</span>
+                </motion.div>
+              );
+            })()}
+          </div>
+        )}
+      </div>
+
+      {/* TIMESTAMP */}
+      <div className="text-[10px] font-black uppercase tracking-widest text-slate-600 mt-2 px-1">
+        {moment(message.timestamp).format("LT")}
+      </div>
+    </motion.div>
+  );
+};
   return (
     <div className="flex-1 overflow-y-auto bg-[#1f202a] py-4 relative custom-scrollbar">
       <div className="max-w-6xl mx-auto">
         {selectedChatMessages.map((message, index) => {
-          const lastDate = index > 0 ? moment(selectedChatMessages[index - 1].timestamp).format("YYYY-MM-DD") : null;
+          const lastDate =
+            index > 0
+              ? moment(selectedChatMessages[index - 1].timestamp).format(
+                  "YYYY-MM-DD",
+                )
+              : null;
           const messageDate = moment(message.timestamp).format("YYYY-MM-DD");
           const showDate = messageDate !== lastDate;
 
@@ -189,6 +322,7 @@ const MessageDisplay = () => {
                 </div>
               )}
               {selectedChatType === "contact" && renderDmMessages(message)}
+              {selectedChatType === "channel" && renderChannelMessage(message)}
             </div>
           );
         })}
@@ -216,7 +350,7 @@ const MessageDisplay = () => {
             >
               {/* Close Action */}
               <div className="flex justify-end p-2">
-                <button 
+                <button
                   onClick={closeImageModal}
                   className="p-2 bg-white/5 hover:bg-white/10 rounded-full text-slate-400 hover:text-white transition-all"
                 >
@@ -236,14 +370,20 @@ const MessageDisplay = () => {
               {/* Bottom Action Bar */}
               <div className="p-5 bg-[#1f202a]/50 rounded-[2rem] flex items-center justify-between border border-white/5">
                 <div className="flex flex-col gap-0.5">
-                  <span className="text-[9px] uppercase font-black tracking-widest text-slate-500">Attachment</span>
-                  <span className="text-xs text-slate-300 font-bold truncate max-w-45">{modalFileName}</span>
+                  <span className="text-[9px] uppercase font-black tracking-widest text-slate-500">
+                    Attachment
+                  </span>
+                  <span className="text-xs text-slate-300 font-bold truncate max-w-45">
+                    {modalFileName}
+                  </span>
                 </div>
-                
+
                 <motion.button
                   whileHover={{ scale: 1.05, backgroundColor: "#3b82f6" }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => handleDownloadFile(modalImageUrl, modalFileName)}
+                  onClick={() =>
+                    handleDownloadFile(modalImageUrl, modalFileName)
+                  }
                   className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-wider shadow-lg shadow-blue-900/40 transition-colors"
                 >
                   <AiOutlineDownload size={18} />

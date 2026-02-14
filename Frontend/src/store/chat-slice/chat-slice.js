@@ -41,6 +41,9 @@ export const createChatSlice = (set, get) => ({
         selectedChatMessages: [...state.selectedChatMessages, newMessage],
       };
     });
+  },
+  addChannelInChannelList:(message)=>{
+    const channels=get().channels
   }
 
 

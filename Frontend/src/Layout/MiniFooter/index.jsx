@@ -16,8 +16,7 @@ const MiniFooter = () => {
               <Logo className="w-5 h-5" />
             </div>
             <div className="flex flex-col leading-tight">
-              <span className="text-sm font-bold text-white -mb-0.5">GrowthNexus</span>
-              <span className="text-[11px] text-slate-500">Small tools • Big growth</span>
+              <span className="text-sm font-bold text-white -mb-0.5">Growth<span className="text-blue-500">Nexus</span></span>
             </div>
           </div>
 

@@ -9,7 +9,7 @@ export const useSocket = () => useContext(SocketContext);
 export const SocketProvider = ({ children }) => {
   const socketRef = useRef(null);
   const [socket, setSocket] = useState(null);
-  const { userInfo, selectedChatData, selectedChatType} = useAppStore();
+  const { userInfo, selectedChatData, selectedChatType } = useAppStore();
 
   useEffect(() => {
     if (!userInfo) return;
@@ -24,26 +24,32 @@ export const SocketProvider = ({ children }) => {
       console.log("Connected to Socket Server");
     });
 
-   const handleReceiveMessage = (message) => {
-  const store = useAppStore.getState();
+    const handleReceiveMessage = (message) => {
+      const store = useAppStore.getState();
 
-  if (
-    store.selectedChatType &&
-    store.selectedChatData &&
-    (
-      store.selectedChatData._id === message.sender?._id ||
-      store.selectedChatData._id === message.recipient?._id
-    )
-  ) {
-    store.addMessage(message);
+      if (
+        store.selectedChatType &&
+        store.selectedChatData &&
+        (store.selectedChatData._id === message.sender?._id ||
+          store.selectedChatData._id === message.recipient?._id)
+      ) {
+        store.addMessage(message);
 
-    // console.log("UPDATED:", useAppStore.getState().selectedChatMessages);
-  }
+        // console.log("UPDATED:", useAppStore.getState().selectedChatMessages);
+      }
 
-  console.log("SOCKET MESSAGE:", message);
-};
+      console.log("SOCKET MESSAGE:", message);
+    };
+    const handleRecieveChannelMessage = (message) => {
+      const { selectedChatData, selectedChatType, addMessage } =
+        useAppStore.getState();
+        if(selectedChatType!==undefined&&selectedChatData._id===message.channelId){
+          addMessage(message);
+        }
+    };
 
     s.on("receiveMessage", handleReceiveMessage);
+    s.on("recieve-channel-message", handleRecieveChannelMessage);
     return () => {
       s.off("receiveMessage", handleReceiveMessage);
       s.disconnect();

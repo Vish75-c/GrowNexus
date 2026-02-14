@@ -16,7 +16,7 @@ import LandingPage from "./pages/LandingPage";
 import Documentation from "./pages/Documentation";
 import Noticeboard from "./pages/Noticeboard";
 import EmptyContainer from "./pages/EmptyContainer";
-
+import Contact from "./pages/Contact";
 const PrivateRoute = ({ children }) => {
   const { userInfo } = useAppStore();
   if (!userInfo) return <Navigate to="/auth" />;
@@ -96,7 +96,7 @@ const App = () => {
           
           <Route index element={<Navigate to="empty-screen" />} />
           <Route path="empty-screen" element={<EmptyContainer/>}/>
-          <Route path="profile" element={<MyProfile />} />
+          <Route path="profile" element={<MyProfile userInfo={userInfo}/>} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="message" element={<Chat />} />
           <Route path="find" element={<Find />} />
@@ -104,7 +104,7 @@ const App = () => {
           <Route path="docs" element={<Documentation/>}/>
           <Route path="notices" element={<Noticeboard/>}/>
           {/* initially not making contact page */}
-          <Route path="contact" element={<Noticeboard/>}/>
+          <Route path="contact" element={<Contact/>}/>
         </Route>
 
         <Route path="*" element={<Navigate to="/auth" />} />

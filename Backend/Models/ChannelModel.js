@@ -32,9 +32,9 @@ channelSchema.pre("save",function(){
     this.updatedAt=Date.now();
     
 })
-channelSchema.prependOnceListener("findOneAndUpdate",function (next){
+channelSchema.pre("findOneAndUpdate",function (){
     this.set({updatedAt:Date.now()})
-    next()
+
 })
 
 const Channel=mongoose.model("Channels",channelSchema);

@@ -116,16 +116,16 @@ const ContactContainer = () => {
                     setSelectedChatType("channel");
                     setSelectedChatData(channel);
                   }}
-                  className={`w-full flex items-center gap-4 p-4 rounded-xl transition-all group border ${
+                  className={`w-full flex items-center gap-4 group p-4 rounded-xl transition-all group border ${
                     isSelected(channel._id) 
                       ? "bg-emerald-500/10 border-emerald-500/30 shadow-lg shadow-emerald-900/10" 
                       : "bg-transparent border-transparent hover:bg-[#292b36]"
                   }`}
                 >
-                  <div className={`h-9 w-9 rounded-xl bg-[#1f202a] flex items-center justify-center border ${isSelected(channel._id) ? "text-emerald-500 border-emerald-500/30" : "text-slate-500 border-slate-800"}`}>
-                    <FiHash size={18} />
+                  <div className={`h-10 w-10 rounded-xl ring-1 ring-slate-700 group-hover:ring-blue-400 transition-all duration-500  bg-[#1f202a] flex items-center justify-center text-slate-500 `}>
+                    <FiHash size={20} />
                   </div>
-                  <span className={`text-base font-bold truncate ${isSelected(channel._id) ? "text-emerald-400" : "text-slate-200"}`}>
+                  <span className={`text-base group-hover:text-blue-400 transition-all duration-500 font-bold truncate text-slate-200 `}>
                     {channel.name}
                   </span>
                 </button>

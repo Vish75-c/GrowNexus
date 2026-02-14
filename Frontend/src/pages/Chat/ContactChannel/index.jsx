@@ -21,7 +21,8 @@ import { CREATE_CHANNEL_ROUTE, GET_ALL_CONTACTS_ROUTE } from "@/utils/Constant";
 import { Button } from "@/components/ui/button";
 import MultipleSelector from "@/components/ui/multipleselect";
 import { motion, AnimatePresence } from "framer-motion";
-
+import Lottie from "react-lottie";
+import { animationDefaultOptions } from "@/lib/utils";
 const ContactChannel = () => {
   const [newChannelModel, setnewChannelModel] = useState(false);
   const { userInfo, addChannel } = useAppStore();
@@ -161,13 +162,33 @@ const ContactChannel = () => {
                     </Button>
                   </motion.div>
                 </div>
-
+                 { (
+              <div className="flex flex-col items-center justify-center h-full  text-center">
+                <div className="opacity-80 scale-75">
+                  <Lottie
+                    isClickToPauseDisabled={true}
+                    height={200}
+                    width={200}
+                    options={animationDefaultOptions}
+                  />
+                </div>
+                <div className="mt-4">
+                  <h3 className="text-lg font-bold text-white tracking-tight">
+                    Start a <span className="text-blue-500">Connection</span>
+                  </h3>
+                  <p className="text-sm text-slate-500 font-medium mt-1">
+                    Create Channel at Growth Nexus
+                  </p>
+                </div>
+              </div>
+            )}
                 <ScrollArea className="flex-1 pr-4"></ScrollArea>
               </motion.div>
             )}
           </AnimatePresence>
         </DialogContent>
       </Dialog>
+
     </>
   );
 };

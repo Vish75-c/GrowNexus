@@ -41,3 +41,18 @@ export const getUserChannel=async (req,res)=>{
         return res.status(500).send("Server Error");
     }
 }
+
+export const ChannelMessages=async (req,res)=>{
+    try {
+        const {channelId}=req.body;
+        const channel=await Channel.findById(channelId).populate({path:"messages",populate:{
+            path:"sender",
+            select:"firstName lastName email _id image color"
+        }})
+        
+        
+        return res.status(200).json({messages:channel.messages})
+    } catch (error) {
+        return res.status(500).send("Server Error");
+    }
+}
