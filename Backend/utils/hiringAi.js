@@ -3,25 +3,24 @@ import { PromptTemplate } from "@langchain/core/prompts";
 import { StructuredOutputParser } from "@langchain/core/output_parsers";
 import { z } from "zod";
 
-// --------------------
-// Schema
-// --------------------
 const parser = StructuredOutputParser.fromZodSchema(
   z.object({
-    company: z.string().describe("The name of the company"),
-    role: z.string().describe("Job title or internship role"),
-    location: z.string().describe("City or 'Remote'"),
-    duration: z.string().describe("Length of internship e.g. '3 months'"),
-    deadline: z.string().describe("The deadline date in YYYY-MM-DD format"),
-    stipend: z.string().describe("Monthly stipend or annual salary"),
+    company: z.string(),
+    companyDiscription: z.string().describe(
+      "3 line factual description of the company (what they do). NOT 'we are hiring'"
+    ),
+    role: z.string(),
+    location: z.string().optional(),
+    duration: z.string().optional(),
+    stipend: z.string().optional(),
+    deadline: z.string(),
+    requirements: z.string().describe(
+      "A clear string of required skills or qualifications, separated by commas if multiple."
+    ),
   })
 );
 
-// --------------------
-// Main Function
-// --------------------
 export const analyzeJobDescription = async (text) => {
-  // FREE Groq model (working 2026)
   const model = new ChatGroq({
     apiKey: process.env.GROQ_API_KEY,
     model: "llama-3.3-70b-versatile",
@@ -32,8 +31,15 @@ export const analyzeJobDescription = async (text) => {
 
   const prompt = new PromptTemplate({
     template: `
-Extract structured job info.
-Return ONLY valid JSON.
+Extract job info and return ONLY JSON.
+
+IMPORTANT RULES:
+- companyDiscription must describe what the company does (e.g., "Google is a tech giant specializing in search engines and AI.")
+- requirements must be a concise string of skills (e.g., "React, Node.js, TypeScript, and Problem Solving.")
+- DO NOT write: "is hiring", "looking for", "our company"
+- Write factual info only
+- 3 short lines only for companyDiscription
+- if not found return empty Strings
 
 {format_instructions}
 
@@ -46,23 +52,31 @@ Job Text:
 
   try {
     const input = await prompt.format({ jobText: text });
-
     const response = await model.invoke(input);
 
     let content = response.content ?? "";
-
-    // Remove markdown blocks if present
     content = content.replace(/```json/g, "").replace(/```/g, "");
 
-    // Extract JSON safely
     const match = content.match(/\{[\s\S]*\}/);
     if (match) content = match[0];
 
     const parsed = await parser.parse(content.trim());
-    return parsed;
 
-  } catch (error) {
-    console.error("AI Extraction Error:", error);
-    throw new Error("Failed to parse text with AI");
+    const result = {
+      company: parsed.company,
+      companyDiscription: parsed.companyDiscription,
+      role: parsed.role,
+      requirements: parsed.requirements || "", // Added requirements here
+      location: parsed.location || "Remote",
+      duration: parsed.duration || "",
+      stipend: parsed.stipend || "",
+      deadline: parsed.deadline,
+    };
+
+    return result;
+
+  } catch (err) {
+    console.error("AI Extraction Error:", err);
+    throw new Error("Failed to parse job description");
   }
 };

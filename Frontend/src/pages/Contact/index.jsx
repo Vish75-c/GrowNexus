@@ -38,7 +38,7 @@ const Contact = () => {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="max-w-4xl mx-auto pt-12 pb-20" // Narrower max-width for better vertical flow
+        className="max-w-4xl mx-auto  pb-20" // Narrower max-width for better vertical flow
       >
         {/* --- HEADER --- */}
         <motion.div variants={itemVariants} className="text-center mb-12">

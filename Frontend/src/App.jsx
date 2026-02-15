@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Auth from "./pages/Auth";
 import Profile from "./pages/Profile";
 import Blog from "./pages/Blog";
-import Hiring from "./pages/Hiring";
 import MyProfile from "./pages/MyProfile";
 import Dashboard from "./pages/Dashboard";
 import apiClient from "./lib/apiClient";
@@ -17,6 +16,8 @@ import Documentation from "./pages/Documentation";
 import Noticeboard from "./pages/Noticeboard";
 import EmptyContainer from "./pages/EmptyContainer";
 import Contact from "./pages/Contact";
+import PostOpportunity from "./pages/Hiring/PostOpportunity";
+import HiringPost from "./pages/Hiring/HiringPost";
 const PrivateRoute = ({ children }) => {
   const { userInfo } = useAppStore();
   if (!userInfo) return <Navigate to="/auth" />;
@@ -100,7 +101,11 @@ const App = () => {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="message" element={<Chat />} />
           <Route path="find" element={<Find />} />
+
           <Route path="blogs" element={<Blog />} />
+
+          <Route path="post-opportunity" element={<PostOpportunity/>}/>
+          <Route path="hiring-post" element={<HiringPost/>}/>
           <Route path="docs" element={<Documentation/>}/>
           <Route path="notices" element={<Noticeboard/>}/>
           {/* initially not making contact page */}

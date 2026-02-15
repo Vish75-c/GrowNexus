@@ -18,7 +18,8 @@ export const parseHiringText = async (req, res) => {
 // Step 2: Save the user-confirmed data
 export const createHiringPost = async (req, res) => {
   try {
-    const { company, role, location, duration, deadline, stipend, rawDescription } = req.body;
+    
+    const { company, role, location, duration, deadline, stipend, companyDiscription,requirements } = req.body;
 
     // Convert string deadline (YYYY-MM-DD) to JS Date Object for TTL
     const expiryDate = new Date(deadline);
@@ -34,11 +35,12 @@ export const createHiringPost = async (req, res) => {
       duration,
       deadline: expiryDate, // MongoDB index watches this
       stipend,
-      rawDescription,
-      postedBy: req.userId, // From your auth middleware
+      requirements,
+      companyDiscription,
+      postedBy: req.user, 
     });
-
-    return res.status(201).json({ message: "Post created and scheduled for auto-deletion", post: newPost });
+    console.log(newPost);
+    return res.status(200).json({newPost});
   } catch (error) {
     console.error("Database Error:", error);
     return res.status(500).send("Failed to create hiring post");

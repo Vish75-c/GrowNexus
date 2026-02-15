@@ -24,3 +24,8 @@ export const CHANNEL_ROUTES='api/channel'
 export const CREATE_CHANNEL_ROUTE=`${CHANNEL_ROUTES}/createChannel`
 export const GET_ALL_CHANNEL_ROUTE=`${CHANNEL_ROUTES}/getAllChannel`
 export const GET_CHANNEL_MESSAGE=`${CHANNEL_ROUTES}/getChannelMessages`
+
+
+export const HIRING_ROUTES='api/hiring'
+export const GET_HIRING_INFO=`${HIRING_ROUTES}/analyze`
+export const POST_HIRING_INTO=`${HIRING_ROUTES}/create`

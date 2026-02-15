@@ -2,11 +2,12 @@ import mongoose from "mongoose";
 
 const hiringSchema = new mongoose.Schema({
   company: { type: String, required: true },
+  companyDiscription:{type:String,required:true},
   role: { type: String, required: true },
-  location: { type: String, default: "Remote" },
-  duration: { type: String },
-  stipend: { type: String },
-  rawDescription: { type: String },
+  location: { type: String, default: "Remote" ,required:true},
+  duration: { type: String,required:true },
+  stipend: { type: String ,required:true},
+  requirements:{type:String,required:true},
   // Important: Must be a Date type for TTL to work
   deadline: { 
     type: Date, 

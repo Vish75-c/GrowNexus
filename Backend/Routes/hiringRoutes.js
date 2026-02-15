@@ -4,7 +4,7 @@ import { parseHiringText,createHiringPost } from "../Controllers/hiringControlle
 const hiringRoutes = Router();
 
 // Route for AI processing
-hiringRoutes.post("/analyze", parseHiringText);
+hiringRoutes.post("/analyze",verifyToken, parseHiringText);
 
 // Route for saving to DB
 hiringRoutes.post("/create", verifyToken, createHiringPost);
