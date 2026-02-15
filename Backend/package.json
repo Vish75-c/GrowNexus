@@ -11,6 +11,8 @@
     "dev": "nodemon index.js"
   },
   "dependencies": {
+    "@langchain/groq": "^1.1.0",
+    "@langchain/openai": "^1.2.7",
     "bcrypt": "^6.0.0",
     "cloudinary": "^2.9.0",
     "cookie-parser": "^1.4.7",
@@ -18,10 +20,12 @@
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
+    "langchain": "^1.2.24",
     "mongoose": "^9.1.5",
     "multer": "^2.0.2",
     "nodemon": "^3.1.11",
     "router": "^2.2.0",
-    "socket.io": "^4.8.3"
+    "socket.io": "^4.8.3",
+    "zod": "^4.3.6"
   }
 }
