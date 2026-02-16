@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
   FiMapPin,
@@ -6,65 +6,29 @@ import {
   FiDollarSign,
   FiCalendar,
   FiCpu,
-  FiSend,
-  FiBookmark,
-  FiTerminal,
+  FiExternalLink, // Icon for apply button
   FiAward,
+  FiTerminal, // Icon for requirements
 } from "react-icons/fi";
+import apiClient from "@/lib/apiClient";
+import { GET_HIRING_POST } from "@/utils/Constant";
 
 const HiringPost = () => {
-  const jobs = [
-    {
-      _id: "699207ac2e4192dad8345144",
-      company: "Tesla",
-      companyDiscription:
-        "Tesla is accelerating the world's transition to sustainable energy. They specialize in electric vehicles and solar power.",
-      role: "Data Analyst",
-      location: "Austin, TX",
-      duration: "4-month internship",
-      stipend: "$40/hour",
-      requirements: "Python, SQL, and Tableau",
-      deadline: "2026-04-14T18:30:00.000Z",
-      userInfo: {
-        name: "Elon Musk",
-        image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Elon",
-        role: "Senior",
-      },
-    },
-    {
-      _id: "699207ac2e4192dad8345145",
-      company: "SpaceX",
-      companyDiscription:
-        "SpaceX designs, manufactures and launches advanced rockets and spacecraft to revolutionize space technology.",
-      role: "Software Engineer",
-      location: "Starbase, TX",
-      duration: "6-month internship",
-      stipend: "$55/hour",
-      requirements: "C++, Rust, Linux",
-      deadline: "2026-05-20T18:30:00.000Z",
-      userInfo: {
-        name: "Gwynne Shotwell",
-        image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Gwynne",
-        role: "Alumni",
-      },
-    },
-    {
-      _id: "699207ac2e4192dad8345146",
-      company: "Neuralink",
-      companyDiscription: "Brain-computer interface company.",
-      role: "Firmware Intern",
-      location: "Fremont, CA",
-      stipend: "$45/hour",
-      duration: "3 months",
-      requirements: "C, Assembly",
-      deadline: "2026-03-01T18:30:00.000Z",
-      userInfo: {
-        name: "Shivon Zilis",
-        image: "https://api.dicebear.com/7.x/avataaars/svg?seed=Shivon",
-        role: "Junior",
-      },
-    },
-  ];
+  const [jobs, setJobs] = useState([]);
+
+  useEffect(() => {
+    const GetHiringPost = async () => {
+      try {
+        const response = await apiClient.get(GET_HIRING_POST, { withCredentials: true });
+        if (response.status === 200) {
+          setJobs(response.data.jobs);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    GetHiringPost();
+  }, []);
 
   const getStatusStyle = (status) => {
     switch (status?.toLowerCase()) {
@@ -80,14 +44,13 @@ const HiringPost = () => {
   };
 
   return (
-    <div className="w-full h-full bg-[#1f202a] text-slate-400 font-sans px-4 lg:px-10 overflow-y-auto custom-scrollbar">
-      {/* FIXED HERE */}
+    <div className="w-full h-full bg-[#1f202a] text-slate-400 font-sans px-3 overflow-y-auto custom-scrollbar">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="max-w-7xl mx-auto pt-12 pb-20"
+        className="max-w-7xl mx-auto pb-20"
       >
-        <div className="mb-12">
+        <div className="mb-12 pt-8">
           <h1 className="text-5xl font-black text-white tracking-tighter">
             Opportunity <span className="text-blue-500">Feed</span>
           </h1>
@@ -97,7 +60,7 @@ const HiringPost = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-          {jobs.map((job) => (
+          {jobs.length > 0 && jobs.map((job) => (
             <motion.div
               key={job._id}
               whileHover={{ y: -8, transition: { duration: 0.2 } }}
@@ -107,30 +70,30 @@ const HiringPost = () => {
               <div className="p-8 pb-4 flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <img
-                    src={job.userInfo.image}
-                    alt=""
-                    className="h-12 w-12 rounded-2xl border border-slate-700 p-0.5"
+                    src={job.postedBy.image}
+                    alt="user-img"
+                    className="h-12 w-12 object-cover rounded-2xl border border-slate-700 p-0.5"
                   />
                   <div>
                     <p className="text-white text-xs font-black uppercase tracking-widest">
-                      {job.userInfo.name}
+                      {job.postedBy.firstName} {job.postedBy.lastName}
                     </p>
                     <span
                       className={`px-2.5 py-0.5 rounded-lg text-[9px] font-black uppercase border ${getStatusStyle(
-                        job.userInfo.role
+                        job.postedBy.role
                       )}`}
                     >
-                      {job.userInfo.role}
+                      {job.postedBy.role}
                     </span>
                   </div>
                 </div>
-                <FiAward />
+                <FiAward className="text-slate-700 group-hover:text-yellow-500 transition-colors" />
               </div>
-              {/* Description - Given more space in 2-col */}
-                
+
+              {/* Main Content */}
               <div className="px-8 pb-8 flex flex-col h-full">
-                <div className="mb-8">
-                  <h3 className="text-3xl font-black text-white">
+                <div className="mb-6">
+                  <h3 className="text-3xl font-black text-white line-clamp-1">
                     {job.role}
                   </h3>
                   <div className="flex items-center gap-2">
@@ -140,35 +103,40 @@ const HiringPost = () => {
                     </p>
                   </div>
                   <div className="mt-4">
-                   <p className="text-slate-400 text-sm leading-relaxed font-medium line-clamp-3 italic border-l-2 border-slate-800 ">
-                     "{job.companyDiscription}"
+                    <p className="text-slate-400 text-sm leading-relaxed font-medium line-clamp-2 italic border-l-2 border-slate-800 pl-4">
+                      "{job.companyDiscription}"
+                    </p>
+                  </div>
+                </div>
+
+                {/* Requirements Section */}
+                <div className="mb-6">
+                   <div className="flex items-center gap-2 mb-2">
+                     <FiTerminal size={12} className="text-purple-500"/>
+                     <span className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Technical Stack</span>
+                   </div>
+                   <p className="text-xs text-slate-300 font-bold bg-[#1f202a]/40 p-3 rounded-xl border border-slate-800/50">
+                     {job.requirements}
                    </p>
                 </div>
-                </div>
-                
-                {/* FIXED: use DetailPill instead of DetailBox */}
+
+                {/* Quick Specs Grid */}
                 <div className="grid grid-cols-2 gap-4 mb-8">
-                  <DetailPill
-                    icon={<FiMapPin />}
-                    label="Location"
-                    value={job.location}
-                  />
-                  <DetailPill
-                    icon={<FiDollarSign />}
-                    label="Compensation"
-                    value={job.stipend}
-                  />
-                  <DetailPill
-                    icon={<FiClock />}
-                    label="Duration"
-                    value={job.duration}
-                  />
-                  <DetailPill
-                    icon={<FiCalendar />}
-                    label="Deadline"
-                    value={new Date(job.deadline).toLocaleDateString()}
-                  />
+                  <DetailPill icon={<FiMapPin />} label="Location" value={job.location} />
+                  <DetailPill icon={<FiDollarSign />} label="Stipend" value={job.stipend} />
+                  <DetailPill icon={<FiClock />} label="Duration" value={job.duration} />
+                  <DetailPill icon={<FiCalendar />} label="Deadline" value={new Date(job.deadline).toLocaleDateString()} />
                 </div>
+
+                {/* --- APPLY BUTTON --- */}
+                <a
+                  href={job.applyLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full bg-blue-600 hover:bg-blue-500 text-white font-black uppercase text-xs tracking-[0.2em] py-4 rounded-2xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-blue-900/20 active:scale-[0.98]"
+                >
+                  Apply Now <FiExternalLink />
+                </a>
               </div>
             </motion.div>
           ))}
@@ -184,7 +152,7 @@ const DetailPill = ({ icon, label, value }) => (
       {label}
     </p>
     <div className="flex items-center gap-2 text-slate-300">
-      {icon}
+      <span className="text-blue-500">{icon}</span>
       <span className="text-[10px] font-bold truncate">{value}</span>
     </div>
   </div>

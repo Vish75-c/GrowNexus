@@ -14,6 +14,10 @@ const parser = StructuredOutputParser.fromZodSchema(
     duration: z.string().optional(),
     stipend: z.string().optional(),
     deadline: z.string(),
+    // --- ADDED APPLY LINK TO SCHEMA ---
+    applyLink: z.string().describe(
+      "The URL or link where candidates can apply. If multiple links exist, choose the most direct portal."
+    ),
     requirements: z.string().describe(
       "A clear string of required skills or qualifications, separated by commas if multiple."
     ),
@@ -36,10 +40,12 @@ Extract job info and return ONLY JSON.
 IMPORTANT RULES:
 - companyDiscription must describe what the company does (e.g., "Google is a tech giant specializing in search engines and AI.")
 - requirements must be a concise string of skills (e.g., "React, Node.js, TypeScript, and Problem Solving.")
+- applyLink: Search for URLs, Google Form links, or career portal links. 
 - DO NOT write: "is hiring", "looking for", "our company"
 - Write factual info only
 - 3 short lines only for companyDiscription
-- if not found return empty Strings
+- If a field is not found return an empty string ""
+- deadline in dd MonthName YYYY format if not then return empty string
 
 {format_instructions}
 
@@ -62,15 +68,17 @@ Job Text:
 
     const parsed = await parser.parse(content.trim());
 
+    // --- MAPPING THE RESULT ---
     const result = {
-      company: parsed.company,
-      companyDiscription: parsed.companyDiscription,
-      role: parsed.role,
-      requirements: parsed.requirements || "", // Added requirements here
+      company: parsed.company || "",
+      companyDiscription: parsed.companyDiscription || "",
+      role: parsed.role || "",
+      requirements: parsed.requirements || "",
       location: parsed.location || "Remote",
       duration: parsed.duration || "",
       stipend: parsed.stipend || "",
-      deadline: parsed.deadline,
+      deadline: parsed.deadline || "",
+      applyLink: parsed.applyLink || "", // Ensure this is mapped
     };
 
     return result;
