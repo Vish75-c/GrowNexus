@@ -20,6 +20,7 @@ import HiringPost from "./pages/Hiring/HiringPost";
 import ShareExperience from "./pages/Blog/ShareExperience";
 import Feed from "./pages/Blog/Feed";
 import MyPost from "./pages/Blog/My-Post";
+
 const PrivateRoute = ({ children }) => {
   const { userInfo } = useAppStore();
   if (!userInfo) return <Navigate to="/auth" />;
@@ -107,7 +108,7 @@ const App = () => {
           <Route path="share-experience" element={<ShareExperience />} />
           <Route path="feed" element={<Feed/>}/>
           <Route path="my-post" element={<MyPost/>}/>
-
+          
           
           <Route path="post-opportunity" element={<PostOpportunity/>}/>
           <Route path="hiring-post" element={<HiringPost/>}/>
