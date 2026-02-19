@@ -40,10 +40,11 @@ const ShareExperience = () => {
     setLoading(true);
     try {
       const res = await apiClient.post(CREATE_BLOG_ROUTE, { title, content, tags, bannerImage: bannerPreview }, { withCredentials: true });
-      if (res.status === 201) {
+      if (res.status === 200) {
         toast.success("Post Broadcasted!");
         setTitle(""); setContent(""); setTags([]); setBannerPreview(null);
       }
+      console.log(res);
     } catch (err) {
       toast.error("Broadcast failed.");
     } finally { setLoading(false); }
@@ -51,9 +52,8 @@ const ShareExperience = () => {
 
   return (
     <div className="w-full min-h-screen bg-[#1f202a] text-slate-400 p-6 overflow-y-auto custom-scrollbar">
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
+      <div 
+        
         className="max-w-5xl mx-auto pt-10 pb-20"
       >
         {/* Header - Matching your Hiring Dashboard style */}
@@ -170,7 +170,7 @@ const ShareExperience = () => {
 
           </div>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 };

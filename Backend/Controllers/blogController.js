@@ -4,14 +4,15 @@ import mongoose from "mongoose";
 export const createBlog = async (req, res) => {
   try {
     const { title, content, bannerImage, tags } = req.body;
+    console.log(req.body);
     const newBlog = await Blog.create({
       title,
       content,
       bannerImage,
-      tags: tags ? tags.split(",").map(tag => tag.trim()) : [],
-      author: req.userId, // Provided by your Auth Middleware
+      tags: tags.length>0?tags: [],
+      author: req.user, // Provided by your Auth Middleware
     });
-    res.status(201).json({ blog: newBlog });
+    res.status(200).json({ blog: newBlog });
   } catch (error) {
     res.status(500).json({ message: "Error creating blog", error });
   }
