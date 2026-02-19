@@ -30,3 +30,8 @@ export const HIRING_ROUTES='api/hiring'
 export const GET_HIRING_INFO=`${HIRING_ROUTES}/analyze`
 export const POST_HIRING_INTO=`${HIRING_ROUTES}/create`
 export const GET_HIRING_POST=`${HIRING_ROUTES}/getHiringpost`
+
+export const BLOG_ROUTES='api/blog'
+export const GET_ALL_BLOG_ROUTE=`${BLOG_ROUTES}/all-blogs`;
+export const CREATE_BLOG_ROUTE=`${BLOG_ROUTES}/create-blog`
+export const MY_BLOG_POST_ROUTE=`${BLOG_ROUTES}/my-post`

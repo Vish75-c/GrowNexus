@@ -9,6 +9,7 @@ import { SetupSocket } from "./Socket.js";
 import messageRoute from "./Routes/messageRoute.js";
 import channelRoutes from "./Routes/channelRoutes.js";
 import hiringRoutes from "./Routes/hiringRoutes.js";
+import blogRoutes from "./Routes/blogRoutes.js";
 dotenv.config();
 const port=process.env.PORT||3003
 const app=express();
@@ -29,6 +30,7 @@ app.use('/api/contact',contactRoutes);
 app.use('/api/message',messageRoute)
 app.use('/api/channel',channelRoutes)
 app.use('/api/hiring',hiringRoutes)
+app.use('/api/blog',blogRoutes);
 const server=app.listen(port,()=>{
     console.log(`Server is Running at port ${port}`);
 })

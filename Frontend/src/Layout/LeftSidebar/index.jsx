@@ -104,9 +104,9 @@ const LeftSidebar = ({ setIsOpen }) => {
         <NavItem to="/main/message" icon={FiMessageSquare} label="Messages" />
 
         <SectionHeader label="Knowledge" />
-        <NavItem to="/main/blogs" icon={FiLayers} label="All Blogs" />
-        <NavItem to="/blogs/my-blogs" icon={FiFileText} label="My Blogs" />
-        <NavItem to="/blogs/create" icon={FiEdit3} label="Create Blog" />
+        <NavItem to="/main/feed" icon={FiLayers} label="Feed" />
+        <NavItem to="/main/my-post" icon={FiFileText} label="My Posts" />
+        <NavItem to="/main/share-experience" icon={FiEdit3} label="Share Experience" />
 
         <SectionHeader label="Careers" />
         <NavItem to="/main/hiring-post" icon={FiBriefcase} label="Hiring Post" />

@@ -18,6 +18,9 @@ import EmptyContainer from "./pages/EmptyContainer";
 import Contact from "./pages/Contact";
 import PostOpportunity from "./pages/Hiring/PostOpportunity";
 import HiringPost from "./pages/Hiring/HiringPost";
+import ShareExperience from "./pages/Blog/ShareExperience";
+import Feed from "./pages/Blog/Feed";
+import MyPost from "./pages/Blog/My-Post";
 const PrivateRoute = ({ children }) => {
   const { userInfo } = useAppStore();
   if (!userInfo) return <Navigate to="/auth" />;
@@ -102,8 +105,11 @@ const App = () => {
           <Route path="message" element={<Chat />} />
           <Route path="find" element={<Find />} />
 
-          <Route path="blogs" element={<Blog />} />
+          <Route path="share-experience" element={<ShareExperience />} />
+          <Route path="feed" element={<Feed/>}/>
+          <Route path="my-post" element={<MyPost/>}/>
 
+          
           <Route path="post-opportunity" element={<PostOpportunity/>}/>
           <Route path="hiring-post" element={<HiringPost/>}/>
           <Route path="docs" element={<Documentation/>}/>
