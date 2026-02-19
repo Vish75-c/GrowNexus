@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Auth from "./pages/Auth";
 import Profile from "./pages/Profile";
-import Blog from "./pages/Blog";
 import MyProfile from "./pages/MyProfile";
 import Dashboard from "./pages/Dashboard";
 import apiClient from "./lib/apiClient";
