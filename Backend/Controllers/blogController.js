@@ -56,7 +56,7 @@ export const getAllBlogs = async (req, res) => {
       .populate("author", "firstName lastName image role")
       .populate("comments.user", "firstName lastName image")
       .sort({ createdAt: sortOrder });
-
+      console.log(blogs);
     res.status(200).json({ blogs });
   } catch (error) {
     res.status(500).json({ message: "Error fetching blogs", error });
@@ -69,23 +69,41 @@ export const getAllBlogs = async (req, res) => {
 export const toggleLike = async (req, res) => {
   try {
     const { blogId } = req.params;
-    const blog = await Blog.findById(blogId);
 
-    if (blog.likes.includes(req.userId)) {
-      // Unlike
-      blog.likes = blog.likes.filter(id => id.toString() !== req.userId);
+    const blog = await Blog.findById(blogId);
+    if (!blog) {
+      return res.status(404).json({ message: "Blog not found" });
+    }
+
+    const userId = req.user?.toString();
+    if (!userId) {
+      return res.status(400).json({ message: "User not found in request" });
+    }
+
+    // Remove null values first
+    blog.likes = blog.likes.filter(id => id != null);
+
+    const alreadyLiked = blog.likes.some(
+      id => id.toString() === userId
+    );
+
+    if (alreadyLiked) {
+      blog.likes = blog.likes.filter(
+        id => id.toString() !== userId
+      );
     } else {
-      // Like
-      blog.likes.push(req.userId);
+      blog.likes.push(userId);
     }
 
     await blog.save();
+
     res.status(200).json({ likes: blog.likes });
+
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: "Error liking blog" });
   }
 };
-
 // 5. Post a Comment
 export const addComment = async (req, res) => {
   try {
@@ -93,7 +111,7 @@ export const addComment = async (req, res) => {
     const { text } = req.body;
 
     const blog = await Blog.findById(blogId);
-    blog.comments.push({ user: req.userId, text });
+    blog.comments.push({ user: req.user, text });
 
     await blog.save();
 

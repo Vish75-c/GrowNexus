@@ -46,7 +46,7 @@ const Feed = () => {
             <Loader2 className="animate-spin text-blue-500" size={40} />
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
             {posts.map((post) => (
               <PostCard key={post._id} post={post} />
             ))}

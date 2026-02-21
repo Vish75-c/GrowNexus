@@ -20,6 +20,7 @@ import HiringPost from "./pages/Hiring/HiringPost";
 import ShareExperience from "./pages/Blog/ShareExperience";
 import Feed from "./pages/Blog/Feed";
 import MyPost from "./pages/Blog/My-Post";
+import FeedCard from "./pages/Blog/FeedCard";
 
 const PrivateRoute = ({ children }) => {
   const { userInfo } = useAppStore();
@@ -108,7 +109,7 @@ const App = () => {
           <Route path="share-experience" element={<ShareExperience />} />
           <Route path="feed" element={<Feed/>}/>
           <Route path="my-post" element={<MyPost/>}/>
-          
+          <Route path="feed/:id" element={<FeedCard/>}/>
           
           <Route path="post-opportunity" element={<PostOpportunity/>}/>
           <Route path="hiring-post" element={<HiringPost/>}/>

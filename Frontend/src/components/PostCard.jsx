@@ -1,22 +1,28 @@
 import { Badge } from "@/components/ui/badge";
+import { useAppStore } from "@/store";
 import { Calendar, Clock, Heart, MessageCircle } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const PostCard = ({ post }) => {
   const banner = post.bannerImage || post.banner;
   const date = post.createdAt ? new Date(post.createdAt).toLocaleDateString() : "";
   const likesCount = Array.isArray(post.likes) ? post.likes.length : 0;
   const commentsCount = Array.isArray(post.comments) ? post.comments.length : 0;
-
+  const navigate=useNavigate();
   // strip HTML from content for excerpt and compute read time
   const plainText = post.content ? post.content.replace(/<[^>]+>/g, "") : "";
   const excerpt = plainText ? (plainText.length > 120 ? plainText.slice(0, 120) + "..." : plainText) : "";
   const words = plainText ? plainText.trim().split(/\s+/).filter(Boolean).length : 0;
   const readTime = post.readTime || `${Math.max(1, Math.ceil(words / 200))} min read`;
-
+  const {setPost}=useAppStore();
+  const handleCardClick=()=>{
+    setPost(post);
+    navigate(`/main/feed/${post._id}`);
+  }
   return (
-    <div className="bg-[#292b36] border border-slate-800 rounded-[2rem] overflow-hidden hover:border-blue-500/30 transition-all group">
+    <div onClick={handleCardClick} className="bg-[#292b36] border border-slate-800 rounded-[2rem] overflow-hidden hover:border-blue-500/30 transition-all group">
       {banner && (
-        <div className="h-48 overflow-hidden">
+        <div className="h-60 overflow-hidden">
           <img
             src={banner}
             alt={post.title}
