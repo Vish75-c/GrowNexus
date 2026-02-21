@@ -81,12 +81,12 @@ const Documentation = () => {
 
           {/* Quick Stats */}
           <div className="grid grid-cols-2 gap-4 w-full md:w-auto">
-            <div className="bg-[#292b36] p-5 rounded-2xl border border-slate-800 shadow-xl min-w-[140px]">
+            <div className="bg-[#292b36] p-5 rounded-2xl border border-slate-800 shadow-xl min-w-35">
               <FiStar className="text-amber-500 mb-2" size={20}/>
               <p className="text-white font-black text-xl">500+</p>
               <p className="text-[10px] uppercase font-bold text-slate-500 tracking-widest">Mentors</p>
             </div>
-            <div className="bg-[#292b36] p-5 rounded-2xl border border-slate-800 shadow-xl min-w-[140px]">
+            <div className="bg-[#292b36] p-5 rounded-2xl border border-slate-800 shadow-xl min-w-35">
               <FiAward className="text-blue-500 mb-2" size={20}/>
               <p className="text-white font-black text-xl">1.2k</p>
               <p className="text-[10px] uppercase font-bold text-slate-500 tracking-widest">Referrals</p>
@@ -135,7 +135,7 @@ const Documentation = () => {
       {userInfo.role === 'alumni' && (
         <motion.div 
           variants={itemVariants}
-          className="mt-20 p-10 rounded-[3rem] bg-gradient-to-br from-blue-600/10 via-[#292b36] to-transparent border border-blue-500/20 flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden"
+          className="mt-20 p-10 rounded-[3rem] bg-linear-to-br from-blue-600/10 via-[#292b36] to-transparent border border-blue-500/20 flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden"
         >
           {/* Decorative Background Icon */}
           <FiBriefcase className="absolute -bottom-10 -left-10 text-blue-500/5 rotate-12" size={200} />
