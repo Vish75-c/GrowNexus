@@ -1,27 +1,54 @@
 import Blog from "../Models/BlogModel.js";
 import mongoose from "mongoose";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 // 1. Create a New Blog
 export const createBlog = async (req, res) => {
   try {
-    const { title, content, bannerImage, tags } = req.body;
-    console.log(req.body);
+    const { title, content, tags } = req.body;
+    let bannerImageUrl = "";
+
+    // if file exists
+    if (req.file) {
+      const localFilePath = req.file.path;
+      console.log(localFilePath,"visited");
+      const cloudResult = await uploadOnCloudinary(localFilePath);
+
+      if (!cloudResult) {
+        return res.status(500).json({ ok: false, message: "Upload failed" });
+      } 
+ 
+      bannerImageUrl = cloudResult.url;
+    }
+
     const newBlog = await Blog.create({
       title,
       content,
-      bannerImage,
-      tags: tags.length>0?tags: [],
-      author: req.user, // Provided by your Auth Middleware
+      bannerImage: bannerImageUrl, // save cloudinary url
+      tags: tags ? JSON.parse(tags) : [],
+      author: req.user,
     });
+    console.log(newBlog);
     res.status(200).json({ blog: newBlog });
+
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: "Error creating blog", error });
   }
 };
+export const getMyBlogs = async (req, res) => {
+  try {
+    const blogs = await Blog.find({ author: req.userId })
+      .sort({ createdAt: -1 });
+    res.status(200).json({ blogs });
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching your blogs", error });
+  }
+};
 
-// 2. Get All Blogs (with Sorting)
+//  Get All Blogs (with Sorting)
 export const getAllBlogs = async (req, res) => {
   try {
-    const { sort } = req.query; 
+    const { sort } = req.query;
     // Latest = -1 (Descending), Oldest = 1 (Ascending)
     const sortOrder = sort === "oldest" ? 1 : -1;
 
@@ -36,23 +63,14 @@ export const getAllBlogs = async (req, res) => {
   }
 };
 
-// 3. Get User's Own Blogs
-export const getMyBlogs = async (req, res) => {
-  try {
-    const blogs = await Blog.find({ author: req.userId })
-      .sort({ createdAt: -1 });
-    res.status(200).json({ blogs });
-  } catch (error) {
-    res.status(500).json({ message: "Error fetching your blogs", error });
-  }
-};
+
 
 // 4. Toggle Like (Add or Remove)
 export const toggleLike = async (req, res) => {
   try {
     const { blogId } = req.params;
     const blog = await Blog.findById(blogId);
-    
+
     if (blog.likes.includes(req.userId)) {
       // Unlike
       blog.likes = blog.likes.filter(id => id.toString() !== req.userId);
@@ -60,7 +78,7 @@ export const toggleLike = async (req, res) => {
       // Like
       blog.likes.push(req.userId);
     }
-    
+
     await blog.save();
     res.status(200).json({ likes: blog.likes });
   } catch (error) {
@@ -76,9 +94,9 @@ export const addComment = async (req, res) => {
 
     const blog = await Blog.findById(blogId);
     blog.comments.push({ user: req.userId, text });
-    
+
     await blog.save();
-    
+
     // Return the updated blog with populated users for the UI
     const updatedBlog = await Blog.findById(blogId).populate("comments.user", "firstName lastName image");
     res.status(200).json({ comments: updatedBlog.comments });

@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { verifyToken } from "../middleware/authMiddleware.js";
 import { getAllBlogs,createBlog,getMyBlogs,toggleLike,addComment } from "../Controllers/blogController.js";
+import { upload } from "../middleware/multerMiddleware.js";
 
 
 const blogRoutes = Router();
@@ -9,7 +10,7 @@ const blogRoutes = Router();
 blogRoutes.get("/all-blogs", verifyToken, getAllBlogs);
 
 // Personal routes
-blogRoutes.post("/create-blog", verifyToken, createBlog);
+blogRoutes.post("/create-blog", verifyToken,upload.single("image"), createBlog);
 blogRoutes.get("/my-post", verifyToken, getMyBlogs);
 
 // Interaction routes
