@@ -38,37 +38,45 @@ const NoticeBoard = () => {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.1 }
+      transition: { 
+        staggerChildren: 0.15,
+        delayChildren: 0.2 
+      }
     }
   };
 
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
-    visible: { y: 0, opacity: 1, transition: { type: "spring", stiffness: 100 } }
+    visible: { 
+      y: 0, 
+      opacity: 1, 
+      transition: { type: "spring", stiffness: 100, damping: 15 } 
+    }
   };
 
   return (
-    <div className="w-full h-full bg-[#1f202a] text-slate-400 font-sans px-3  overflow-y-auto custom-scrollbar">
+    <div className="w-full h-full bg-[#1f202a] text-slate-400 font-sans px-3 overflow-y-auto custom-scrollbar">
       <motion.div 
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="max-w-5xl mx-auto  pb-20"
+        className="mx-auto mb-15 mt-10"
       >
         {/* --- HEADER --- */}
         <motion.div variants={itemVariants} className="text-center mb-12">
           <h1 className="text-4xl font-black text-white tracking-tight">
-            System <span className="text-blue-500">Notices</span>
+            System <span className="text-blue-600 italic">Notices</span>
           </h1>
           <p className="text-slate-500 text-sm mt-3 max-w-md mx-auto font-medium">
             Important updates and announcements regarding the GrowthNexus ecosystem.
           </p>
         </motion.div>
 
-        {/* --- QUICK STATS (Like Contact Badges) --- */}
+        {/* --- QUICK STATS --- */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
           <motion.div 
             variants={itemVariants}
+            whileHover={{ scale: 1.02, translateY: -2 }}
             className="bg-[#292b36] p-5 rounded-2xl border border-slate-800 flex items-center gap-5 shadow-xl"
           >
             <div className="h-12 w-12 shrink-0 bg-blue-500/10 rounded-xl flex items-center justify-center text-blue-500">
@@ -82,6 +90,7 @@ const NoticeBoard = () => {
 
           <motion.div 
             variants={itemVariants}
+            whileHover={{ scale: 1.02, translateY: -2 }}
             className="bg-[#292b36] p-5 rounded-2xl border border-slate-800 flex items-center gap-5 shadow-xl"
           >
             <div className="h-12 w-12 shrink-0 bg-purple-500/10 rounded-xl flex items-center justify-center text-purple-500">
@@ -106,8 +115,9 @@ const NoticeBoard = () => {
 
             <div className="divide-y divide-slate-800/50">
               {notices.map((notice) => (
-                <div 
+                <motion.div 
                   key={notice.id}
+                  variants={itemVariants}
                   className="p-8 hover:bg-[#1f202a]/30 transition-all duration-300 group cursor-default"
                 >
                   <div className="flex flex-wrap items-center gap-3 mb-4">
@@ -133,23 +143,29 @@ const NoticeBoard = () => {
                         {notice.content}
                       </p>
                     </div>
-                    <button className="h-10 w-10 rounded-xl bg-[#1f202a] flex items-center justify-center text-slate-600 group-hover:text-blue-500 group-hover:border-blue-500/30 border border-slate-800 transition-all">
+                    <motion.button 
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      className="h-10 w-10 rounded-xl bg-[#1f202a] flex items-center justify-center text-slate-600 group-hover:text-blue-500 group-hover:border-blue-500/30 border border-slate-800 transition-all"
+                    >
                       <FiChevronRight size={18} />
-                    </button>
+                    </motion.button>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
 
             {/* CARD FOOTER */}
             <div className="p-6 bg-[#1f202a]/20 text-center">
-               <button className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-600 hover:text-slate-400 transition-colors">
+               <motion.button 
+                whileHover={{ letterSpacing: "0.25em", color: "#94a3b8" }}
+                className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-600 transition-all"
+               >
                  Load Archive History
-               </button>
+               </motion.button>
             </div>
           </div>
         </motion.div>
-
       </motion.div>
     </div>
   );

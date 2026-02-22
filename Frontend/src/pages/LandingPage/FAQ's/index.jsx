@@ -44,7 +44,7 @@ const FAQs = () => {
       <div className="w-full max-w-5xl">
         {/* Header */}
         <header className="text-center mb-10">
-          <h2 className="font-extrabold text-2xl sm:text-3xl md:text-5xl text-slate-900 tracking-tight leading-tight">
+          <h2 className="font-extrabold text-2xl sm:text-3xl md:text-5xl  tracking-tight leading-tight">
             Frequently Asked{" "}
             <span className="text-blue-600 italic">Questions</span>
           </h2>

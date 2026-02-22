@@ -59,7 +59,7 @@ const Documentation = () => {
       initial="hidden"
       animate="visible"
       variants={containerVariants}
-      className="max-w-6xl mx-auto font-sans px-6 md:px-3"
+      className="mt-10 mb-15 mx-auto font-sans px-3 "
     >
       {/* --- HEADER --- */}
       <motion.div variants={itemVariants} className="mb-20">
@@ -72,7 +72,7 @@ const Documentation = () => {
               <span className="text-blue-500 font-black tracking-[0.3em] text-[10px] uppercase">Platform Manifesto</span>
             </div>
             <h1 className="text-5xl font-black text-white tracking-tighter mb-6">
-              Empowering <span className="text-slate-500 italic">Tomorrow's</span> Leaders.
+              Empowering <span className="text-blue-600 italic">Tomorrow's</span> Leaders.
             </h1>
             <p className="text-slate-400 text-lg leading-relaxed font-medium">
               GrowthNexus is more than a tool—it's a career engine. Whether you're here to learn or lead, here is how we accelerate professional journeys.
