@@ -65,6 +65,7 @@ Each feature opens in its **own optimized layout**.
   - Message window
   - Last message preview
 - **No read/unread receipts** in MVP (intentional to reduce complexity)
+- Group chats / community channels
 
 ---
 
@@ -103,12 +104,15 @@ Each feature opens in its **own optimized layout**.
 - React.js
 - Tailwind CSS
 - React Router
+- Framer Motion
+- shad-CN
 
 ### Backend
 - Node.js
 - Express.js
 - MongoDB (Mongoose)
 - WebSockets (Socket.io)
+- Langchain (ollama)
 
 ### Authentication
 - JWT-based authentication
@@ -142,7 +146,6 @@ Each feature opens in its **own optimized layout**.
 
 ## 🌱 Future Enhancements
 
-- Group chats / community channels
 - Advanced search & recommendation system
 - Read/unread indicators
 - Notifications system
