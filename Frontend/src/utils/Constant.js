@@ -35,3 +35,4 @@ export const BLOG_ROUTES='api/blog'
 export const GET_ALL_BLOG_ROUTE=`${BLOG_ROUTES}/all-blogs`;
 export const CREATE_BLOG_ROUTE=`${BLOG_ROUTES}/create-blog`
 export const MY_BLOG_POST_ROUTE=`${BLOG_ROUTES}/my-post`
+export const GET_DASHBOARD_ROUTE=`${BLOG_ROUTES}/dashboardblog`

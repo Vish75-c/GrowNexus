@@ -96,7 +96,7 @@ const LeftSidebar = ({ setIsOpen }) => {
       >
         <SectionHeader label="Overview" />
         <NavItem to="/main/dashboard" icon={FiGrid} label="Dashboard" />
-        <NavItem to="/main/release-notes" icon={FiList} label="Release Notes" />
+        
         <NavItem to="/main/profile" icon={FiUser} label="My Profile" />
 
         <SectionHeader label="Mentorship" />

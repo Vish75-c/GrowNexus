@@ -137,12 +137,12 @@ const FeedCard = () => {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="max-w-3xl mx-auto my-8"
+      className="max-w-5xl mx-auto "
     >
       <motion.article
         variants={cardVariants}
         whileHover="hover"
-        className="overflow-hidden border border-slate-800 bg-[#1e2028] rounded-[2rem] shadow-2xl"
+        className="overflow-hidden border mt-10 mb-15 border-slate-800 bg-[#1e2028] rounded-[2rem] shadow-2xl"
       >
         {/* Visual Header / Banner - Using itemVariants for stagger */}
         {post.bannerImage && (

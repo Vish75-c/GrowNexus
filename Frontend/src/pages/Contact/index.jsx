@@ -39,14 +39,14 @@ const Contact = () => {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="max-w-4xl mx-auto" 
+        className=" mx-auto" 
       >
         {/* --- HEADER --- */}
-        <motion.div variants={itemVariants} className="text-center mb-12">
+        <motion.div variants={itemVariants} className=" mb-12">
           <h1 className="text-4xl font-black text-white tracking-tight">
             Get in <span className="text-blue-600 italic">Touch</span>
           </h1>
-          <p className="text-slate-500 text-sm mt-3 max-w-md mx-auto font-medium leading-relaxed">
+          <p className="text-slate-500 text-sm mt-3 max-w-md  font-medium leading-relaxed">
             Have a question or want to join our mentor network? Drop us a message below.
           </p>
         </motion.div>

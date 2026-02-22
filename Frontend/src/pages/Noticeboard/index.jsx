@@ -63,11 +63,11 @@ const NoticeBoard = () => {
         className="mx-auto mb-15 mt-10"
       >
         {/* --- HEADER --- */}
-        <motion.div variants={itemVariants} className="text-center mb-12">
+        <motion.div variants={itemVariants} className=" mb-12">
           <h1 className="text-4xl font-black text-white tracking-tight">
             System <span className="text-blue-600 italic">Notices</span>
           </h1>
-          <p className="text-slate-500 text-sm mt-3 max-w-md mx-auto font-medium">
+          <p className="text-slate-500 text-sm mt-3 max-w-md  font-medium">
             Important updates and announcements regarding the GrowthNexus ecosystem.
           </p>
         </motion.div>
