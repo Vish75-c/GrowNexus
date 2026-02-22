@@ -13,7 +13,8 @@ export const CONTACT_ROUTES=`api/contact`
 export const SEARCH_CONTACT_ROUTE=`${CONTACT_ROUTES}/searchContacts`
 export const GET_DM_CONTACT_ROUTE=`${CONTACT_ROUTES}/getDmContact`
 export const GET_ALL_CONTACTS_ROUTE=`${CONTACT_ROUTES}/getAllContact`
-
+export const GET_DASHBOARD_SENIOR_ROUTE=`${CONTACT_ROUTES}/dashboardsenior`
+export const GET_DASHBOARD_DM_ROUTE=`${CONTACT_ROUTES}/dashboardcontact`
 
 export const MESSAGE_ROUTES=`api/message`
 export const GET_MESSAGE_ROUTE=`${MESSAGE_ROUTES}/getMessages`
@@ -30,6 +31,7 @@ export const HIRING_ROUTES='api/hiring'
 export const GET_HIRING_INFO=`${HIRING_ROUTES}/analyze`
 export const POST_HIRING_INTO=`${HIRING_ROUTES}/create`
 export const GET_HIRING_POST=`${HIRING_ROUTES}/getHiringpost`
+export const GET_DASHBOARD_HIRING_POST=`${HIRING_ROUTES}/dashboardpost`
 
 export const BLOG_ROUTES='api/blog'
 export const GET_ALL_BLOG_ROUTE=`${BLOG_ROUTES}/all-blogs`;

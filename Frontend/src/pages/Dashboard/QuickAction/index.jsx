@@ -68,7 +68,7 @@ const QuickAction = () => {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid  grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       {actions.map((action, i) => {
         const Icon = action.icon;
         const BgIcon = action.bgIcon;
@@ -82,7 +82,7 @@ const QuickAction = () => {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             transition={{ delay: i * 0.08, duration: 0.4 }}
-            className={`group relative flex flex-col h-full overflow-hidden rounded-[2rem] bg-[#1f202a] p-8 border border-slate-800 transition-all duration-500 shadow-xl ${action.hoverBorder}`}
+            className={`group relative flex flex-col h-full overflow-hidden rounded-[2rem] bg-[#292b36] p-6 border border-slate-800 transition-all duration-500 shadow-xl ${action.hoverBorder}`}
           >
             {/* --- ABSTRACT BACKGROUND ICON --- */}
             <div className="absolute -right-4 -top-4 pointer-events-none transition-transform duration-700 group-hover:scale-125 group-hover:rotate-12">
@@ -97,7 +97,7 @@ const QuickAction = () => {
             </div>
 
             {/* Text Content */}
-            <div className="text-left mt-8 relative z-10">
+            <div className="text-left mt-8 relative z-10 ">
               <p className="font-display font-bold text-white text-xl tracking-tight">
                 {action.label}
               </p>
@@ -107,7 +107,7 @@ const QuickAction = () => {
             </div>
 
             {/* Footer / Arrow */}
-            <div className="mt-auto pt-6 flex justify-end">
+            <div className="mt-auto  flex justify-end">
                 <div className="p-2 rounded-full bg-slate-800/50 group-hover:bg-blue-500/20 transition-colors">
                     <ChevronRight className="h-4 w-4 text-slate-500 group-hover:text-white group-hover:translate-x-1 transition-all" />
                 </div>

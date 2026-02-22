@@ -11,7 +11,7 @@ export const searchContacts = async (req, res) => {
             /[.*+?^${}()|[\]\\]/g, "\\$&"
         );
         const regex = new RegExp(sanitizedSearchTerm, 'i');
-        const raw= await User.find({
+        const raw = await User.find({
             $and: [
                 { _id: { $ne: req.user } },
                 {
@@ -19,7 +19,7 @@ export const searchContacts = async (req, res) => {
                 }
             ]
         })
-        const contacts=await raw.filter((contact)=>contact.profileSetup===true);
+        const contacts = await raw.filter((contact) => contact.profileSetup === true);
         return res.status(200).json({ contacts });
     } catch (error) {
         return res.status(500).send("Server Error");
@@ -86,49 +86,120 @@ export const getDmContact = async (req, res) => {
         return res.status(500).send("Server error");
     }
 }
+export const DashboardDmContact = async (req, res) => {
+    try {
+        let userId = req.user;
+        // console.log(userId);
+        userId = new mongoose.Types.ObjectId(userId);
+        // console.log(userId,"visited");
+        const contacts = await Message.aggregate([
+            {
+                $match: {
+                    $or: [{ sender: userId }, { recipient: userId }],
+                }
+            },
+            {
+                $sort: { timestamp: -1 },
+            },
+            {
+                $group: {
+                    _id: {
+                        $cond: {
+                            if: { $eq: ['$sender', userId] },
+                            then: "$recipient",
+                            else: "$sender"
+                        }
+                    },
+                    lastMessageTime: { $first: "$timestamp" }
+                }
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "_id",
+                    foreignField: "_id",
+                    as: "contactInfo"
+                }
+            },
+            {
+                $unwind: "$contactInfo"
+            },
+            {
+                $project: {
+                    _id: 1,
+                    lastMessageTime: 1,
+                    email: '$contactInfo.email',
+                    firstName: '$contactInfo.firstName',
+                    lastName: '$contactInfo.lastName',
+                    image: '$contactInfo.image',
+                    color: '$contactInfo.color'
+                }
+            },
+            {
+                $sort: { lastMessageTime: -1 },
+            },
+        ]);
+        const chats=contacts.splice(0,3);
+        // console.log(contacts,'Visited');
+        return res.status(200).json({ chats });
+    } catch (error) {
+        return res.status(500).send("Server error");
+    }
+}
+export const dashboardSenior = async (req, res) => {
+    try {
+        const user = await User.find();
+        console.log(user);
+        const senior = user
+            .filter(u => u.role!=='junior')
+            .slice(0, 3); return res.status(200).json({ senior });
 
+    } catch (error) {
+        return res.status(500).send("Server Error");
+    }
+}
 export const findMentors = async (req, res) => {
-  try {
-    const userId=req.user;
-    const { skills, searchTerm } = req.query;
-    console.log(skills,searchTerm);
-    // 1. Base query: only find users who can actually be mentors
-    let query={
-        role:{$in:["alumni","senior"]}
-    }
-    if(skills){
-        let skillsArray=skills.split(",");
-        query.skills={$in:skillsArray}
-    }
-    // 3. Search Term (Name or Company)
-    if (searchTerm) {
-      query.$or = [
-        { firstName: { $regex: searchTerm, $options: "i" } },
-        { lastName: { $regex: searchTerm, $options: "i" } },
-        { company: { $regex: searchTerm, $options: "i" } },
-      ];
-    }
+    try {
+        const userId = req.user;
+        const { skills, searchTerm } = req.query;
+        console.log(skills, searchTerm);
+        // 1. Base query: only find users who can actually be mentors
+        let query = {
+            role: { $in: ["alumni", "senior"] }
+        }
+        if (skills) {
+            let skillsArray = skills.split(",");
+            query.skills = { $in: skillsArray }
+        }
+        // 3. Search Term (Name or Company)
+        if (searchTerm) {
+            query.$or = [
+                { firstName: { $regex: searchTerm, $options: "i" } },
+                { lastName: { $regex: searchTerm, $options: "i" } },
+                { company: { $regex: searchTerm, $options: "i" } },
+            ];
+        }
 
-    // 4. Fetch results (excluding sensitive data)
-    const contact = await User.find(query)
-      .select("firstName lastName role company batch skills bio linkedinUrl image color")
-      .sort({ createdAt: -1 });
-    //   console.log(mentors);
-    const mentors=await contact.filter((contact)=>contact._id.toString()!==userId.toString());
-    return res.status(200).json({ mentors });
-  } catch (error) {
-    console.error("Find Mentors Error:", error);
-    return res.status(500).json({ message: "Internal Server Error" });
-  }
+        // 4. Fetch results (excluding sensitive data)
+        const contact = await User.find(query)
+            .select("firstName lastName role company batch skills bio linkedinUrl image color")
+            .sort({ createdAt: -1 });
+        //   console.log(mentors);
+        const mentors = await contact.filter((contact) => contact._id.toString() !== userId.toString());
+        return res.status(200).json({ mentors });
+    } catch (error) {
+        console.error("Find Mentors Error:", error);
+        return res.status(500).json({ message: "Internal Server Error" });
+    }
 };
 
 export const getAllContacts = async (req, res) => {
     try {
-        const users=await User.find({_id:{$ne:req.user}},"firstNmae lastName _id email");
-        
-        const contacts=users.map((user)=>({
-            label:user.firstName?`${user.firstName} ${user.lastName}`:user.email,
-            value:user._id
+        const users = await User.find({ _id: { $ne: req.user } }, "firstNmae lastName _id email");
+
+        const contacts = users.map((user) => ({
+            label: user.firstName ? `${user.firstName} ${user.lastName}` : user.email,
+            value: user._id
         }))
         return res.status(200).json({ contacts });
     } catch (error) {

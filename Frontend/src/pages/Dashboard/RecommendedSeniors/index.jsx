@@ -1,6 +1,17 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { MessageSquare, Building2, Star, Users, Zap, ShieldCheck } from "lucide-react";
+import {
+  MessageSquare,
+  Building2,
+  Star,
+  Users,
+  Zap,
+  ShieldCheck,
+} from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useAppStore } from "@/store";
+import apiClient from "@/lib/apiClient";
+import { GET_DASHBOARD_SENIOR_ROUTE } from "@/utils/Constant";
 
 const seniors = [
   {
@@ -30,6 +41,24 @@ const seniors = [
 ];
 
 const RecommendedSeniors = () => {
+    const [seniors,setSenior]=useState([]);
+    const {setSelectedChatType,setSelectedChatData}=useAppStore();
+  const navigate = useNavigate();
+  const handleChat = (senior) => {
+    setSelectedChatType("contact");
+    setSelectedChatData(senior);
+    navigate('/main/message');
+  };
+  useEffect(()=>{
+    const getSenior=async ()=>{
+        const response=await apiClient.get(GET_DASHBOARD_SENIOR_ROUTE,{withCredentials:true});
+        if(response.status===200){
+            setSenior(response.data.senior);
+        }
+        console.log(response);
+    }
+    getSenior();
+  },[])
   return (
     <motion.div
       initial={{ opacity: 0, y: 12 }}
@@ -50,7 +79,10 @@ const RecommendedSeniors = () => {
           <h3 className="font-display font-semibold text-blue-400/80 uppercase tracking-[0.15em] text-[11px]">
             Recommended Seniors
           </h3>
-          <button className="text-[10px] text-slate-400 font-bold uppercase tracking-widest hover:text-blue-400 transition-colors bg-slate-800/40 px-3 py-1 rounded-full border border-white/5">
+          <button
+            onClick={() => navigate("/main/message")}
+            className="text-[10px] text-slate-400 font-bold uppercase tracking-widest hover:text-blue-400 transition-colors bg-slate-800/40 px-3 py-1 rounded-full border border-white/5"
+          >
             View all
           </button>
         </div>
@@ -63,26 +95,24 @@ const RecommendedSeniors = () => {
             >
               {/* Avatar with Glow */}
               <div className="relative">
-                <div className="h-12 w-12 rounded-2xl bg-linear-to-br from-blue-600/20 to-blue-900/40 border border-blue-500/30 flex items-center justify-center text-sm font-black text-blue-400 shrink-0 shadow-lg group-hover:scale-105 transition-transform duration-300">
-                  {senior.avatar}
-                </div>
-                <div className="absolute -top-1 -right-1 h-3 w-3 bg-blue-500 rounded-full border-2 border-[#1e2028] shadow-[0_0_8px_rgba(59,130,246,0.5)]"></div>
+                <img src={senior.image} alt="img"  className="h-12 w-12 rounded-full object-cover"/>
               </div>
 
               <div className="flex-1 min-w-0">
                 <p className="font-bold text-sm text-white uppercase tracking-tight italic group-hover:text-blue-50 transition-colors">
-                  {senior.name}
+                  {senior.firstName} {senior.lastName}
                 </p>
-                
+
                 <div className="flex items-center gap-1.5 mt-1">
                   <Building2 className="h-3 w-3 text-slate-600" />
                   <span className="text-[10px] font-bold text-slate-500 uppercase tracking-tighter">
-                    {senior.role} <span className="text-slate-700">@</span> <span className="text-slate-400">{senior.company}</span>
+                    {senior.role} <span className="text-slate-700">@</span>{" "}
+                    <span className="text-slate-400">{senior.company}</span>
                   </span>
                 </div>
 
                 <div className="flex flex-wrap gap-1.5 mt-2.5">
-                  {senior.expertise.map((skill) => (
+                  {senior.skills.slice(0,2).map((skill) => (
                     <span
                       key={skill}
                       className="text-[8px] font-black bg-slate-900/80 text-blue-400/80 border border-slate-700/50 px-2 py-0.5 rounded-md uppercase tracking-wider group-hover:border-blue-500/30 transition-colors"
@@ -95,13 +125,13 @@ const RecommendedSeniors = () => {
 
               {/* Action Area */}
               <div className="flex flex-col items-end gap-3 shrink-0">
-                <div className="flex items-center gap-1 bg-slate-900/80 px-2 py-1 rounded-lg border border-slate-800">
-                  <Star className="h-3 w-3 fill-amber-500 text-amber-500" />
-                  <span className="text-[10px] font-black text-slate-300">{senior.rating}</span>
-                </div>
-                
+              
+
                 <div className="h-8 flex items-center">
-                  <button className="opacity-0 translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 bg-blue-600 hover:bg-blue-500 text-white text-[9px] px-3 py-1.5 rounded-xl font-black uppercase tracking-widest flex items-center gap-1.5 shadow-lg shadow-blue-900/40">
+                  <button
+                    onClick={()=>handleChat(senior)}
+                    className="opacity-0 translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 bg-blue-600 hover:bg-blue-500 text-white text-[9px] px-3 py-1.5 rounded-xl font-black uppercase tracking-widest flex items-center gap-1.5 shadow-lg shadow-blue-900/40"
+                  >
                     <MessageSquare className="h-3 w-3" />
                     Chat
                   </button>

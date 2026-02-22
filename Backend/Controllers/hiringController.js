@@ -72,3 +72,13 @@ export const getAllHiringPost = async (req, res) => {
     return res.status(500).send("Server Error");
   }
 };
+
+export const DashboardHiringPost=async (req,res)=>{
+  try {
+    const data=await Hiring.find().sort({createdAt:-1});
+    const jobs=data.splice(0,3);
+    return res.status(200).send({jobs})
+  } catch (error) {
+    return res.status(500).send("server error");
+  }
+}

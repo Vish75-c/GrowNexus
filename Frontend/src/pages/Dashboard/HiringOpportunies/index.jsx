@@ -1,35 +1,47 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Briefcase, MapPin, ExternalLink, Rocket, Search, Globe } from "lucide-react";
-
-const opportunities = [
-  {
-    title: "Frontend Intern",
-    company: "Razorpay",
-    location: "Bangalore",
-    type: "Internship",
-    postedBy: "Rahul Verma",
-    daysAgo: 1,
-  },
-  {
-    title: "SDE Referral",
-    company: "Google",
-    location: "Hyderabad",
-    type: "Referral",
-    postedBy: "Priya Sharma",
-    daysAgo: 2,
-  },
-  {
-    title: "Backend Developer",
-    company: "Flipkart",
-    location: "Remote",
-    type: "Internship",
-    postedBy: "Ananya Gupta",
-    daysAgo: 3,
-  },
-];
+import { useNavigate } from "react-router-dom";
+import apiClient from "@/lib/apiClient";
+import { GET_DASHBOARD_HIRING_POST } from "@/utils/Constant";
 
 const HiringOpportunities = () => {
+  const [opportunities, setOpportunities] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const getPost = async () => {
+      try {
+        const response = await apiClient.get(
+          GET_DASHBOARD_HIRING_POST,
+          { withCredentials: true }
+        );
+
+        const formattedJobs = response.data.jobs.map((job) => {
+          const createdDate = new Date(job.createdAt);
+          const today = new Date();
+          const diffTime = Math.abs(today - createdDate);
+          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+          return {
+            title: job.role,
+            company: job.company,
+            location: job.location,
+            type: job.duration || "Internship",
+            daysAgo: diffDays,
+            applyLink: job.applyLink,
+          };
+        });
+
+        setOpportunities(formattedJobs);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getPost();
+  }, []);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 12 }}
@@ -37,7 +49,6 @@ const HiringOpportunities = () => {
       transition={{ delay: 0.55, duration: 0.4 }}
       className="relative rounded-[2rem] bg-[#1e2028] border border-slate-800 shadow-2xl overflow-hidden group/main"
     >
-      {/* --- DECORATIVE BACKGROUND ICONS --- */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
         <Rocket className="absolute -top-4 right-12 h-20 w-20 text-orange-500/10 rotate-25" />
         <Search className="absolute bottom-10 -left-4 h-24 w-24 text-slate-500/5 -rotate-12" />
@@ -49,7 +60,10 @@ const HiringOpportunities = () => {
           <h3 className="font-display font-semibold text-orange-500/80 uppercase tracking-[0.15em] text-[11px]">
             Latest Opportunities
           </h3>
-          <button className="text-[10px] text-slate-400 font-bold uppercase tracking-widest hover:text-orange-400 transition-colors bg-slate-800/40 px-3 py-1 rounded-full border border-white/5">
+          <button
+            onClick={() => navigate("/main/hiring-post")}
+            className="text-[10px] text-slate-400 font-bold uppercase tracking-widest hover:text-orange-400 transition-colors bg-slate-800/40 px-3 py-1 rounded-full border border-white/5"
+          >
             View all
           </button>
         </div>
@@ -58,9 +72,9 @@ const HiringOpportunities = () => {
           {opportunities.map((opp) => (
             <div
               key={opp.title + opp.company}
+              onClick={() => window.open(opp.applyLink, "_blank")}
               className="flex items-center gap-4 px-4 py-5 hover:bg-[#292b36]/80 backdrop-blur-md rounded-2xl transition-all duration-300 cursor-pointer group border border-transparent hover:border-orange-500/20"
             >
-              {/* Icon Container with Glow */}
               <div className="h-12 w-12 rounded-2xl bg-linear-to-br from-orange-600/10 to-orange-900/30 border border-orange-500/20 flex items-center justify-center shrink-0 group-hover:border-orange-500/50 transition-all duration-300 shadow-lg shadow-orange-900/10">
                 <Briefcase className="h-5 w-5 text-orange-500 group-hover:scale-110 transition-transform" />
               </div>
@@ -80,7 +94,7 @@ const HiringOpportunities = () => {
                     {opp.type}
                   </span>
                 </div>
-                
+
                 <div className="flex items-center gap-3 mt-1.5">
                   <span className="text-[11px] font-bold text-slate-400">
                     {opp.company}
@@ -94,7 +108,6 @@ const HiringOpportunities = () => {
                 </div>
               </div>
 
-              {/* Right Side Info */}
               <div className="flex flex-col items-end gap-2 shrink-0">
                 <span className="text-[9px] font-black text-slate-600 uppercase tracking-widest bg-slate-900/50 px-2 py-0.5 rounded border border-slate-800">
                   {opp.daysAgo}D AGO
