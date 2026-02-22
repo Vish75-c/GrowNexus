@@ -37,8 +37,8 @@ export const createBlog = async (req, res) => {
 };
 export const getMyBlogs = async (req, res) => {
   try {
-    const blogs = await Blog.find({ author: req.userId })
-      .sort({ createdAt: -1 });
+    const blogs = await Blog.find({ author: req.user }).populate("author", "firstName lastName image role")
+      .populate("comments.user", "firstName lastName image").sort({ createdAt: -1 });
     res.status(200).json({ blogs });
   } catch (error) {
     res.status(500).json({ message: "Error fetching your blogs", error });

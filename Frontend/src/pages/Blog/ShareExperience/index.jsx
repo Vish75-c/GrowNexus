@@ -100,7 +100,7 @@ const ShareExperience = () => {
             </div>
             
             <h1 className="text-5xl font-black text-white tracking-tighter">
-            Share Your <span className="text-blue-500">Experience</span>
+            Share Your <span className="text-blue-600 italic">Experience</span>
           </h1>
           </div>
           <Button
