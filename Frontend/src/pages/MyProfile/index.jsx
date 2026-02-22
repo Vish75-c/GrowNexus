@@ -63,7 +63,7 @@ const MyProfile = ({userInfo}) => {
                 {userInfo?.image ? (
                   <Avatar.Image
                     src={userInfo.image}
-                    className="h-full w-full object-cover"
+                    className="h-full w-full rounded-lg object-cover"
                   />
                 ) : (
                   <Avatar.Fallback className="flex items-center justify-center text-white font-black text-7xl uppercase">
@@ -83,13 +83,13 @@ const MyProfile = ({userInfo}) => {
               </p>
             </div>
 
-            <motion.button
+            <motion.button 
               whileHover={{ scale: 1.02, y: -2 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => navigate("/profile")}
               className="w-full bg-linear-to-r from-[#8417ff] to-[#6a11cb] text-white py-4 rounded-2xl font-black text-xs tracking-widest flex items-center justify-center gap-3 transition shadow-xl shadow-purple-900/20 mb-10"
             >
-              <FiEdit3 size={16} /> MODIFY PROTOCOL
+              <FiEdit3 size={16} /> Edit Profile
             </motion.button>
 
             {/* CONTACT DETAILS */}

@@ -43,7 +43,7 @@ const FeaturesTuple = [
 
 const Features = () => {
   return (
-    <div className='bg-white py-15'>
+    <section id='features' className='bg-white px-4 sm:px-6 lg:px-8 py-16'>
       <div className="container mx-auto max-w-7xl flex flex-col items-center">
         
         <div className="text-center mb-20">
@@ -82,7 +82,7 @@ const Features = () => {
           ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

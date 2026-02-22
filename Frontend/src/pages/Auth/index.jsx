@@ -102,7 +102,7 @@ const Auth = () => {
             className="w-full flex-1 flex flex-col"
           >
             {/* Full-width transition bar */}
-            <TabsList className="grid w-full grid-cols-2 bg-slate-100 p-1 rounded-2xl h-14 mb-8">
+            <TabsList className="grid w-full grid-cols-2 bg-slate-100 rounded-2xl h-14 mb-8">
               <TabsTrigger
                 value="login"
                 className="rounded-xl data-[state=active]:bg-white data-[state=active]:text-blue-600 data-[state=active]:shadow-sm transition-all duration-300 font-semibold"

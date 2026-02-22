@@ -80,7 +80,7 @@ export default function ProblemCarousel({ autoplay = true, autoplayInterval = 50
   };
 
   return (
-    <section className="mx-auto py-15 px-4 bg-slate-50">
+    <section id='problem' className="mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-slate-50">
       <header className="text-center mb-12">
         <h2 className="font-extrabold text-3xl md:text-5xl text-slate-900 tracking-tight mb-4">
           The Career Struggle is <span className="text-blue-600 italic">Real.</span>

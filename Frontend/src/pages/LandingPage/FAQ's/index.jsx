@@ -37,60 +37,75 @@ const FAQs = () => {
   };
 
   return (
-    <div className="container mx-auto max-w-5xl py-12 flex flex-col items-center my-10">
-      <header className="text-center mb-12">
-        <h2 className="font-extrabold text-3xl md:text-5xl text-slate-900 tracking-tight">
-          Frequently Asked <span className="text-blue-600">Questions</span>
-        </h2>
-        <p className="text-md md:text-xl text-slate-500 mt-3 font-medium">
-          Everything you need to know about GrowthNexus
-        </p>
-      </header>
+    <section
+      id="faqs"
+      className="w-full px-4 sm:px-6 lg:px-8 py-16 flex flex-col items-center"
+    >
+      <div className="w-full max-w-5xl">
+        {/* Header */}
+        <header className="text-center mb-10">
+          <h2 className="font-extrabold text-2xl sm:text-3xl md:text-5xl text-slate-900 tracking-tight leading-tight">
+            Frequently Asked{" "}
+            <span className="text-blue-600 italic">Questions</span>
+          </h2>
 
-      <div className="w-full mt-4 space-y-2">
-        {ques.map((item, i) => (
-          <div
-            key={i}
-            className="border-b border-slate-200 py-5 cursor-pointer group"
-            onClick={() => toggleIndex(i)}
-          >
-            <div className="flex justify-between items-center gap-4">
-              <h3 className={`text-lg md:text-xl font-bold transition-colors duration-300 ${
-                openIndex === i ? "text-blue-600" : "text-slate-800 group-hover:text-blue-500"
-              }`}>
-                {item.head}
-              </h3>
+          <p className="text-sm sm:text-base md:text-xl text-slate-500 mt-3 font-medium">
+            Everything you need to know about GrowthNexus
+          </p>
+        </header>
 
-              <span className={`text-2xl font-light transition-transform duration-300 ${
-                openIndex === i ? "rotate-45 text-blue-600" : "text-slate-400"
-              }`}>
-                {openIndex === i ? "+" : "+"} 
-                {/* Note: I used a '+' for both but rotate it 45 deg to make an 'x' when open */}
-              </span>
-            </div>
-
-            {/* Animated section */}
+        {/* FAQ Items */}
+        <div className="space-y-3">
+          {ques.map((item, i) => (
             <div
-              ref={(el) => (contentRefs.current[i] = el)}
-              className="overflow-hidden transition-all duration-300 ease-in-out"
-              style={{
-                maxHeight:
-                  openIndex === i
-                    ? contentRefs.current[i]?.scrollHeight + "px"
-                    : "0px",
-                opacity: openIndex === i ? 1 : 0,
-              }}
+              key={i}
+              className="border border-slate-200 rounded-xl p-4 sm:p-6 cursor-pointer transition-all duration-300 hover:shadow-md"
+              onClick={() => toggleIndex(i)}
             >
-              <div className="pr-10">
-                <p className="text-slate-500 mt-4 text-base md:text-lg leading-relaxed font-medium">
+              {/* Question Row */}
+              <div className="flex justify-between items-center gap-4">
+                <h3
+                  className={`text-base sm:text-lg md:text-xl font-bold transition-colors duration-300 ${
+                    openIndex === i
+                      ? "text-blue-600"
+                      : "text-slate-800"
+                  }`}
+                >
+                  {item.head}
+                </h3>
+
+                <span
+                  className={`text-2xl font-light transition-transform duration-300 ${
+                    openIndex === i
+                      ? "rotate-45 text-blue-600"
+                      : "text-slate-400"
+                  }`}
+                >
+                  +
+                </span>
+              </div>
+
+              {/* Animated Answer */}
+              <div
+                ref={(el) => (contentRefs.current[i] = el)}
+                className="overflow-hidden transition-all duration-300 ease-in-out"
+                style={{
+                  maxHeight:
+                    openIndex === i
+                      ? contentRefs.current[i]?.scrollHeight + "px"
+                      : "0px",
+                  opacity: openIndex === i ? 1 : 0,
+                }}
+              >
+                <p className="text-slate-500 mt-4 text-sm sm:text-base md:text-lg leading-relaxed font-medium">
                   {item.title}
                 </p>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
+    </section>
   );
 };
 

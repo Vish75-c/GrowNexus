@@ -7,10 +7,11 @@ import Features from './Features'
 import FAQs from './FAQ\'s'
 import Pricing from './Pricing'
 const LandingPage = () => {
+  
   return (
     <>
     <Navbar />
-    <div className='mb-20'></div>
+    <div className='mb-20 md:mb-0'></div>
     <Hero/>
     <ProblemCarousel/>
     <Features/>

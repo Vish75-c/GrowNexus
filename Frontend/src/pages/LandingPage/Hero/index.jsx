@@ -1,10 +1,23 @@
 import React from 'react'
 import HeroImg from '../../../assets/Hero-Background.jpg' // Keep your existing background
 import { FiArrowRight, FiTerminal } from 'react-icons/fi'
+import { useAppStore } from '@/store'
+import { useNavigate } from 'react-router-dom'
 
 const Hero = () => {
+    const {userInfo}=useAppStore();
+    const navigate=useNavigate();
+    const handleDirect=()=>{
+        if(!userInfo){
+            navigate('/auth')
+        }else if(userInfo.profileSetup===false){
+            navigate('/profile')
+        }else{
+            navigate('/main')
+        }
+    }
   return (
-    <section className='relative overflow-hidden w-full'>
+    <section id='hero' className='relative overflow-hidden w-full'>
       <img 
         src={HeroImg} 
         alt="GrowthNexus Hero"
@@ -38,7 +51,7 @@ const Hero = () => {
 
         <div className='mt-10 flex flex-col sm:flex-row gap-4'>
           {/* Primary Action */}
-          <button className='bg-blue-600 group space-x-4 p-4 px-8 rounded-xl flex items-center transition-all hover:bg-blue-500 shadow-xl shadow-blue-900/40'>
+          <button onClick={handleDirect} className='bg-blue-600 group space-x-4 p-4 px-8 rounded-xl flex items-center transition-all hover:bg-blue-500 shadow-xl shadow-blue-900/40'>
             <p className='font-black text-white text-xs uppercase tracking-widest'>Get the Inside Track</p>
             <FiArrowRight size={20} className='text-white group-hover:translate-x-2 transition-transform' />
           </button>
