@@ -105,9 +105,8 @@ const FeaturedBlog = () => {
                     <img
                         src={data.author?.image}
                         alt="author"
-                        className="h-8 w-8 rounded-full object-cover border border-slate-700"
+                        className="h-11 w-11 rounded-xl ring hover:scale-110 ring-slate-800 hover:ring-blue-500 duration-500 object-cover border border-slate-700"
                     />
-                    <div className="absolute -bottom-1 -right-1 h-3 w-3 bg-green-500 border-2 border-[#292b36] rounded-full"></div>
                 </div>
                 <div className="flex flex-col">
                   <span className="text-xs font-bold text-slate-200">

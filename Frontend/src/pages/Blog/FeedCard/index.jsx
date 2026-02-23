@@ -10,20 +10,14 @@ import { useAppStore } from "@/store";
 import { useNavigate } from "react-router-dom";
 
 // --- ANIMATION VARIANTS ---
-
-// 1. Staggered Entrance (Container)
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.2,
-    },
+    transition: { staggerChildren: 0.1, delayChildren: 0.2 },
   },
 };
 
-// 2. Item Slide-Up (Children)
 const itemVariants = {
   hidden: { y: 20, opacity: 0 },
   visible: {
@@ -33,7 +27,6 @@ const itemVariants = {
   },
 };
 
-// 3. Interactive Card Hover & Group Hover Logic
 const cardVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: { 
@@ -47,63 +40,97 @@ const cardVariants = {
   }
 };
 
-const iconVariants = {
-  hover: { scale: 1.1 } // scale-110
-};
-
-const secondaryElementVariants = {
-  initial: { opacity: 0, x: 0 },
-  hover: { 
-    opacity: 1, 
-    x: 2, // translate-x-2
-    transition: { duration: 0.3 }
-  }
-};
-
+// --- HELPERS ---
 const toIdString = (id) => {
   if (!id && id !== 0) return null;
-  if (typeof id === "object") {
-    if (id._id) return String(id._id);
-    if (id.id) return String(id.id);
-    if (typeof id.toString === "function") return id.toString();
-  }
+  if (typeof id === "object") return String(id._id || id.id || id.toString?.() || id);
   return String(id);
 };
+
+// --- SUB-COMPONENTS ---
+
+const ActionButton = ({ icon: Icon, label, active, activeColor, activeFill, onClick, disabled }) => (
+  <motion.button
+    whileTap={{ scale: 0.9 }}
+    onClick={onClick}
+    disabled={disabled}
+    className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black transition-all ${
+      active ? activeColor : "text-slate-400 hover:text-slate-200"
+    } disabled:opacity-50`}
+  >
+    <Icon size={18} className={`${active && activeFill ? "fill-current" : ""}`} />
+    <span>{label}</span>
+  </motion.button>
+);
+
+const CommentItem = ({ comment }) => (
+  <div className="flex gap-4">
+    <Avatar className="h-10 w-10 ">
+      <AvatarImage src={comment.user?.image} className="object-cover rounded-lg" />
+      <AvatarFallback className="bg-slate-800 text-[10px] text-white ">
+        {comment.user?.firstName?.[0]}
+      </AvatarFallback>
+    </Avatar>
+    <div className="flex-1 space-y-1">
+      <div className="flex items-center justify-between">
+        <span className="text-xs font-black text-indigo-400">
+          {comment.user?.firstName} {comment.user?.lastName}
+        </span>
+        <span className="text-[9px] font-bold text-slate-600 uppercase">
+          {formatDistanceToNow(new Date(comment.createdAt || Date.now()))} ago
+        </span>
+      </div>
+      <div className="bg-[#12141a]/50 p-3 rounded-2xl rounded-tl-none border border-slate-800/50">
+        <p className="text-[13px] text-slate-400 leading-normal">{comment.text}</p>
+      </div>
+    </div>
+  </div>
+);
+
+// --- MAIN COMPONENT ---
 
 const FeedCard = () => {
   const { post, userInfo } = useAppStore();
   const navigate = useNavigate();
 
-  const [likes, setLikes] = useState(() => (post?.likes || []).map(toIdString).filter(Boolean));
-  const [comments, setComments] = useState(post?.comments || []);
+  // Local State
+  const [likes, setLikes] = useState([]);
+  const [comments, setComments] = useState([]);
   const [commentText, setCommentText] = useState("");
   const [showComments, setShowComments] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
 
+  // Sync state with post prop
   useEffect(() => {
-    if (!post) navigate("/main/feed");
+    if (!post) {
+      navigate("/main/feed");
+      return;
+    }
+    setLikes((post.likes || []).map(toIdString).filter(Boolean));
+    setComments(post.comments || []);
   }, [post, navigate]);
 
-  useEffect(() => {
-    setLikes((post?.likes || []).map(toIdString).filter(Boolean));
-    setComments(post?.comments || []);
-  }, [post]);
-
-  const currentUserId = userInfo?._id ? toIdString(userInfo._id) : null;
+  // Performance Memoization
+  const currentUserId = useMemo(() => toIdString(userInfo?._id), [userInfo?._id]);
   const isLiked = useMemo(() => currentUserId && likes.includes(currentUserId), [likes, currentUserId]);
+  
+  const { shouldTruncate, maxContentLength } = useMemo(() => {
+    const maxLen = 220;
+    const plainText = (post?.content || "").replace(/<[^>]*>/g, "");
+    return { shouldTruncate: plainText.length > maxLen, maxContentLength: maxLen };
+  }, [post?.content]);
 
-  const maxContentLength = 220;
-  const plainTextContent = (post?.content || "").replace(/<[^>]*>/g, "");
-  const shouldTruncate = plainTextContent.length > maxContentLength;
-
+  // Handlers
   const handleToggleLike = async () => {
     if (!currentUserId) return toast.error("Please login to like");
     if (!post?._id || isProcessing) return;
+
     setIsProcessing(true);
     const prevLikes = [...likes];
     const optimistic = isLiked ? prevLikes.filter((id) => id !== currentUserId) : [currentUserId, ...prevLikes];
+    
     setLikes(optimistic);
     try {
       const { data } = await apiClient.post(`/api/blog/like/${post._id}`, {}, { withCredentials: true });
@@ -119,6 +146,7 @@ const FeedCard = () => {
   const handleAddComment = async (e) => {
     e.preventDefault();
     if (!commentText.trim() || !currentUserId || !post?._id) return;
+    
     try {
       const { data } = await apiClient.post(`/api/blog/comment/${post._id}`, { text: commentText }, { withCredentials: true });
       setComments(data.comments || []);
@@ -132,41 +160,55 @@ const FeedCard = () => {
   if (!post) return null;
 
   return (
-    // 4. Wrap main container in motion.div using the variants
     <motion.div
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="max-w-5xl mx-auto "
+      className=" mx-auto px-3 mt-10 mb-15"
     >
+      {/* Editorial Heading */}
+      <motion.div variants={itemVariants} className=" m">
+        <div className="flex items-center gap-3 mb-2">
+          <div className="h-1 w-8 bg-indigo-500 rounded-full" />
+          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-indigo-400">
+            Explorer Feed
+          </span>
+        </div>
+        <h1 className="text-4xl md:text-5xl font-black text-white tracking-tighter ">
+          Featured <span className="text-blue-600 italic">Story</span>
+        </h1>
+        <p className="text-slate-500 text-sm mt-2 font-medium max-w-md">
+          Dive into the latest experiences and technical deep-dives from our top contributors.
+        </p>
+      </motion.div>
+
+      {/* Main Card */}
       <motion.article
         variants={cardVariants}
         whileHover="hover"
-        className="overflow-hidden border mt-10 mb-15 border-slate-800 bg-[#1e2028] rounded-[2rem] shadow-2xl"
+        className="overflow-hidden border mt-8 mb-15 border-slate-800 bg-[#1e2028] rounded-[2.5rem] shadow-2xl"
       >
-        {/* Visual Header / Banner - Using itemVariants for stagger */}
+        {/* Banner Image */}
         {post.bannerImage && (
           <motion.div variants={itemVariants} className="relative group overflow-hidden aspect-21/9">
             <img
               src={post.bannerImage}
               alt={post.title}
-              className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+              className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-linear-to-t from-[#1e2028] via-transparent to-transparent" />
           </motion.div>
         )}
 
-        {/* Author & Context Bar */}
-        <motion.div variants={itemVariants} className="flex items-center justify-between px-6 py-5">
+        {/* Author Header */}
+        <motion.div variants={itemVariants} className="flex items-center justify-between px-8 py-6">
           <div className="flex items-center gap-3">
-            <motion.div variants={iconVariants}>
-                <Avatar className="h-10 w-10 ring-2 ring-indigo-500/20 ring-offset-2 ring-offset-[#1e2028]">
-                <AvatarImage src={post.author?.image} className="object-cover" />
-                <AvatarFallback className="bg-indigo-600 text-white font-black text-xs">
-                    {post.author?.firstName?.[0]}
-                </AvatarFallback>
-                </Avatar>
-            </motion.div>
+            <Avatar className="h-11 w-11 ring ring-slate-800 rounded-xl hover:ring-indigo-500 transition-all duration-500">
+              <AvatarImage src={post.author?.image} className="object-cover" />
+              <AvatarFallback className="bg-indigo-600 text-white font-black text-xs">
+                {post.author?.firstName?.[0]}
+              </AvatarFallback>
+            </Avatar>
             <div>
               <h4 className="text-sm font-black text-white leading-none mb-1">
                 {post.author?.firstName} {post.author?.lastName}
@@ -188,13 +230,13 @@ const FeedCard = () => {
           </motion.button>
         </motion.div>
 
-        {/* Main Content Body */}
-        <motion.div variants={itemVariants} className="px-6 pb-6">
-          <h2 className="text-2xl font-black text-white mb-4 tracking-tight leading-tight">
+        {/* Post Content */}
+        <motion.div variants={itemVariants} className="px-8 pb-6">
+          <h2 className="text-2xl md:text-3xl font-black text-white mb-4 tracking-tight leading-tight">
             {post.title}
           </h2>
           <div
-            className="text-[15px] text-slate-300 leading-relaxed prose-invert custom-post-content"
+            className="text-[16px] text-slate-300 leading-relaxed prose-invert custom-post-content"
             dangerouslySetInnerHTML={{
               __html: shouldTruncate && !isExpanded 
                 ? post.content.slice(0, maxContentLength) + "..." 
@@ -211,8 +253,8 @@ const FeedCard = () => {
           )}
         </motion.div>
 
-        {/* Engagement Glass-Bar */}
-        <motion.div variants={itemVariants} className="mx-6 mb-6 p-2 bg-slate-900/40 rounded-2xl border border-slate-800 flex items-center justify-between">
+        {/* Engagement Bar */}
+        <motion.div variants={itemVariants} className="mx-8 mb-8 p-2 bg-slate-900/40 rounded-2xl border border-slate-800 flex items-center justify-between">
           <div className="flex items-center">
             <ActionButton
               icon={Heart}
@@ -232,9 +274,7 @@ const FeedCard = () => {
             />
           </div>
 
-          <motion.button 
-            variants={secondaryElementVariants}
-            initial="initial"
+          <button 
             onClick={() => {
                 navigator.clipboard.writeText(`${window.location.origin}/main/feed/${post._id}`);
                 toast.success("Link copied!");
@@ -243,7 +283,7 @@ const FeedCard = () => {
           >
             <Share2 size={16} />
             <span className="hidden sm:inline">Share</span>
-          </motion.button>
+          </button>
         </motion.div>
 
         {/* Comments Drawer */}
@@ -255,7 +295,7 @@ const FeedCard = () => {
               exit={{ height: 0, opacity: 0 }}
               className="overflow-hidden border-t border-slate-800 bg-black/10"
             >
-              <div className="p-6 space-y-6">
+              <div className="p-8 space-y-6">
                 <div className="max-h-80 overflow-y-auto space-y-5 pr-2 custom-scrollbar">
                   {comments.map((c) => (
                     <CommentItem key={c._id || c.id} comment={c} />
@@ -290,44 +330,5 @@ const FeedCard = () => {
     </motion.div>
   );
 };
-
-const ActionButton = ({ icon: Icon, label, active, activeColor, activeFill, onClick, disabled }) => (
-  <motion.button
-    whileTap={{ scale: 0.9 }}
-    variants={iconVariants}
-    onClick={onClick}
-    disabled={disabled}
-    className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black transition-all ${
-      active ? activeColor : "text-slate-400 hover:text-slate-200"
-    } disabled:opacity-50`}
-  >
-    <Icon size={18} className={`${active && activeFill ? "fill-current" : ""}`} />
-    <span>{label}</span>
-  </motion.button>
-);
-
-const CommentItem = ({ comment }) => (
-  <div className="flex gap-4">
-    <Avatar className="h-8 w-8 shrink-0">
-      <AvatarImage src={comment.user?.image} />
-      <AvatarFallback className="bg-slate-800 text-[10px] text-white">
-        {comment.user?.firstName?.[0]}
-      </AvatarFallback>
-    </Avatar>
-    <div className="flex-1 space-y-1">
-      <div className="flex items-center justify-between">
-        <span className="text-xs font-black text-indigo-400">
-          {comment.user?.firstName} {comment.user?.lastName}
-        </span>
-        <span className="text-[9px] font-bold text-slate-600 uppercase">
-          {formatDistanceToNow(new Date(comment.createdAt || Date.now()))}
-        </span>
-      </div>
-      <div className="bg-[#12141a]/50 p-3 rounded-2xl rounded-tl-none border border-slate-800/50">
-        <p className="text-[13px] text-slate-400 leading-normal">{comment.text}</p>
-      </div>
-    </div>
-  </div>
-);
 
 export default FeedCard;

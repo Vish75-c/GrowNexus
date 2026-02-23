@@ -95,11 +95,11 @@ const RecommendedSeniors = () => {
             >
               {/* Avatar with Glow */}
               <div className="relative">
-                <img src={senior.image} alt="img"  className="h-12 w-12 rounded-full object-cover"/>
+                <img src={senior.image} alt="img"  className="h-12 w-12 hover:scale-110 rounded-2xl ring ring-slate-800 hover:ring-blue-400 transition-all duration-500 object-cover"/>
               </div>
 
               <div className="flex-1 min-w-0">
-                <p className="font-bold text-sm text-white uppercase tracking-tight italic group-hover:text-blue-50 transition-colors">
+                <p className="font-bold text-sm text-white uppercase tracking-tight  group-hover:text-blue-50 transition-colors">
                   {senior.firstName} {senior.lastName}
                 </p>
 

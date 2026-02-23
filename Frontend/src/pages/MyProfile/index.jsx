@@ -11,6 +11,7 @@ import {
 } from "react-icons/fi";
 import * as Avatar from "@radix-ui/react-avatar";
 import { useNavigate } from "react-router-dom";
+import { getColor } from "@/lib/utils";
 
 // 1. Staggered Entrance (Container)
 const containerVariants = {
@@ -43,12 +44,13 @@ const cardHoverProps = {
 // Internal Group Hover Variants
 const childIconVariants = {
   initial: { scale: 1 },
-  hover: { scale: 1.1 }, // scale-110
+  hover: { scale: 1.1 },
 };
 
+// ✅ FIXED: Always visible
 const childTextVariants = {
-  initial: { opacity: 0, x: 0 },
-  hover: { opacity: 1, x: 2 }, // translate-x-2
+  initial: { opacity: 1, x: 0 },
+  hover: { opacity: 1, x: 0 },
 };
 
 // -------------------------
@@ -57,11 +59,10 @@ const childTextVariants = {
 
 const ContactRow = ({ icon, label, value }) => (
   <motion.div
-    whileHover="hover"
     initial="initial"
     className="flex items-center gap-3 bg-[#1a1b25] p-3 rounded-xl border border-slate-800 group hover:border-blue-500/30 transition-colors cursor-default"
   >
-    <motion.div 
+    <motion.div
       variants={childIconVariants}
       className="h-9 w-9 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-500 group-hover:bg-blue-500 group-hover:text-white transition-all"
     >
@@ -71,7 +72,7 @@ const ContactRow = ({ icon, label, value }) => (
       <p className="text-[9px] uppercase font-black tracking-widest text-slate-500">
         {label}
       </p>
-      <motion.p 
+      <motion.p
         variants={childTextVariants}
         className="text-sm font-bold text-slate-200 truncate"
       >
@@ -85,24 +86,31 @@ const ProfileIdentityCard = ({ user, onEdit }) => (
   <motion.div
     variants={itemVariants}
     {...cardHoverProps}
-    className="bg-[#292b36] p-6 sm:p-8 rounded-[2.5rem] border border-slate-800 shadow-2xl text-center relative overflow-hidden"
+    className="bg-[#292b36] p-6 sm:p-8 rounded-[2.5rem] border flex flex-col  items-center border-slate-800 shadow-2xl text-center relative overflow-hidden"
   >
     <div className="absolute -top-24 -left-24 w-48 h-48 bg-blue-600/10 blur-[100px]" />
 
-    <div className="mb-6 relative">
-      <Avatar.Root className="mx-auto h-28 w-28 sm:h-36 sm:w-36 rounded-[2rem] overflow-hidden shadow-2xl border-4 border-[#1a1b25]">
-        {user.image ? (
-          <Avatar.Image src={user.image} className="h-full rounded-lg w-full object-cover" />
-        ) : (
-          <Avatar.Fallback className="flex items-center justify-center h-full w-full bg-slate-800 text-white font-black text-3xl">
-            {user.firstName?.[0] || user.email?.[0]}
-          </Avatar.Fallback>
-        )}
+    <div className="mb-6 mx-auto ">
+      <Avatar.Root className="mx-auto h-28 w-28 sm:h-36 sm:w-36 rounded-[2rem] overflow-hidden shadow-2xl ">
+        <Avatar.Root
+          className={`h-40 w-40 rounded-full overflow-hidden border-4 border-slate-700 flex items-center justify-center shadow-xl ${getColor(user.color)}`}
+        >
+          {user.image ? (
+            <Avatar.Image
+              src={user.image}
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <Avatar.Fallback className="text-6xl text-white font-bold">
+              {user.firstName?.[0] || user?.email?.[0] || "U"}
+            </Avatar.Fallback>
+          )}
+        </Avatar.Root>
       </Avatar.Root>
     </div>
 
-    <h3 className="text-xl sm:text-2xl font-black text-white uppercase italic tracking-tighter truncate">
-      {user.firstName} <span className="text-blue-500">{user.lastName}</span>
+    <h3 className="text-xl sm:text-2xl font-black text-white uppercase  tracking-tighter truncate">
+      {user.firstName} {user.lastName}
     </h3>
 
     <div className="mt-3 mb-4 px-4 py-1 rounded-full bg-blue-500/10 inline-block border border-blue-500/20">
@@ -115,14 +123,14 @@ const ProfileIdentityCard = ({ user, onEdit }) => (
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       onClick={onEdit}
-      className="w-full mt-2 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-black uppercase tracking-widest text-xs transition-all shadow-lg shadow-blue-900/20"
+      className="w-full mt-2 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-black uppercase tracking-widest text-xs transition-all shadow-lg shadow-blue-900/20"
     >
       <FiEdit3 /> Edit Identity
     </motion.button>
 
-    <div className="mt-6 space-y-3 text-left">
+    <div className="mt-6 space-y-3 w-full">
       <ContactRow icon={<FiMail />} label="Matrix Email" value={user.email} />
-      <ContactRow icon={<FiMapPin />} label="Deployment Location" value="Main Campus Portal" />
+      <ContactRow icon={<FiMapPin />} label="Location" value="Main Campus" />
     </div>
   </motion.div>
 );
@@ -139,19 +147,18 @@ const NetworkCard = ({ linkedinUrl }) => (
     </h4>
 
     <motion.button
-      whileHover="hover"
       initial="initial"
       onClick={() => linkedinUrl && window.open(linkedinUrl, "_blank")}
       className="w-full flex items-center justify-between p-4 bg-[#1a1b25] rounded-xl border border-slate-800 hover:border-blue-500/50 transition-all group"
     >
       <div className="flex items-center gap-3">
-        <motion.div 
+        <motion.div
           variants={childIconVariants}
           className="p-2 bg-blue-500/10 rounded-lg text-blue-500 group-hover:bg-blue-500 group-hover:text-white transition-all"
         >
           <FiLinkedin size={16} />
         </motion.div>
-        <motion.span 
+        <motion.span
           variants={childTextVariants}
           className="font-bold text-slate-200 group-hover:text-white transition-colors"
         >
@@ -173,7 +180,7 @@ const BioSummaryCard = ({ bio }) => (
       <div className="h-12 w-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 text-emerald-500">
         <FiGlobe size={22} />
       </div>
-      <h3 className="text-sm font-black uppercase tracking-widest text-white italic">
+      <h3 className="text-sm font-black uppercase tracking-widest text-white ">
         Objective & Bio
       </h3>
     </div>
@@ -184,8 +191,8 @@ const BioSummaryCard = ({ bio }) => (
 );
 
 const TechStackCard = ({ skills = [] }) => (
-  <motion.div 
-    variants={itemVariants} 
+  <motion.div
+    variants={itemVariants}
     {...cardHoverProps}
     className="bg-[#292b36] p-6 sm:p-10 rounded-[2.5rem] border border-slate-800 shadow-2xl"
   >
@@ -194,7 +201,7 @@ const TechStackCard = ({ skills = [] }) => (
         <div className="w-12 h-12 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-500">
           <FiLayers size={22} />
         </div>
-        <h3 className="text-sm font-black uppercase tracking-widest text-white italic">
+        <h3 className="text-sm font-black uppercase tracking-widest text-white ">
           Technical Matrix
         </h3>
       </div>
@@ -207,7 +214,11 @@ const TechStackCard = ({ skills = [] }) => (
       {skills.map((skill, i) => (
         <motion.span
           key={i}
-          whileHover={{ y: -3, borderColor: "rgba(59, 130, 246, 0.5)", color: "#fff" }}
+          whileHover={{
+            y: -3,
+            borderColor: "rgba(59, 130, 246, 0.5)",
+            color: "#fff",
+          }}
           className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#1a1b25] border border-slate-800 text-xs font-bold text-slate-300 transition-colors cursor-default"
         >
           <FiHash className="text-blue-500" size={12} />
@@ -217,10 +228,6 @@ const TechStackCard = ({ skills = [] }) => (
     </div>
   </motion.div>
 );
-
-// -------------------------
-// Main Component
-// -------------------------
 
 const MyProfile = ({ userInfo }) => {
   const navigate = useNavigate();
@@ -232,20 +239,27 @@ const MyProfile = ({ userInfo }) => {
     role: "System Architect",
     image: "",
     bio: "Full-stack engineer building scalable systems and distributed neural networks.",
-    skills: ["React", "TypeScript", "Node.js", "Python", "Docker", "GraphQL", "AWS"],
+    skills: [
+      "React",
+      "TypeScript",
+      "Node.js",
+      "Python",
+      "Docker",
+      "GraphQL",
+      "AWS",
+    ],
     linkedinUrl: "https://linkedin.com",
   };
 
   return (
     <div className="min-h-screen mt-10 mb-15">
-      {/* 4. Main Container Wrap */}
       <motion.div
         variants={containerVariants}
         initial="hidden"
         animate="visible"
         className="px-6 max-w-7xl mx-auto"
       >
-        <motion.div 
+        <motion.div
           variants={itemVariants}
           className="sm:flex items-center justify-between pb-8"
         >
@@ -279,7 +293,20 @@ const MyProfile = ({ userInfo }) => {
 };
 
 const FiChevronRight = ({ className }) => (
-  <svg stroke="currentColor" fill="none" strokeWidth="3" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round" className={className} height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="9 18 15 12 9 6"></polyline></svg>
+  <svg
+    stroke="currentColor"
+    fill="none"
+    strokeWidth="3"
+    viewBox="0 0 24 24"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+    height="1em"
+    width="1em"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <polyline points="9 18 15 12 9 6"></polyline>
+  </svg>
 );
 
 export default MyProfile;

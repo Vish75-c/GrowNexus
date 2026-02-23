@@ -125,7 +125,7 @@ const HiringPost = () => {
                         variants={iconVariants}
                         src={job.postedBy.image}
                         alt="user-img"
-                        className="h-12 w-12 object-cover rounded-2xl border border-slate-700 p-0.5"
+                        className="h-12 w-12 object-cover rounded-2xl  ring ring-slate-800 hover:ring-blue-500 duration-500"
                       />
                       <div>
                         <p className="text-white text-xs font-black uppercase tracking-widest">

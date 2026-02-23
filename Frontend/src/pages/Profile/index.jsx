@@ -65,6 +65,17 @@ const Profile = () => {
    * This runs whenever 'userInfo' changes. If data exists (e.g., on re-update),
    * it populates the local state so the inputs aren't empty.
    */
+  useEffect(()=>{
+    const year=(new Date()).getFullYear();
+    
+    if(year>batch){
+      setRole("alumni");
+    }else if(batch>year&&batch-year>=2){
+      setRole('junior')
+    }else{
+      setRole('senior')
+    }
+  },[batch])
   useEffect(() => {
     if (userInfo) {
       setFirstName(userInfo.firstName || "");
@@ -223,6 +234,7 @@ const Profile = () => {
                   </label>
                   <select
                     value={role}
+                    disabled
                     onChange={(e) => setRole(e.target.value)}
                     className="w-full h-14 rounded-2xl bg-white border border-slate-200 px-6 text-slate-600 font-semibold outline-none focus:ring-2 focus:ring-blue-600 transition-all cursor-pointer appearance-none shadow-sm"
                   >
@@ -238,7 +250,7 @@ const Profile = () => {
             <div className="flex-1 p-8 md:p-12 space-y-10 overflow-y-auto">
               <div className="space-y-1 text-center md:text-left">
                 <h1 className="text-3xl font-black tracking-tight text-slate-900">
-                  Setup Your Profile
+                  Setup Your <span className="text-blue-600 italic">Profile</span>
                 </h1>
                 <p className="text-slate-400 text-sm font-medium">
                   Verify your details to keep your profile updated.

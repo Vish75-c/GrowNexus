@@ -132,7 +132,7 @@ const ContactContainer = () => {
                     }`}
                   >
                     <motion.div variants={iconVariants}>
-                      <Avatar.Root className={`h-10 w-10 rounded-xl shrink-0 flex items-center justify-center text-white font-bold text-lg overflow-hidden ${getColor(contact.color)}`}>
+                      <Avatar.Root className={`h-10 w-10 rounded-xl ring ring-slate-800 group-hover:ring-blue-500  shrink-0 flex items-center justify-center text-white font-bold text-lg overflow-hidden ${getColor(contact.color)}`}>
                         {contact.image ? (
                           <Avatar.Image src={contact.image} className="h-full w-full object-cover rounded-xl ring-1 ring-white/10" />
                         ) : (

@@ -87,7 +87,7 @@ const RecentChats = () => {
             >
               {/* Avatar */}
               <div className="relative shrink-0">
-                <div className="h-11 w-11 rounded-full overflow-hidden border border-slate-700 group-hover:scale-110 transition-all duration-300">
+                <div className="h-12 w-12 rounded-2xl ring ring-slate-800 hover:ring-blue-500 transition-all duration-500 overflow-hidden border border-slate-700 hover:scale-110 ">
                   <img
                     src={chat.image}
                     alt="avatar"

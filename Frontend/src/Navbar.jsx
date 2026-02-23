@@ -128,7 +128,7 @@ const Navbar = () => {
                 className="flex items-center gap-3 pl-4 border-l border-slate-200 cursor-pointer group"
               >
                 <Avatar.Root
-                  className={`h-10 w-10 rounded-full overflow-hidden border-2 border-white shadow-md ${getColor(
+                  className={`h-10 w-10 rounded-2xl  overflow-hidden ring ring-slate-700 hover:ring-blue-500 duration-500   ${getColor(
                     userInfo?.colorIndex
                   )}`}
                 >

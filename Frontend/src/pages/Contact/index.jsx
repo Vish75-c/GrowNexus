@@ -86,7 +86,7 @@ const Contact = () => {
         <motion.div variants={itemVariants}>
           <div className="bg-[#292b36] rounded-[2.5rem] p-8 lg:p-12 border border-slate-800 shadow-2xl relative overflow-hidden">
             {/* Background Glow */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/5 rounded-full -mr-32 -mt-32 blur-3xl pointer-events-none" />
+            <div className="absolute top-0 right-0 w-64 h-64  bg-blue-500/5 rounded-full -mr-32 -mt-32 blur-3xl pointer-events-none" />
             
             <AnimatePresence mode="wait">
               {!isSent ? (
@@ -98,7 +98,7 @@ const Contact = () => {
                   onSubmit={handleSubmit} 
                   className="relative z-10 space-y-6"
                 >
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1  md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-2">Full Name</label>
                       <div className="relative group">
@@ -145,13 +145,13 @@ const Contact = () => {
                     whileHover={{ scale: 1.01, backgroundColor: "#3b82f6" }}
                     whileTap={{ scale: 0.98 }}
                     disabled={isSubmitting}
-                    className="w-full bg-blue-600 text-white py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all shadow-xl shadow-blue-900/20 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-1/4 bg-blue-500 hover:bg-blue-600 mx-auto text-white py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all shadow-xl shadow-blue-900/20 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isSubmitting ? (
                       <div className="h-5 w-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                     ) : (
                       <>
-                        Submit Message <FiArrowRight size={16} />
+                        Send Message <FiArrowRight size={16} />
                       </>
                     )}
                   </motion.button>

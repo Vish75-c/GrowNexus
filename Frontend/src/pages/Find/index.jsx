@@ -236,9 +236,9 @@ const Find = () => {
                       <motion.div 
                         // 3. Group Hover: Scale icons
                         variants={childIconVariants}
-                        className="h-14 w-14 rounded-2xl bg-[#1f202a] flex items-center justify-center text-blue-500 border border-slate-800 font-black text-xl overflow-hidden shadow-inner"
+                        className="h-13 w-13 flex items-center justify-center"
                       >
-                        {mentor.image ? <img src={mentor.image} className="w-full h-full object-cover" alt="" /> : mentor.firstName[0]}
+                        {mentor.image ? <img src={mentor.image} className="w-13 rounded-2xl h-13 ring-1 ring-slate-800 hover:ring-blue-500 hover:scale-110 duration-500  object-cover" alt="" /> : mentor.firstName[0]}
                       </motion.div>
                       <div>
                         <h3 className="text-white font-bold text-xl leading-tight">{mentor.firstName} {mentor.lastName}</h3>
