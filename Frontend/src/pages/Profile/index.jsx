@@ -65,17 +65,17 @@ const Profile = () => {
    * This runs whenever 'userInfo' changes. If data exists (e.g., on re-update),
    * it populates the local state so the inputs aren't empty.
    */
-  useEffect(()=>{
-    const year=(new Date()).getFullYear();
-    
-    if(year>batch){
+  useEffect(() => {
+    const year = new Date().getFullYear();
+
+    if (year > batch) {
       setRole("alumni");
-    }else if(batch>year&&batch-year>=2){
-      setRole('junior')
-    }else{
-      setRole('senior')
+    } else if (batch > year && batch - year >= 2) {
+      setRole("junior");
+    } else {
+      setRole("senior");
     }
-  },[batch])
+  }, [batch]);
   useEffect(() => {
     if (userInfo) {
       setFirstName(userInfo.firstName || "");
@@ -108,23 +108,36 @@ const Profile = () => {
   const saveProfileImg = async (event) => {
     const file = event.target.files?.[0];
     if (!file) return;
+
     try {
       const formData = new FormData();
       formData.append("image", file);
+
       const response = await apiClient.post(SAVE_USER_IMAGE, formData, {
         withCredentials: true,
       });
-      if(response.status===200){
-        setUserInfo((prev)=>({
-          ...prev,
-          image:response.data.image,
-        }))
-        setAvatarSrc(response.data.image);
-        toast.success("Image Upload Successfully");
+
+      if (response.status === 200 && response.data.image) {
+        // 1. Generate the URL with timestamp once
+        const imageUrl = `${response.data.image}?t=${new Date().getTime()}`;
+
+        // 2. Update the Global Store first
+        setUserInfo({
+          ...userInfo,
+          image: imageUrl,
+        });
+
+        // 3. Update Local State
+        setAvatarSrc(imageUrl);
+
+        // 4. Reset input so the same file can be uploaded again if needed
+        if (fileInputRef.current) fileInputRef.current.value = "";
+
+        toast.success("Image updated successfully 🎉");
       }
-      // console.log(response);
     } catch (error) {
-      toast.error("Failed To upload Image");
+      console.error(error);
+      toast.error("Failed to upload image");
     }
   };
 
@@ -188,6 +201,7 @@ const Profile = () => {
                 >
                   {avatarSrc ? (
                     <Avatar.Image
+                      key={avatarSrc} // <--- ADD THIS KEY
                       src={avatarSrc}
                       className="h-full w-full object-cover"
                     />
@@ -250,7 +264,8 @@ const Profile = () => {
             <div className="flex-1 p-8 md:p-12 space-y-10 overflow-y-auto">
               <div className="space-y-1 text-center md:text-left">
                 <h1 className="text-3xl font-black tracking-tight text-slate-900">
-                  Setup Your <span className="text-blue-600 italic">Profile</span>
+                  Setup Your{" "}
+                  <span className="text-blue-600 italic">Profile</span>
                 </h1>
                 <p className="text-slate-400 text-sm font-medium">
                   Verify your details to keep your profile updated.

@@ -37,7 +37,7 @@ const FeaturedBlog = () => {
     return Math.ceil(words / 200);
   };
 
-  const readTime = calculateReadTime(data.content);
+  const readTime = calculateReadTime(data!==undefined?data.content:"");
   const getPreviewText = (htmlContent, wordLimit = 25) => {
     if (!htmlContent) return "";
     const text = htmlContent.replace(/<[^>]+>/g, "");
@@ -46,8 +46,8 @@ const FeaturedBlog = () => {
     return words.slice(0, wordLimit).join(" ") + "...";
   };
 
-  const previewContent = getPreviewText(data.content, 25);
-
+  const previewContent = getPreviewText(data!==undefined?data.content:"", 25);
+  if(data===undefined)return;
   return (
     <motion.div
       initial={{ opacity: 0, y: 12 }}
