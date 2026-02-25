@@ -33,7 +33,7 @@ const SKILL_CATEGORIES = [
   },
   {
     name: "AI / ML",
-    skills: ["PyTorch", "TensorFlow", "NLP", "LLMs", "Computer Vision"],
+    skills: [ ],
   },
   {
     name: "DevOps & Cloud",

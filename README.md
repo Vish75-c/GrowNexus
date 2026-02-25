@@ -18,9 +18,10 @@ I personally faced this issue in my first year, which inspired this project.
 
 ## 💡 Solution
 
-**CampusConnect** is a web platform that enables:
-- Juniors to **discover, connect, and chat with seniors**
+**GrowthNexus** is a web platform that enables:
+- Juniors to **discover, connect,apply for internships/referrals, and chat with seniors**
 - Seniors to **share blogs, guidance, and hiring opportunities**
+- Alumni to **Can post about hiring in their company,guide and share Experience**
 - A structured, college-specific ecosystem for mentorship and knowledge sharing
 
 The platform focuses on **simplicity, usability, and real impact**, avoiding unnecessary complexity in the MVP.
@@ -33,13 +34,16 @@ The platform focuses on **simplicity, usability, and real impact**, avoiding unn
 - **Junior**
   - Search and connect with seniors
   - Chat with seniors in real-time
-  - Read blogs and hiring posts
+  - Read experience and hiring posts
 - **Senior**
   - All junior features +
-  - Create blog posts
+  - Share Experience
   - Post hiring opportunities (internships / referrals)
-
-Role-based access ensures **only seniors can post hiring content**.
+  - **Alumni**
+  - All junior features +
+  - Share Experience
+  - Post hiring opportunities (internships / referrals)
+Role-based access ensures **only seniors/Alumni can post hiring content**.
 
 ---
 
@@ -79,8 +83,8 @@ Each feature opens in its **own optimized layout**.
 
 ---
 
-### ✍️ Blogs
-- Seniors can write blog posts about:
+### ✍️ Share Experience 
+- Seniors can write Experience posts about:
   - DSA preparation
   - Projects
   - Interviews

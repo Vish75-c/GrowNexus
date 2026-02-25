@@ -150,9 +150,11 @@ export const dashboardSenior = async (req, res) => {
     try {
         const user = await User.find();
         console.log(user);
-        const senior = user
+        const seniors = user
             .filter(u => u.role!=='junior')
-            .slice(0, 3); return res.status(200).json({ senior });
+            .slice(0, 3); 
+            const senior=await seniors.filter((id)=>id._id.toString()!==req.user.toString());
+            return res.status(200).json({ senior });
 
     } catch (error) {
         return res.status(500).send("Server Error");

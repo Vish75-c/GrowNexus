@@ -46,7 +46,7 @@ const userSchema = new mongoose.Schema({
         type:Number,
         required:false  //Graduation Year
     },
-    // Professional data (Seniors/alumni)
+    // Professional data (seniors/alumni)
     company:{
         type:String,
         required:false 

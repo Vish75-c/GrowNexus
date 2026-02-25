@@ -94,7 +94,7 @@ export const saveUserImage = async (req, res) => {
         }
         const { secure_url: url = cloudResult.url, public_id } = cloudResult;
         const user=await User.findByIdAndUpdate(
-            {_id:id},{image:url}
+            {_id:id},{image:url},{new:true}
         )
         // console.log(user);
         return res.status(200).json(user);

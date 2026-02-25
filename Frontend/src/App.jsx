@@ -99,8 +99,7 @@ const App = () => {
           }
         >
           
-          <Route index element={<Navigate to="empty-screen" />} />
-          <Route path="empty-screen" element={<EmptyContainer/>}/>
+          <Route index element={<Navigate to="dashboard" />} />
           <Route path="profile" element={<MyProfile userInfo={userInfo}/>} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="message" element={<Chat />} />
