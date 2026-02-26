@@ -12,7 +12,7 @@ import {
 import * as Avatar from "@radix-ui/react-avatar";
 import { useNavigate } from "react-router-dom";
 import { getColor } from "@/lib/utils";
-
+import Tilt from 'react-parallax-tilt'
 // 1. Staggered Entrance (Container)
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -86,14 +86,25 @@ const ProfileIdentityCard = ({ user, onEdit }) => (
   <motion.div
     variants={itemVariants}
     {...cardHoverProps}
-    className="bg-[#292b36] p-6 sm:p-8 rounded-[2.5rem] border flex flex-col  items-center border-slate-800 shadow-2xl text-center relative overflow-hidden"
+    className="bg-[#292b36] p-6 sm:p-8 rounded-[2.5rem] border flex flex-col items-center border-slate-800 shadow-2xl text-center relative overflow-hidden"
   >
-    <div className="absolute -top-24 -left-24 w-48 h-48 bg-blue-600/10 blur-[100px]" />
+    {/* Ensure this blur is behind everything */}
+    <div className="absolute -top-24 -left-24 w-48 h-48 bg-blue-600/10 blur-[100px] pointer-events-none" />
 
-    <div className="mb-6 mx-auto ">
-      <Avatar.Root className="mx-auto h-28 w-28 sm:h-36 sm:w-36 rounded-[2rem] overflow-hidden shadow-2xl ">
+    <div className="mb-6 mx-auto relative z-10">
+      <Tilt
+        tiltMaxAngleX={15}
+        tiltMaxAngleY={15}
+        perspective={1000}
+        scale={1.1}
+        transitionSpeed={2000}
+        gyroscope={true}
+      >
+        {/* Only ONE Avatar.Root with consistent sizing */}
         <Avatar.Root
-          className={`h-40 w-40 rounded-full overflow-hidden border-4 border-slate-700 flex items-center justify-center shadow-xl ${getColor(user.color)}`}
+          className={`h-50 w-50 sm:h-44 sm:w-44 rounded-full overflow-hidden border-4 border-slate-700 flex items-center justify-center shadow-2xl cursor-grab active:cursor-grabbing ${getColor(
+            user.color
+          )}`}
         >
           {user.image ? (
             <Avatar.Image
@@ -106,14 +117,14 @@ const ProfileIdentityCard = ({ user, onEdit }) => (
             </Avatar.Fallback>
           )}
         </Avatar.Root>
-      </Avatar.Root>
+      </Tilt>
     </div>
 
-    <h3 className="text-xl sm:text-2xl font-black text-white uppercase  tracking-tighter truncate">
+    <h3 className="text-xl sm:text-2xl font-black text-white uppercase tracking-tighter truncate relative z-10">
       {user.firstName} {user.lastName}
     </h3>
 
-    <div className="mt-3 mb-4 px-4 py-1 rounded-full bg-blue-500/10 inline-block border border-blue-500/20">
+    <div className="mt-3 mb-4 px-4 py-1 rounded-full bg-blue-500/10 inline-block border border-blue-500/20 relative z-10">
       <span className="text-[10px] font-black uppercase tracking-widest text-blue-400">
         {user.role}
       </span>
@@ -123,12 +134,12 @@ const ProfileIdentityCard = ({ user, onEdit }) => (
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       onClick={onEdit}
-      className="w-full mt-2 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-black uppercase tracking-widest text-xs transition-all shadow-lg shadow-blue-900/20"
+      className="w-full mt-2 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-black uppercase tracking-widest text-xs transition-all shadow-lg shadow-blue-900/20 relative z-10"
     >
       <FiEdit3 /> Edit Identity
     </motion.button>
 
-    <div className="mt-6 space-y-3 w-full">
+    <div className="mt-6 space-y-3 w-full relative z-10">
       <ContactRow icon={<FiMail />} label="Matrix Email" value={user.email} />
       <ContactRow icon={<FiMapPin />} label="Location" value="Main Campus" />
     </div>

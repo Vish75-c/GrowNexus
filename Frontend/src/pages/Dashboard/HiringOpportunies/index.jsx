@@ -81,7 +81,7 @@ const HiringOpportunities = () => {
 
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <p className="font-bold text-sm text-white truncate uppercase tracking-tight italic group-hover:text-orange-50 transition-colors">
+                  <p className="font-bold text-sm text-white truncate uppercase tracking-tight  group-hover:text-orange-50 transition-colors">
                     {opp.title}
                   </p>
                   <span
