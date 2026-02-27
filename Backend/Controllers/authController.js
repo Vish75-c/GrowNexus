@@ -25,12 +25,14 @@ export const signup = async (req, res) => {
         if (!response) {
             return res.status(401).send("Error while creating user");
         }
-        res.cookie("jwt", generateToken(email, response._id), {
-            maxAge: cookieMaxAge,
-            httpOnly: true,
-            secure: false,
-            sameSite: "Lax"
-        })
+       const isProduction = process.env.NODE_ENV === "production";
+
+res.cookie("jwt", generateToken(email, response._id), {
+    maxAge: cookieMaxAge,
+    httpOnly: true,
+    secure: isProduction,  
+    sameSite: isProduction ? "None" : "Lax"
+});
         return res.status(201).json(response);
     } catch (error) {
         console.log(error);
@@ -51,12 +53,14 @@ export const login = async (req, res) => {
         if (!isMatch) {
             return res.status(401).send("Entered wrong password");
         }
+        const isProduction = process.env.NODE_ENV === "production";
+
         res.cookie("jwt", generateToken(email, response._id), {
             maxAge: cookieMaxAge,
             httpOnly: true,
-            secure: false,
-            sameSite: "Lax"
-        })
+            secure: isProduction,
+            sameSite: isProduction ? "None" : "Lax"
+        });
         return res.status(201).json(response);
     } catch (error) {
         res.status(500).send("Server error");
@@ -80,21 +84,21 @@ export const getUserInfo = async (req, res) => {
 // Update or save the user info
 export const saveUserImage = async (req, res) => {
     try {
-        const id=req.user;
+        const id = req.user;
         if (!req.file) {
             return res.status(400).json({ ok: false, message: 'No file uploaded. Use field name "image".' });
         }
 
         const localFilePath = req.file.path;
- 
+
         const cloudResult = await uploadOnCloudinary(localFilePath);
         console.log(cloudResult);
         if (!cloudResult) {
             return res.status(500).json({ ok: false, message: 'Upload failed' });
         }
         const { secure_url: url = cloudResult.url, public_id } = cloudResult;
-        const user=await User.findByIdAndUpdate(
-            {_id:id},{image:url},{new:true}
+        const user = await User.findByIdAndUpdate(
+            { _id: id }, { image: url }, { new: true }
         )
         // console.log(user);
         return res.status(200).json(user);
@@ -118,7 +122,7 @@ export const saveUserInfo = async (req, res) => {
         const id = req.user;
         const { firstName, lastName, company, branch, role, batch, bio, linkedinUrl, skills, color } = req.body
         // console.log(req.body);
-    
+
         const user = await User.findOneAndUpdate(
             { _id: id },
             {
@@ -146,10 +150,16 @@ export const saveUserInfo = async (req, res) => {
 }
 
 
-export const logout=async (req,res)=>{
+export const logout = async (req, res) => {
     try {
-        res.cookie('jwt',{maxAge:1,secure:false,httpOnly:true,sameSite:"lax"})
-    res.status(200).send("Logout Successful");
+        const isProduction = process.env.NODE_ENV === "production";
+
+        res.cookie("jwt", generateToken(email, response._id), {
+            maxAge: cookieMaxAge,
+            httpOnly: true,
+            secure: isProduction,
+            sameSite: isProduction ? "None" : "Lax"
+        }); res.status(200).send("Logout Successful");
     } catch (error) {
         return res.status(500).send("Server Error");
     }
