@@ -118,19 +118,15 @@ const Profile = () => {
       });
 
       if (response.status === 200 && response.data.image) {
-        // 1. Generate the URL with timestamp once
         const imageUrl = `${response.data.image}?t=${new Date().getTime()}`;
 
-        // 2. Update the Global Store first
         setUserInfo({
           ...userInfo,
           image: imageUrl,
         });
 
-        // 3. Update Local State
         setAvatarSrc(imageUrl);
 
-        // 4. Reset input so the same file can be uploaded again if needed
         if (fileInputRef.current) fileInputRef.current.value = "";
 
         toast.success("Image updated successfully 🎉");
@@ -190,7 +186,7 @@ const Profile = () => {
   return (
     <>
       <Navbar />
-      <div className="poppins-medium min-h-screen mt-20 w-full bg-slate-50 flex items-center justify-center p-6 py-10">
+      <div className="poppins-medium min-h-screen mt-20 w-full bg-slate-50 flex items-center justify-center px-3 md:px-3 py-10">
         <div className="w-full max-w-287 flex flex-col gap-6">
           <div className="bg-white rounded-[40px] shadow-2xl shadow-slate-200/60 border border-slate-100 flex flex-col lg:flex-row overflow-hidden min-h-[85vh]">
             {/* Left Sidebar */}

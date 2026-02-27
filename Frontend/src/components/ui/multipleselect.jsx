@@ -219,7 +219,7 @@ const MultipleSelector = React.forwardRef(
               onFocus={() => setOpen(true)}
               placeholder={hidePlaceholderWhenSelected && selected.length !== 0 ? "" : placeholder}
               className={cn(
-                "flex-1 bg-transparent outline-none placeholder:text-muted-foreground  min-w-[120px]",
+                "flex-1 bg-transparent outline-none placeholder:text-muted-foreground  min-w-30",
                 {
                   "px-3 py-2": selected.length === 0,
                 },
@@ -232,7 +232,7 @@ const MultipleSelector = React.forwardRef(
         <div className="relative">
           {open && (
             <CommandList
-              className="absolute top-2 z-50 w-full rounded-md border bg-[#1f202a] text-white shadow-xl outline-none animate-in fade-in-0 zoom-in-95 max-h-[250px] overflow-y-auto"
+              className="absolute top-2 z-50 w-full rounded-md border bg-[#1f202a] text-white shadow-xl outline-none animate-in fade-in-0 zoom-in-95 max-h-62.5 overflow-y-auto"
               onMouseLeave={() => (mouseOn.current = false)}
               onMouseEnter={() => (mouseOn.current = true)}
             >
