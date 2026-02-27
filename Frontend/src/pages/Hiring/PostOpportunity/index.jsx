@@ -164,7 +164,7 @@ const PostOpportunity = () => {
       initial="hidden"
       animate="visible"
       variants={containerVariants}
-      className="w-full h-full bg-[#1f202a] text-slate-400 font-sans px-3 pt-10 pb-15 overflow-y-auto custom-scrollbar"
+      className="w-full h-full bg-[#1f202a] text-slate-400 font-sans md:px-3 pt-10 pb-15 overflow-y-auto custom-scrollbar"
     >
       <div className="max-w-7xl mx-auto mb-10">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">

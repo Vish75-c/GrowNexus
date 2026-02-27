@@ -6,6 +6,7 @@ import FeaturedBlog from './FeaturedBlog';
 import HiringOpportunities from './HiringOpportunies';
 import RecommendedSeniors from './RecommendedSeniors';
 import RecentChats from './RecentChats';
+import { useAppStore } from '@/store';
 
 // --- ANIMATION VARIANTS ---
 
@@ -40,6 +41,7 @@ const cardHoverVariants = {
 };
 
 const Dashboard = () => {
+  const {userInfo}=useAppStore();
   return (
     // 4. Wrap main container in motion.div with variants
     <motion.div 
@@ -48,13 +50,13 @@ const Dashboard = () => {
       variants={containerVariants}
       className="min-h-screen"
     >
-      <main className="mx-auto px-3 mt-10 mb-15 py-3">
+      <main className="mx-auto md:px-3 mt-10 mb-15 py-3">
         
         {/* Greeting - Slide-Up inheriting from parent */}
         <motion.div variants={slideUpVariants} className="mb-8">
           <div className="flex items-center gap-2 mb-1">
             <h1 className="text-4xl font-black text-white tracking-tight">
-              Welcome back <span className="text-blue-600 italic">Vishal</span>
+              Welcome back <span className="text-blue-600 italic">{userInfo.firstName}</span>
             </h1>
             <Sparkles className="h-6 w-6 text-blue-600" />
           </div>

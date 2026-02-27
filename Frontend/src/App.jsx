@@ -111,7 +111,7 @@ const App = () => {
           <Route path="feed/:id" element={<FeedCard/>}/>
           
           <Route path="post-opportunity" element={<PostOpportunity/>}/>
-          <Route path="hiring-post" element={<HiringPost/>}/>
+          <Route path="opportunity-feed" element={<HiringPost/>}/>
           <Route path="docs" element={<Documentation/>}/>
           <Route path="notices" element={<Noticeboard/>}/>
           {/* initially not making contact page */}

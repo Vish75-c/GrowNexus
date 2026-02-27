@@ -129,7 +129,7 @@ const ShareExperience = () => {
       variants={containerVariants}
       className="min-h-screen mt-10 mb-15 text-white"
     >
-      <div className=" mx-auto px-3">
+      <div className=" mx-auto md:px-3">
         {/* Header - inheriting Slide-Up */}
         <motion.div variants={itemVariants} className="flex items-center justify-between mb-10">
           <div>

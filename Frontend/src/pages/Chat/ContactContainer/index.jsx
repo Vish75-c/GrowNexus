@@ -101,7 +101,7 @@ const ContactContainer = () => {
       variants={containerVariants}
       className='flex flex-col h-full bg-[#1f202a] text-slate-300'
     >
-      <div className="flex-1 overflow-y-auto custom-scrollbar px-3 mt-10 mb-15 space-y-8">
+      <div className="flex-1 overflow-y-auto custom-scrollbar md:px-3 mt-10 mb-15 space-y-8">
         
         {/* DIRECT MESSAGES SECTION */}
         <motion.section variants={slideUpVariants}>
@@ -113,7 +113,7 @@ const ContactContainer = () => {
             <NewDm />
           </div>
 
-          <div className="space-y-1">
+          <div className="space-y-1  ">
             <AnimatePresence mode="popLayout">
               {selectedGroupContact?.length > 0 ? (
                 selectedGroupContact.map((contact) => (

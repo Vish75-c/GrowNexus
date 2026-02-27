@@ -6,10 +6,11 @@ import {
   FiChevronRight, FiUsers, FiAward, FiStar
 } from "react-icons/fi";
 import { useAppStore } from "@/store";
+import { useNavigate } from "react-router-dom";
 
 const Documentation = () => {
   const { userInfo } = useAppStore();
-
+  const navigate=useNavigate();
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -59,7 +60,7 @@ const Documentation = () => {
       initial="hidden"
       animate="visible"
       variants={containerVariants}
-      className="mt-10 mb-15 mx-auto font-sans px-3 "
+      className="mt-10 mb-15 mx-auto md:px-3 "
     >
       {/* --- HEADER --- */}
       <motion.div variants={itemVariants} className="mb-20">
@@ -141,7 +142,7 @@ const Documentation = () => {
           <FiBriefcase className="absolute -bottom-10 -left-10 text-blue-500/5 rotate-12" size={200} />
 
           <div className="flex items-center gap-6 relative z-10">
-            <div className="h-16 w-16 rounded-[1.5rem] bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-600/20">
+            <div className="h-16 w-16 p-3 rounded-[1.5rem] bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-600/20">
               <FiUsers size={32} />
             </div>
             <div>
@@ -150,7 +151,7 @@ const Documentation = () => {
             </div>
           </div>
           
-          <button className="relative z-10 whitespace-nowrap px-10 py-4 bg-blue-600 text-white font-black text-xs uppercase tracking-widest rounded-2xl hover:bg-blue-500 transition-all shadow-xl shadow-blue-900/40 active:scale-95">
+          <button onClick={()=>navigate('/main/post-opportunity')} className="relative z-10 whitespace-nowrap px-10 py-4 bg-blue-600 text-white font-black text-xs uppercase tracking-widest rounded-2xl hover:bg-blue-500 transition-all shadow-xl shadow-blue-900/40 active:scale-95">
             Post Opportunity
           </button>
         </motion.div>

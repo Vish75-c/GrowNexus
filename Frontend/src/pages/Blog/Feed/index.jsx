@@ -65,7 +65,7 @@ const Feed = () => {
       variants={containerVariants}
       className="min-h-screen mt-10 mb-15 text-white"
     >
-      <div className="mx-auto px-3 ">
+      <div className="mx-auto md:px-3 ">
         {/* Header - inheriting initial/animate from parent */}
         <motion.div variants={itemVariants} className="mb-10">
           <div className="flex items-center gap-2 mb-2">

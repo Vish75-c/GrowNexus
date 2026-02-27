@@ -117,7 +117,7 @@ const Find = () => {
       initial="hidden"
       animate="visible"
       variants={containerVariants}
-      className="w-full h-full bg-[#1f202a] text-slate-400 font-sans px-3 mt-10 mb-15 overflow-y-auto custom-scrollbar"
+      className="w-full h-full bg-[#1f202a] text-slate-400 font-sans md:px-3 mt-10 mb-15 overflow-y-auto custom-scrollbar"
     >
       
       {/* --- HEADER --- */}

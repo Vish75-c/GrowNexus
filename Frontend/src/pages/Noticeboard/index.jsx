@@ -55,12 +55,12 @@ const NoticeBoard = () => {
   };
 
   return (
-    <div className="w-full h-full bg-[#1f202a] text-slate-400 font-sans px-3 overflow-y-auto custom-scrollbar">
+    <div className="w-full h-full bg-[#1f202a] text-slate-400 font-sans md:px-3 overflow-y-auto custom-scrollbar">
       <motion.div 
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="mx-auto mb-15 mt-10"
+        className="mx-auto  mb-15 mt-10"
       >
         {/* --- HEADER --- */}
         <motion.div variants={itemVariants} className=" mb-12">

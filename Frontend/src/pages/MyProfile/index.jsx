@@ -134,9 +134,9 @@ const ProfileIdentityCard = ({ user, onEdit }) => (
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       onClick={onEdit}
-      className="w-full mt-2 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-blue-500 hover:bg-blue-600 text-white font-black uppercase tracking-widest text-xs transition-all shadow-lg shadow-blue-900/20 relative z-10"
+      className="w-full mt-2 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-black uppercase tracking-widest text-xs transition-all shadow-lg shadow-blue-900/20 relative z-10"
     >
-      <FiEdit3 /> Edit Identity
+      <FiEdit3 /> Edit Profile
     </motion.button>
 
     <div className="mt-6 space-y-3 w-full relative z-10">
@@ -268,7 +268,7 @@ const MyProfile = ({ userInfo }) => {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="px-6 max-w-7xl mx-auto"
+        className="md:px-3  max-w-7xl mx-auto"
       >
         <motion.div
           variants={itemVariants}
@@ -278,9 +278,10 @@ const MyProfile = ({ userInfo }) => {
             <h1 className="text-4xl font-black text-white tracking-tighter">
               My <span className="text-blue-600 italic">Profile</span>
             </h1>
-            <p className="text-slate-500 font-medium text-sm mt-2 tracking-widest uppercase">
-              Identity Configuration & Skill Matrix
-            </p>
+            
+            <p className="text-slate-500 text-sm mt-2 max-w-md font-medium">
+              Identity Configuration & Skill Matrix.
+          </p>
           </div>
         </motion.div>
 

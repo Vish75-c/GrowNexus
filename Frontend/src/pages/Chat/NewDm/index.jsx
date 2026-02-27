@@ -91,7 +91,7 @@ const NewDm = () => {
             />
           </div>
 
-          <ScrollArea className="flex-1 pr-4">
+          <div className="flex-1 overflow-y-auto pr-4 custom-scrollbar">
             <div className="flex flex-col gap-2">
               {searchedContacts.map((contact) => (
                 <button
@@ -146,7 +146,7 @@ const NewDm = () => {
                 </div>
               </div>
             )}
-          </ScrollArea>
+          </div>
         </DialogContent>
       </Dialog>
     </>

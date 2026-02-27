@@ -87,7 +87,7 @@ const HiringPost = () => {
   };
 
   return (
-    <div className="w-full h-full bg-[#1f202a] text-slate-400 font-sans px-3 pt-10 pb-15 overflow-y-auto custom-scrollbar">
+    <div className="w-full h-full bg-[#1f202a] text-slate-400  md:px-3 pt-10 pb-15 overflow-y-auto custom-scrollbar">
       {/* 4. Main container wrapped in motion.div */}
       <motion.div
         variants={containerVariants}
@@ -100,7 +100,8 @@ const HiringPost = () => {
           <h1 className="text-4xl font-black text-white tracking-tighter">
             Opportunity <span className="text-blue-600 italic">Feed</span>
           </h1>
-          <p className="text-slate-500 text-sm mt-2 font-bold uppercase tracking-[0.3em]">
+          
+          <p className="text-slate-500 text-sm mt-2 max-w-md font-medium">
             Curated by the GrowthNexus Community
           </p>
         </motion.div>
