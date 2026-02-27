@@ -161,7 +161,7 @@ Each feature opens in its **own optimized layout**.
 
 ## 🎯 Impact
 
-CampusConnect aims to:
+GrowthNexus aims to:
 - Improve mentorship culture in colleges
 - Reduce confusion for juniors
 - Preserve alumni knowledge
