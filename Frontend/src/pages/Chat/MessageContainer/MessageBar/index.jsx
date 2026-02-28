@@ -137,114 +137,119 @@ const MessageBar = () => {
   };
 
   return (
-    <div className="py-4 flex justify-center items-center  mb-4 gap-4 relative bg-[#1f202a]">
-      {/* --- FILE PREVIEW AREA --- */}
-      <AnimatePresence>
-        {selectedFile && (
-          <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="absolute bottom-full left-8 mb-4 z-10"
-          >
-            <div className="bg-[#292b36] border border-slate-700 p-2 rounded-2xl shadow-2xl flex items-center gap-3 pr-4 min-w-15 backdrop-blur-md bg-opacity-90">
-              <div className="h-12 w-12 rounded-xl overflow-hidden bg-[#1f202a] flex items-center justify-center border border-slate-800">
-                {filePreview ? (
-                  <img
-                    src={filePreview}
-                    className="h-full w-full object-cover"
-                    alt="preview"
-                  />
-                ) : (
-                  <FiFile className="text-blue-500" size={20} />
-                )}
-              </div>
-              <div className="flex-1 overflow-hidden">
-                <p className="text-xs text-slate-200 font-bold truncate max-w-30">
-                  {selectedFile.name}
-                </p>
-                <p className="text-[10px] text-slate-500 font-black uppercase tracking-wider">
-                  {(selectedFile.size / 1024).toFixed(1)} KB
-                </p>
-              </div>
-              <button
-                onClick={clearFile}
-                className="p-1.5 hover:bg-red-500/10 text-slate-500 hover:text-red-500 transition-all rounded-full"
-              >
-                <AiOutlineClose size={16} />
-              </button>
+  <div className="w-full px-2 sm:px-4 py-3 sm:py-4 flex justify-center items-center mb-2 sm:mb-4 gap-3 sm:gap-4 relative bg-[#1f202a]">
+    {/* --- FILE PREVIEW AREA --- */}
+    <AnimatePresence>
+      {selectedFile && (
+        <motion.div
+          initial={{ opacity: 0, y: 20, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 20, scale: 0.95 }}
+          className="absolute bottom-full left-2 sm:left-8 mb-3 sm:mb-4 z-10 px-2"
+        >
+          <div className="bg-[#292b36] border border-slate-700 p-2 rounded-2xl shadow-2xl flex items-center gap-2 sm:gap-3 pr-3 sm:pr-4 min-w-45 backdrop-blur-md bg-opacity-90">
+            <div className="h-10 sm:h-12 w-10 sm:w-12 rounded-xl overflow-hidden bg-[#1f202a] flex items-center justify-center border border-slate-800">
+              {filePreview ? (
+                <img
+                  src={filePreview}
+                  className="h-full w-full object-cover"
+                  alt="preview"
+                />
+              ) : (
+                <FiFile className="text-blue-500" size={18} />
+              )}
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
-      <div className="flex-1 flex bg-[#292b36] rounded-2xl items-center gap-4 pr-5 relative border border-slate-800 focus-within:border-blue-500/50 transition-all shadow-xl">
-        <input
-          type="text"
-          placeholder={isUploading ? "Uploading file..." : "Type a message..."}
+            <div className="flex-1 overflow-hidden">
+              <p className="text-xs text-slate-200 font-bold truncate max-w-30 sm:max-w-40">
+                {selectedFile.name}
+              </p>
+              <p className="text-[9px] sm:text-[10px] text-slate-500 font-black uppercase tracking-wider">
+                {(selectedFile.size / 1024).toFixed(1)} KB
+              </p>
+            </div>
+
+            <button
+              onClick={clearFile}
+              className="p-1.5 hover:bg-red-500/10 text-slate-500 hover:text-red-500 transition-all rounded-full"
+            >
+              <AiOutlineClose size={14} />
+            </button>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+
+    {/* Message Input Area */}
+    <div className="flex-1 w-full max-w-3xl flex bg-[#292b36] rounded-2xl items-center gap-3 sm:gap-4 pr-3 sm:pr-5 relative border border-slate-800 focus-within:border-blue-500/50 transition-all shadow-xl">
+      <input
+        type="text"
+        placeholder={isUploading ? "Uploading file..." : "Type a message..."}
+        disabled={isUploading}
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+        onKeyDown={handleKeyDown}
+        className="text-slate-200 flex-1 py-3 sm:py-5 px-3 sm:px-6 bg-transparent rounded-2xl focus:outline-none text-sm sm:text-base placeholder:text-slate-500 font-medium disabled:opacity-50"
+      />
+
+      <div className="flex items-center gap-3 sm:gap-4">
+        <button
+          onClick={handleAttachmentClick}
           disabled={isUploading}
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          onKeyDown={handleKeyDown}
-          className="text-slate-200 flex-1 py-5 px-6 bg-transparent rounded-2xl focus:outline-none text-base placeholder:text-slate-500 font-medium disabled:opacity-50"
+          className="text-slate-500 hover:text-blue-500 transition-colors duration-300 disabled:opacity-30"
+        >
+          <GrAttachment size={20} />
+        </button>
+
+        <input
+          type="file"
+          className="hidden"
+          ref={fileInputRef}
+          onChange={handleAttachmentChange}
         />
 
-        <div className="flex items-center gap-4">
-          <button
-            onClick={handleAttachmentClick}
-            disabled={isUploading}
-            className="text-slate-500 hover:text-blue-500 transition-colors duration-300 disabled:opacity-30"
-          >
-            <GrAttachment size={22} />
-          </button>
-          <input
-            type="file"
-            className="hidden"
-            ref={fileInputRef}
-            onChange={handleAttachmentChange}
-          />
-
-          <button
-            onClick={() => setEmojiPickerOpen(!emojiPickerOpen)}
-            className={`transition-colors duration-300 ${
-              emojiPickerOpen
-                ? "text-blue-500"
-                : "text-slate-500 hover:text-blue-500"
-            }`}
-          >
-            <RiEmojiStickerLine size={24} />
-          </button>
-        </div>
-
-        {emojiPickerOpen && (
-          <div
-            ref={emojiRef}
-            className="absolute bottom-24 right-0 z-50 shadow-2xl"
-          >
-            <EmojiPicker
-              theme="dark"
-              onEmojiClick={(e) => setMessage((msg) => msg + e.emoji)}
-              autoFocusSearch={false}
-              width={350}
-              height={450}
-            />
-          </div>
-        )}
+        <button
+          onClick={() => setEmojiPickerOpen(!emojiPickerOpen)}
+          className={`transition-colors duration-300 ${
+            emojiPickerOpen
+              ? "text-blue-500"
+              : "text-slate-500 hover:text-blue-500"
+          }`}
+        >
+          <RiEmojiStickerLine size={22} />
+        </button>
       </div>
 
-      <button
-        onClick={handleSendMessage}
-        disabled={isUploading || (!message.trim() && !selectedFile)}
-        className="bg-[#8417ff] p-2 h-16 w-14 rounded-2xl flex items-center justify-center text-white hover:bg-[#741bda] hover:scale-105 active:scale-95 transition-all shadow-lg shadow-purple-900/20 disabled:opacity-50 disabled:hover:scale-100"
-      >
-        {isUploading ? (
-          <div className="h-6 w-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-        ) : (
-          <IoMdSend size={25}  />
-        )}
-      </button>
+      {emojiPickerOpen && (
+        <div
+          ref={emojiRef}
+          className="absolute bottom-20 sm:bottom-24 right-0 z-50 shadow-2xl"
+        >
+          <EmojiPicker
+            theme="dark"
+            onEmojiClick={(e) => setMessage((msg) => msg + e.emoji)}
+            autoFocusSearch={false}
+            width={window.innerWidth < 480 ? 280 : 350}
+            height={400}
+          />
+        </div>
+      )}
     </div>
-  );
+
+    {/* Send Button */}
+    <button
+      onClick={handleSendMessage}
+      disabled={isUploading || (!message.trim() && !selectedFile)}
+      className="bg-[#8417ff] p-2 h-12 sm:h-16 w-12 sm:w-14 rounded-2xl flex items-center justify-center text-white hover:bg-[#741bda] hover:scale-105 active:scale-95 transition-all shadow-lg shadow-purple-900/20 disabled:opacity-50 disabled:hover:scale-100"
+    >
+      {isUploading ? (
+        <div className="h-5 w-5 sm:h-6 sm:w-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+      ) : (
+        <IoMdSend size={22} className="sm:text-[25px]" />
+      )}
+    </button>
+  </div>
+);
 };
 
 export default MessageBar;
