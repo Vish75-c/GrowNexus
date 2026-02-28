@@ -50,7 +50,7 @@ const Layout = () => {
         </header>
 
         {selectedChatType && location.pathname === "/main/message" && (
-            <div className="px-6 lg:px-9">
+            <div className="md:px-3">
               <MessageHeader />
             </div>
           )}
@@ -72,7 +72,7 @@ const Layout = () => {
          
         </div>
          {selectedChatType && location.pathname === "/main/message" && (
-            <div className="px-6 pb-2 lg:px-9 lg:pb-2">
+            <div className="md:px-3 pb-2">
               <MessageBar />
             </div>
           )}

@@ -159,7 +159,7 @@ const Documentation = () => {
 
       {/* Footer Disclaimer */}
       <motion.p variants={itemVariants} className="mt-20 text-center text-[10px] font-bold text-slate-600 uppercase tracking-[0.5em]">
-        GrowthNexus &bull; Established 2024 &bull; Empowering Connections
+        GrowthNexus &bull; Established 2026 &bull; Empowering Connections
       </motion.p>
     </motion.div>
   );

@@ -137,7 +137,7 @@ const MessageBar = () => {
   };
 
   return (
-    <div className="py-4 flex justify-center items-center px-3 mb-4 gap-4 relative bg-[#1f202a]">
+    <div className="py-4 flex justify-center items-center  mb-4 gap-4 relative bg-[#1f202a]">
       {/* --- FILE PREVIEW AREA --- */}
       <AnimatePresence>
         {selectedFile && (

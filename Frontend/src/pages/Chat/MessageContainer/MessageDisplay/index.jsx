@@ -300,7 +300,7 @@ const MessageDisplay = () => {
 };
   return (
     <div className="flex-1 overflow-y-auto bg-[#1f202a] py-4 relative custom-scrollbar">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         {selectedChatMessages.map((message, index) => {
           const lastDate =
             index > 0
