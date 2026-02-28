@@ -3,78 +3,116 @@ import Message from "./Models/MessageModel.js";
 import Channel from "./Models/ChannelModel.js";
 
 export const SetupSocket = (server) => {
-    const io = new SocketIOServer(server, {
-        cors: {
-            origin: "https://grow-nexus.vercel.app",
-            methods: ["GET", "POST"],
-            credentials: true
-        },
-        transports: ["websocket", "polling"], // Keep both for mobile stability
-        pingInterval: 10000, // Check connection every 10s
-        pingTimeout: 5000,   // Wait 5s for response before timing out
-    });
+  const io = new SocketIOServer(server, {
+    cors: {
+      origin: [
+        "https://grow-nexus.vercel.app",
+        "http://localhost:3002",
+      ],
+      methods: ["GET", "POST"],
+      credentials: true,
+    },
+    transports: ["polling", "websocket"],
+    pingInterval: 10000,
+    pingTimeout: 5000,
+  });
 
-    const userSocketMap = new Map();
+  // userId -> Set(socketIds)
+  const userSocketMap = new Map();
 
-    const disconnect = (socket) => {
-        console.log(`Client Disconnected: ${socket.id}`);
-        for (const [userId, socketId] of userSocketMap.entries()) {
-            if (socketId === socket.id) {
-                userSocketMap.delete(userId);
-                break;
-            }
-        }
-    };
+  const addSocket = (userId, socketId) => {
+    const sockets = userSocketMap.get(userId) || new Set();
+    sockets.add(socketId);
+    userSocketMap.set(userId, sockets);
+  };
 
-    const sendChannelMessage = async (message) => {
-        const { channelId, sender, content, messageType, fileUrl } = message;
-        const createdMessage = await Message.create({ sender, recipient: null, content, messageType, timestamp: new Date(), fileUrl });
-        const messageData = await Message.findById(createdMessage._id).populate("sender", "id email firstName lastName image color").exec();
+  const removeSocket = (socketId) => {
+    for (const [userId, sockets] of userSocketMap.entries()) {
+      if (sockets.has(socketId)) {
+        sockets.delete(socketId);
+        if (sockets.size === 0) userSocketMap.delete(userId);
+        break;
+      }
+    }
+  };
 
-        await Channel.findByIdAndUpdate(channelId, { $push: { messages: createdMessage._id } });
-        const channel = await Channel.findById(channelId).populate("members");
-        const finalData = { ...messageData._doc, channelId: channel._id };
+  const getUserSockets = (userId) => {
+    return Array.from(userSocketMap.get(userId) || []);
+  };
 
-        if (channel && channel.members) {
-            channel.members.forEach((member) => {
-                const memberSocketId = userSocketMap.get(member._id.toString());
-                if (memberSocketId) {
-                    io.to(memberSocketId).emit("recieve-channel-message", finalData);
-                }
-            });
-            // Handle Admin
-            const adminSocketId = userSocketMap.get(channel.admin._id.toString());
-            if (adminSocketId) io.to(adminSocketId).emit("recieve-channel-message", finalData);
-        }
-    };
+  io.on("connection", (socket) => {
+    const userId = socket.handshake.auth?.userId;
 
-    const sendMessage = async (message) => {
-        const senderSocketId = userSocketMap.get(message.sender);
-        const recipientSocketId = userSocketMap.get(message.recipient);
+    if (userId) {
+      addSocket(userId.toString(), socket.id);
+      console.log(`User ${userId} connected: ${socket.id}`);
+    }
 
+    // ---------------- PRIVATE MESSAGE ----------------
+    socket.on("sendMessage", async (message) => {
+      try {
         const createdMessage = await Message.create(message);
+
         const messageData = await Message.findById(createdMessage._id)
-            .populate("sender", "id email firstName image color")
-            .populate("recipient", "id email firstName lastName image color");
+          .populate("sender", "id email firstName image color")
+          .populate("recipient", "id email firstName lastName image color");
 
-        if (recipientSocketId) io.to(recipientSocketId).emit("receiveMessage", messageData);
-        if (senderSocketId) io.to(senderSocketId).emit("receiveMessage", messageData);
-    };
+        const senderSockets = getUserSockets(message.sender);
+        const recipientSockets = getUserSockets(message.recipient);
 
-    io.on("connection", (socket) => {
-        const userId = socket.handshake.auth.userId;
-        if (userId) {
-            userSocketMap.set(userId, socket.id);
-            console.log(`User Connected: ${userId} with socket Id: ${socket.id}`);
-        }
-
-        // Manual Heartbeat to keep mobile radio active
-        socket.on("heartbeat", (userId) => {
-            if (userId) userSocketMap.set(userId, socket.id);
+        [...senderSockets, ...recipientSockets].forEach((sockId) => {
+          io.to(sockId).emit("receiveMessage", messageData);
         });
 
-        socket.on("sendMessage", sendMessage);
-        socket.on("send-channel-message", sendChannelMessage);
-        socket.on("disconnect", () => disconnect(socket));
+      } catch (err) {
+        console.error("Message send error:", err);
+      }
     });
+
+    // ---------------- CHANNEL MESSAGE ----------------
+    socket.on("send-channel-message", async (message) => {
+      try {
+        const { channelId, sender, content, messageType, fileUrl } = message;
+
+        const createdMessage = await Message.create({
+          sender,
+          recipient: null,
+          content,
+          messageType,
+          timestamp: new Date(),
+          fileUrl,
+        });
+
+        const messageData = await Message.findById(createdMessage._id)
+          .populate("sender", "id email firstName lastName image color");
+
+        await Channel.findByIdAndUpdate(channelId, {
+          $push: { messages: createdMessage._id },
+        });
+
+        const channel = await Channel.findById(channelId).populate("members admin");
+
+        const finalData = {
+          ...messageData._doc,
+          channelId: channel._id,
+        };
+
+        const allMembers = [...channel.members, channel.admin];
+
+        allMembers.forEach((member) => {
+          getUserSockets(member._id.toString()).forEach((sockId) => {
+            io.to(sockId).emit("recieve-channel-message", finalData);
+          });
+        });
+
+      } catch (err) {
+        console.error("Channel message error:", err);
+      }
+    });
+
+    socket.on("disconnect", () => {
+      removeSocket(socket.id);
+      console.log("Socket disconnected:", socket.id);
+    });
+  });
 };

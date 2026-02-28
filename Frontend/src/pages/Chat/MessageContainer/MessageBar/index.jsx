@@ -12,8 +12,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FiFile, FiImage } from "react-icons/fi";
 
 const MessageBar = () => {
-  const socket = useSocket();
-  const emojiRef = useRef();
+const { safeEmit } = useSocket();  const emojiRef = useRef();
   const fileInputRef = useRef();
   const [message, setMessage] = useState("");
   const { selectedChatData, selectedChatType, userInfo } = useAppStore();
@@ -90,9 +89,9 @@ const MessageBar = () => {
             content: undefined,
             fileUrl: fileUrl,
           };
-          socket.emit("sendMessage", payload);
+          await safeEmit("sendMessage", payload);
         } else if (selectedChatType === "channel") {
-          socket.emit("send-channel-message", {
+          await safeEmit("send-channel-message", {
             sender: userInfo._id,
             content: undefined,
             messageType: "file",
@@ -111,7 +110,7 @@ const MessageBar = () => {
           };
           socket.emit("sendMessage", payload);
         } else if (selectedChatType === "channel") {
-          socket.emit("send-channel-message", {
+          await safeEmit("send-channel-message", {
             sender: userInfo._id,
             content: message,
             messageType: "text",

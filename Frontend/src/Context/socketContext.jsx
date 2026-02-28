@@ -7,40 +7,49 @@ const SocketContext = createContext(null);
 export const useSocket = () => useContext(SocketContext);
 
 export const SocketProvider = ({ children }) => {
-  const socketRef = useRef(null);
-  const [socket, setSocket] = useState(null);
   const { userInfo } = useAppStore();
+  const socketRef = useRef(null);
+  const emitQueue = useRef([]);
+  const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    if (!userInfo) return;
+    if (!userInfo?._id) return;
 
-    // Create Socket Instance
     const s = io(HOST, {
       withCredentials: true,
-      transports: ["websocket", "polling"], // Essential for mobile
+      transports: ["polling", "websocket"], // important for mobile
       auth: { userId: userInfo._id },
       reconnection: true,
-      reconnectionAttempts: 10,
+      reconnectionAttempts: Infinity,
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000,
     });
 
     socketRef.current = s;
     setSocket(s);
 
-    // --- Mobile Optimization: Heartbeat ---
-    const heartbeat = setInterval(() => {
-      if (s.connected) {
-        s.emit("heartbeat", userInfo._id);
-      }
-    }, 15000); // Ping every 15s to keep connection alive
+    s.on("connect", () => {
+      console.log("✅ Connected:", s.id);
 
-    s.on("connect", () => console.log("Connected to Socket Server"));
-    s.on("connect_error", (err) => console.log("Socket Error:", err.message));
+      // flush queued emits
+      emitQueue.current.forEach(({ event, data, resolve }) => {
+        s.emit(event, data, resolve);
+      });
+      emitQueue.current = [];
+    });
 
-    // Message Handlers
+    s.on("disconnect", (reason) => {
+      console.log("❌ Disconnected:", reason);
+    });
+
+    s.on("connect_error", (err) => {
+      console.log("⚠️ Socket Error:", err.message);
+    });
+
     const handleReceiveMessage = (message) => {
       const store = useAppStore.getState();
+
       if (
-        store.selectedChatType &&
         store.selectedChatData &&
         (store.selectedChatData._id === message.sender?._id ||
           store.selectedChatData._id === message.recipient?._id)
@@ -49,27 +58,39 @@ export const SocketProvider = ({ children }) => {
       }
     };
 
-    const handleRecieveChannelMessage = (message) => {
+    const handleReceiveChannelMessage = (message) => {
       const { selectedChatData, addMessage } = useAppStore.getState();
-      if (selectedChatData && selectedChatData._id === message.channelId) {
+      if (selectedChatData?._id === message.channelId) {
         addMessage(message);
       }
     };
 
     s.on("receiveMessage", handleReceiveMessage);
-    s.on("recieve-channel-message", handleRecieveChannelMessage);
+    s.on("recieve-channel-message", handleReceiveChannelMessage);
 
     return () => {
-      clearInterval(heartbeat);
-      s.off("receiveMessage", handleReceiveMessage);
-      s.off("recieve-channel-message", handleRecieveChannelMessage);
       s.disconnect();
       socketRef.current = null;
       setSocket(null);
+      emitQueue.current = [];
     };
   }, [userInfo]);
 
+  const safeEmit = (event, data) => {
+    const s = socketRef.current;
+
+    return new Promise((resolve) => {
+      if (s && s.connected) {
+        s.emit(event, data, resolve);
+      } else {
+        emitQueue.current.push({ event, data, resolve });
+      }
+    });
+  };
+
   return (
-    <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>
+    <SocketContext.Provider value={{ socket, safeEmit }}>
+      {children}
+    </SocketContext.Provider>
   );
 };
