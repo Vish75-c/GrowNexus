@@ -12,7 +12,7 @@ The platform helps students:
 
 💬 Chat with seniors in real time
 
-📚 Share and read experience blogs
+📚 Share and read experience of each other in their domain
 
 💼 Discover internships and referral opportunities
 
@@ -73,7 +73,7 @@ Recommended mentors
 
 Recent chat previews
 
-Featured blog section
+Featured experience section
 
 Latest opportunities feed
 
@@ -81,7 +81,7 @@ Each feature opens in an optimized layout.
 
 💬 Real-Time Messaging
 
-One-to-one chat system
+One-to-one and multi chat system 
 
 Socket.io powered WebSocket communication
 
@@ -202,11 +202,10 @@ Visual polish
 
 🤖 RAG-powered career guidance chatbot
 
-📊 Admin moderation dashboard
 
 🎯 Impact
 
-GrowNexus aims to:
+GrowthNexus aims to:
 
 Strengthen mentorship culture in colleges
 
