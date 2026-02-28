@@ -9,10 +9,11 @@ import { useAppStore } from "@/store";
 import apiClient from "@/lib/apiClient";
 import { UPLOAD_FILE_ROUTE } from "@/utils/Constant";
 import { motion, AnimatePresence } from "framer-motion";
-import { FiFile, FiImage } from "react-icons/fi";
+import { FiFile } from "react-icons/fi";
 
 const MessageBar = () => {
-const { safeEmit } = useSocket();  const emojiRef = useRef();
+  const { safeEmit } = useSocket();
+  const emojiRef = useRef();
   const fileInputRef = useRef();
   const [message, setMessage] = useState("");
   const { selectedChatData, selectedChatType, userInfo } = useAppStore();
@@ -63,7 +64,6 @@ const { safeEmit } = useSocket();  const emojiRef = useRef();
   };
 
   const handleSendMessage = async () => {
-  
     if (!message.trim() && !selectedFile) return;
 
     setIsUploading(true);
@@ -89,9 +89,10 @@ const { safeEmit } = useSocket();  const emojiRef = useRef();
             content: undefined,
             fileUrl: fileUrl,
           };
-          await safeEmit("sendMessage", payload);
+          // DON'T await the socket emit so UI doesn't hang waiting for ACK
+          safeEmit("sendMessage", payload);
         } else if (selectedChatType === "channel") {
-          await safeEmit("send-channel-message", {
+          safeEmit("send-channel-message", {
             sender: userInfo._id,
             content: undefined,
             messageType: "file",
@@ -108,9 +109,9 @@ const { safeEmit } = useSocket();  const emojiRef = useRef();
             content: message,
             fileUrl: undefined,
           };
-          await safeEmit("sendMessage", payload);
+          safeEmit("sendMessage", payload);
         } else if (selectedChatType === "channel") {
-          await safeEmit("send-channel-message", {
+          safeEmit("send-channel-message", {
             sender: userInfo._id,
             content: message,
             messageType: "text",
@@ -137,7 +138,7 @@ const { safeEmit } = useSocket();  const emojiRef = useRef();
   };
 
   return (
-    <div className="h-[12vh] flex justify-center items-center px-3 mb-4 gap-4 relative bg-[#1f202a]">
+    <div className="w-full flex justify-center items-end sm:items-center px-3 py-3 sm:py-4 gap-4 relative bg-[#1f202a]">
       {/* --- FILE PREVIEW AREA --- */}
       <AnimatePresence>
         {selectedFile && (
@@ -145,10 +146,11 @@ const { safeEmit } = useSocket();  const emojiRef = useRef();
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="absolute bottom-full left-8 mb-4 z-10"
+            // centered on small screens, anchored left on larger screens
+            className="absolute bottom-full mb-4 z-10 left-1/2 transform -translate-x-1/2 sm:left-8 sm:transform-none max-w-[90vw] sm:max-w-[30rem]"
           >
-            <div className="bg-[#292b36] border border-slate-700 p-2 rounded-2xl shadow-2xl flex items-center gap-3 pr-4 min-w-30 backdrop-blur-md bg-opacity-90">
-              <div className="h-12 w-12 rounded-xl overflow-hidden bg-[#1f202a] flex items-center justify-center border border-slate-800">
+            <div className="bg-[#292b36] border border-slate-700 p-2 rounded-2xl shadow-2xl flex items-center gap-3 pr-4 min-w-[160px] max-w-full backdrop-blur-md bg-opacity-90">
+              <div className="h-12 w-12 rounded-xl overflow-hidden bg-[#1f202a] flex items-center justify-center border border-slate-800 flex-shrink-0">
                 {filePreview ? (
                   <img
                     src={filePreview}
@@ -156,11 +158,11 @@ const { safeEmit } = useSocket();  const emojiRef = useRef();
                     alt="preview"
                   />
                 ) : (
-                  <FiFile className="text-blue-500" size={20} />
+                  <FiFile size={20} />
                 )}
               </div>
               <div className="flex-1 overflow-hidden">
-                <p className="text-xs text-slate-200 font-bold truncate max-w-30">
+                <p className="text-xs text-slate-200 font-bold truncate">
                   {selectedFile.name}
                 </p>
                 <p className="text-[10px] text-slate-500 font-black uppercase tracking-wider">
@@ -169,7 +171,7 @@ const { safeEmit } = useSocket();  const emojiRef = useRef();
               </div>
               <button
                 onClick={clearFile}
-                className="p-1.5 hover:bg-red-500/10 text-slate-500 hover:text-red-500 transition-all rounded-full"
+                className="p-1.5 hover:bg-red-500/10 text-slate-500 hover:text-red-500 transition-all rounded-full flex-shrink-0"
               >
                 <AiOutlineClose size={16} />
               </button>
@@ -178,7 +180,7 @@ const { safeEmit } = useSocket();  const emojiRef = useRef();
         )}
       </AnimatePresence>
 
-      <div className="flex-1 flex bg-[#292b36] rounded-2xl items-center gap-4 pr-5 relative border border-slate-800 focus-within:border-blue-500/50 transition-all shadow-xl">
+      <div className="flex-1 flex bg-[#292b36] rounded-2xl items-center gap-3 pr-3 relative border border-slate-800 focus-within:border-blue-500/50 transition-all shadow-xl min-h-[48px]">
         <input
           type="text"
           placeholder={isUploading ? "Uploading file..." : "Type a message..."}
@@ -186,16 +188,17 @@ const { safeEmit } = useSocket();  const emojiRef = useRef();
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={handleKeyDown}
-          className="text-slate-200 flex-1 py-5 px-6 bg-transparent rounded-2xl focus:outline-none text-base placeholder:text-slate-500 font-medium disabled:opacity-50"
+          className="text-slate-200 flex-1 py-3 sm:py-5 px-4 sm:px-6 bg-transparent rounded-2xl focus:outline-none text-sm sm:text-base placeholder:text-slate-500 font-medium disabled:opacity-50"
         />
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-4 pr-2">
           <button
             onClick={handleAttachmentClick}
             disabled={isUploading}
             className="text-slate-500 hover:text-blue-500 transition-colors duration-300 disabled:opacity-30"
+            aria-label="Attach file"
           >
-            <GrAttachment size={22} />
+            <GrAttachment size={20} />
           </button>
           <input
             type="file"
@@ -211,22 +214,24 @@ const { safeEmit } = useSocket();  const emojiRef = useRef();
                 ? "text-blue-500"
                 : "text-slate-500 hover:text-blue-500"
             }`}
+            aria-label="Open emoji picker"
           >
-            <RiEmojiStickerLine size={24} />
+            <RiEmojiStickerLine size={20} />
           </button>
         </div>
 
         {emojiPickerOpen && (
           <div
             ref={emojiRef}
-            className="absolute bottom-24 right-0 z-50 shadow-2xl"
+            // keep it within screen on small devices
+            className="absolute bottom-24 right-2 sm:right-0 z-50 shadow-2xl"
           >
             <EmojiPicker
               theme="dark"
               onEmojiClick={(e) => setMessage((msg) => msg + e.emoji)}
               autoFocusSearch={false}
-              width={350}
-              height={450}
+              width={320}
+              height={300}
             />
           </div>
         )}
@@ -235,12 +240,13 @@ const { safeEmit } = useSocket();  const emojiRef = useRef();
       <button
         onClick={handleSendMessage}
         disabled={isUploading || (!message.trim() && !selectedFile)}
-        className="bg-[#8417ff] p-2 h-16 w-14 rounded-2xl flex items-center justify-center text-white hover:bg-[#741bda] hover:scale-105 active:scale-95 transition-all shadow-lg shadow-purple-900/20 disabled:opacity-50 disabled:hover:scale-100"
+        className="bg-[#8417ff] p-2 h-12 w-12 sm:h-16 sm:w-14 rounded-2xl flex items-center justify-center text-white hover:bg-[#741bda] hover:scale-105 active:scale-95 transition-all shadow-lg shadow-purple-900/20 disabled:opacity-50 disabled:hover:scale-100"
+        aria-label="Send message"
       >
         {isUploading ? (
-          <div className="h-6 w-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+          <div className="h-5 w-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
         ) : (
-          <IoMdSend size={25}  />
+          <IoMdSend size={20} />
         )}
       </button>
     </div>
