@@ -4,7 +4,8 @@ import Channel from "./Models/ChannelModel.js";
 export const SetupSocket = (server) => {
     const io = new SocketIOServer(server, {
         cors: {
-            origin: "http://localhost:5173",
+            // origin: "https://grow-nexus.vercel.app",
+            origin:process.env.ORIGIN,
             methods: ["GET", "POST"],
             credentials: true
         }

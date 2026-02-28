@@ -12,7 +12,7 @@ import { LOGIN_ROUTE, SIGNUP_ROUTE } from "@/utils/Constant";
 import { useAppStore } from "@/store";
 import Footer from "@/Footer";
 import Navbar from "@/Navbar";
-import { Eye, EyeOff } from "lucide-react"; // Imported icons for show/hide
+import { Eye, EyeOff } from "lucide-react";
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -20,36 +20,59 @@ const Auth = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [activeTab, setActiveTab] = useState("login");
-  const [showPassword, setShowPassword] = useState(false); // Toggle state
+  const [showPassword, setShowPassword] = useState(false);
   const { userInfo, setUserInfo } = useAppStore();
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
-    if (validateLogin()) {
+    if (!validateLogin()) return;
+    
+    setLoading(true);
+    try {
       const response = await apiClient.post(
         LOGIN_ROUTE,
         { email, password },
         { withCredentials: true }
       );
-      if (response.status === 201) {
+
+      // Note: Login usually returns 200 OK. If your backend returns 201, keep it as 201.
+      if (response.status === 200 || response.status === 201) {
         setUserInfo(response.data);
+        toast.success("Login Successful!");
         navigate("/main");
       }
-      console.log(response);
+    } catch (error) {
+      // Handles 401, 404, 500 etc.
+      const errorMessage = error.response?.data || "Wrong email or Password";
+      toast.error(typeof errorMessage === 'string' ? errorMessage : "Login Failed");
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleSignup = async () => {
-    if (validateSignup()) {
+    if (!validateSignup()) return;
+
+    setLoading(true);
+    try {
       const response = await apiClient.post(
         SIGNUP_ROUTE,
         { email, password },
         { withCredentials: true }
       );
+
       if (response.status === 201) {
         setUserInfo(response.data);
+        toast.success("Account Created Successfully!");
         navigate("/main");
       }
-      console.log(response);
+    } catch (error) {
+      const errorMessage = error.response?.data || "Signup failed. Please try again.";
+      toast.error(typeof errorMessage === 'string' ? errorMessage : "Signup Failed");
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -157,8 +180,9 @@ const Auth = () => {
                       <Button
                         className="w-full h-14 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg shadow-lg shadow-blue-200 mt-4 transition-all active:scale-95"
                         onClick={handleLogin}
+                        disabled={loading}
                       >
-                        Sign In
+                        {loading ? "Signing In..." : "Sign In"}
                       </Button>
                     </motion.div>
                   ) : (
@@ -202,8 +226,9 @@ const Auth = () => {
                       <Button
                         className="w-full h-14 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg shadow-lg shadow-blue-200 mt-2 transition-all active:scale-95"
                         onClick={handleSignup}
+                        disabled={loading}
                       >
-                        Create Account
+                        {loading ? "Creating Account..." : "Create Account"}
                       </Button>
                     </motion.div>
                   )}

@@ -138,7 +138,7 @@ const MessageBar = () => {
   };
 
   return (
-    <div className="h-[12vh] flex justify-center items-center px-8 mb-4 gap-4 relative bg-[#1f202a]">
+    <div className="h-[12vh] flex justify-center items-center px-3 mb-4 gap-4 relative bg-[#1f202a]">
       {/* --- FILE PREVIEW AREA --- */}
       <AnimatePresence>
         {selectedFile && (
@@ -148,7 +148,7 @@ const MessageBar = () => {
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             className="absolute bottom-full left-8 mb-4 z-10"
           >
-            <div className="bg-[#292b36] border border-slate-700 p-2 rounded-2xl shadow-2xl flex items-center gap-3 pr-4 min-w-50 backdrop-blur-md bg-opacity-90">
+            <div className="bg-[#292b36] border border-slate-700 p-2 rounded-2xl shadow-2xl flex items-center gap-3 pr-4 min-w-30 backdrop-blur-md bg-opacity-90">
               <div className="h-12 w-12 rounded-xl overflow-hidden bg-[#1f202a] flex items-center justify-center border border-slate-800">
                 {filePreview ? (
                   <img
@@ -236,12 +236,12 @@ const MessageBar = () => {
       <button
         onClick={handleSendMessage}
         disabled={isUploading || (!message.trim() && !selectedFile)}
-        className="bg-[#8417ff] h-14 w-14 rounded-2xl flex items-center justify-center text-white hover:bg-[#741bda] hover:scale-105 active:scale-95 transition-all shadow-lg shadow-purple-900/20 disabled:opacity-50 disabled:hover:scale-100"
+        className="bg-[#8417ff] p-2 h-16 w-14 rounded-2xl flex items-center justify-center text-white hover:bg-[#741bda] hover:scale-105 active:scale-95 transition-all shadow-lg shadow-purple-900/20 disabled:opacity-50 disabled:hover:scale-100"
       >
         {isUploading ? (
           <div className="h-6 w-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
         ) : (
-          <IoMdSend size={28} />
+          <IoMdSend size={25}  />
         )}
       </button>
     </div>

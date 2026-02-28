@@ -212,11 +212,11 @@ const TechStackCard = ({ skills = [] }) => (
         <div className="w-12 h-12 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-500">
           <FiLayers size={22} />
         </div>
-        <h3 className="text-sm font-black uppercase tracking-widest text-white ">
+        <h3 className="text-sm  font-black uppercase tracking-widest text-white ">
           Technical Matrix
         </h3>
       </div>
-      <span className="text-[10px] font-black text-slate-500 bg-[#1a1b25] px-4 py-1.5 rounded-full border border-slate-800 uppercase tracking-tighter">
+      <span className=" text-xs font-black text-slate-500 bg-[#1a1b25] px-4 py-1.5 rounded-full border border-slate-800 uppercase tracking-tighter">
         {skills.length} Modules Online
       </span>
     </div>

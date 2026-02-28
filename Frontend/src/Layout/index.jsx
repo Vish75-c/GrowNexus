@@ -54,7 +54,7 @@ const Layout = () => {
               <MessageHeader />
             </div>
           )}
-        <div className="flex-1 overflow-y-auto custom-scrollbar flex flex-col bg-[#1f202a]">
+        <div className="flex-1 overflow-y-auto no-scrollbar flex flex-col bg-[#1f202a]">
           {/* Page Content */}
           <section className="flex-1 p-6 lg:p-9 bg-[#1f202a]">
             <Outlet />

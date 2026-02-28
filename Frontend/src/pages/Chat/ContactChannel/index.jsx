@@ -99,7 +99,7 @@ const ContactChannel = () => {
           }
         }}
       >
-        <DialogContent className="bg-[#1f202a] border border-slate-800 text-white w-112.5 max-w-[90vw] h-150 flex flex-col p-0 overflow-hidden rounded-3xl shadow-2xl">
+        <DialogContent className="bg-[#1f202a] border border-slate-800 text-white w-112.5 max-w-[90vw] h-125 md:h-130 flex flex-col p-0 overflow-hidden rounded-3xl shadow-2xl">
           <AnimatePresence>
             {newChannelModel && (
               <motion.div
@@ -118,7 +118,7 @@ const ContactChannel = () => {
                 </DialogHeader>
 
                 {/* FIX: Wrap the growing content in ScrollArea */}
-                <div className="flex-1 overflow-y-auto pr-4 no-scrollbar">
+                <div className="flex-1 overflow-y-auto  no-scrollbar ">
                   <div className="relative mb-1 p-2">
                     <FiHash
                       className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"

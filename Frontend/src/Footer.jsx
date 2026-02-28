@@ -23,13 +23,13 @@ const Footer = () => {
               The ultimate bridge between students and alumni. Elevating careers through college-wide networking and mentorship.
             </p>
             <div className="flex gap-4">
-              <a href="#" className="p-2 bg-slate-900 rounded-lg text-slate-500 hover:text-blue-400 hover:bg-slate-800 transition-all">
+              <a href="https://www.linkedin.com/in/vishal-gola-240a24348/" target="_blank" className="p-2 bg-slate-900 rounded-lg text-slate-500 hover:text-blue-400 hover:bg-slate-800 transition-all">
                 <Linkedin size={18} />
               </a>
               <a href="#" className="p-2 bg-slate-900 rounded-lg text-slate-500 hover:text-white hover:bg-slate-800 transition-all">
                 <Twitter size={18} />
               </a>
-              <a href="#" className="p-2 bg-slate-900 rounded-lg text-slate-500 hover:text-white hover:bg-slate-800 transition-all">
+              <a href="https://github.com/Vish75-c" target="_blank" className="p-2 bg-slate-900 rounded-lg text-slate-500 hover:text-white hover:bg-slate-800 transition-all">
                 <Github size={18} />
               </a>
             </div>

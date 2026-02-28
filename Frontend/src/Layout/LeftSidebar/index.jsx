@@ -109,7 +109,7 @@ const LeftSidebar = ({ setIsOpen }) => {
         <NavItem to="/main/share-experience" icon={FiEdit3} label="Share Experience" />
 
         <SectionHeader label="Careers" />
-        <NavItem to="/main/opportunity-feed" icon={FiBriefcase} label="Hiring Post" />
+        <NavItem to="/main/opportunity-feed" icon={FiBriefcase} label="Opportunity Feed" />
         <NavItem to="/main/post-opportunity" icon={FiPlusCircle} label="Post Opportunity" />
 
         <SectionHeader label="System" />

@@ -6,21 +6,10 @@ const MiniFooter = () => {
 
   return (
     <footer className="bg-gray-800/90  px-4 md:px-6 border-t border-gray-700 text-slate-400">
-      <div className="max-w-7xl mx-auto px-4 md:px-6 py-3">
-        <div className="flex flex-col sm:flex-row items-center sm:items-center justify-between gap-2">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 py-5">
+        <div className="flex flex-col  sm:flex-row items-center sm:items-right justify-between gap-2">
           
-          {/* left: small logo + brand */}
-          <div className="flex items-center gap-3 justify-between">
-            <div className="w-10 h-10 flex items-center justify-between ">
-              {/* If you prefer the Logo component, it will slot nicely here */}
-              <Logo className="w-5 h-5" />
-            </div>
-            <div className="flex flex-col leading-tight">
-              <span className="text-sm font-bold text-white -mb-0.5">Growth<span className="text-blue-500">Nexus</span></span>
-            </div>
-          </div>
-
-          {/* center: tiny links (hidden on very small screens) */}
+    
           
 
           {/* right: meta */}

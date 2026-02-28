@@ -64,9 +64,9 @@ const ActionButton = ({ icon: Icon, label, active, activeColor, activeFill, onCl
 );
 
 const CommentItem = ({ comment }) => (
-  <div className="flex gap-4">
-    <Avatar className="h-10 w-10 ">
-      <AvatarImage src={comment.user?.image} className="object-cover rounded-lg" />
+  <div className="flex gap-4 p-2">
+    <Avatar className="h-10 w-10 rounded-2xl ring-1  ring-slate-800 hover:scale-105 hover:ring-blue-600 duration-500">
+      <AvatarImage src={comment.user?.image} className="object-cover " />
       <AvatarFallback className="bg-slate-800 text-[10px] text-white ">
         {comment.user?.firstName?.[0]}
       </AvatarFallback>
@@ -201,7 +201,7 @@ const FeedCard = () => {
         )}
 
         {/* Author Header */}
-        <motion.div variants={itemVariants} className="flex items-center justify-between px-8 py-6">
+        <motion.div variants={itemVariants} className="flex items-center justify-between px-3 md:px-8 py-6">
           <div className="flex items-center gap-3">
             <Avatar className="h-11 w-11 ring ring-slate-800 rounded-xl hover:ring-indigo-500 transition-all duration-500">
               <AvatarImage src={post.author?.image} className="object-cover" />
@@ -231,7 +231,7 @@ const FeedCard = () => {
         </motion.div>
 
         {/* Post Content */}
-        <motion.div variants={itemVariants} className="px-8 pb-6">
+        <motion.div variants={itemVariants} className="px-3 md:px-8 pb-6">
           <h2 className="text-2xl md:text-3xl font-black text-white mb-4 tracking-tight leading-tight">
             {post.title}
           </h2>
@@ -254,7 +254,7 @@ const FeedCard = () => {
         </motion.div>
 
         {/* Engagement Bar */}
-        <motion.div variants={itemVariants} className="mx-8 mb-8 p-2 bg-slate-900/40 rounded-2xl border border-slate-800 flex items-center justify-between">
+        <motion.div variants={itemVariants} className="mx-3 md:mx-8 mb-8 p-2 bg-slate-900/40 rounded-2xl border border-slate-800 flex items-center justify-between">
           <div className="flex items-center">
             <ActionButton
               icon={Heart}
@@ -295,7 +295,7 @@ const FeedCard = () => {
               exit={{ height: 0, opacity: 0 }}
               className="overflow-hidden border-t border-slate-800 bg-black/10"
             >
-              <div className="p-8 space-y-6">
+              <div className="px-3 md:px-8 py-8 space-y-6">
                 <div className="max-h-80 overflow-y-auto space-y-5 pr-2 custom-scrollbar">
                   {comments.map((c) => (
                     <CommentItem key={c._id || c.id} comment={c} />

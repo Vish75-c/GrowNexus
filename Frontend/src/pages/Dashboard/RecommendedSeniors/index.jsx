@@ -130,7 +130,7 @@ const RecommendedSeniors = () => {
                 <div className="h-8 flex items-center">
                   <button
                     onClick={()=>handleChat(senior)}
-                    className="opacity-0 translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 bg-blue-600 hover:bg-blue-500 text-white text-[9px] px-3 py-1.5 rounded-xl font-black uppercase tracking-widest flex items-center gap-1.5 shadow-lg shadow-blue-900/40"
+                    className="md:opacity-0 translate-x-2 md:group-hover:opacity-100 md:group-hover:translate-x-0 transition-all duration-300 bg-blue-600 hover:bg-blue-500 text-white text-[9px] px-3 py-1.5 rounded-xl font-black uppercase tracking-widest flex items-center gap-1.5 shadow-lg shadow-blue-900/40"
                   >
                     <MessageSquare className="h-3 w-3" />
                     Chat

@@ -72,7 +72,7 @@ const NewDm = () => {
       </TooltipProvider>
 
       <Dialog open={openNewContactModel} onOpenChange={setOpenNewContactModel}>
-        <DialogContent className="bg-[#1f202a] border border-slate-800 text-white w-112.5 max-w-[90vw] h-150 flex flex-col p-6 rounded-3xl shadow-2xl">
+        <DialogContent className="bg-[#1f202a] border border-slate-800 text-white w-112.5 max-w-[90vw] h-125 md:h-130 flex flex-col p-6 rounded-3xl shadow-2xl">
           <DialogHeader className="mb-4">
             <DialogTitle className="text-xl font-black text-white tracking-tight">
               New <span className="text-blue-500">Conversation</span>
@@ -127,7 +127,7 @@ const NewDm = () => {
             </div>
 
             {searchedContacts.length <= 0 && (
-              <div className="flex flex-col items-center justify-center h-full pt-10 text-center">
+              <div className="flex flex-col items-center justify-center h-full text-center">
                 <div className="opacity-80 scale-75">
                   <Lottie
                     isClickToPauseDisabled={true}
