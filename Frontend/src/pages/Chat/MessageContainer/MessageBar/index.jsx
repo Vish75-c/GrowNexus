@@ -63,7 +63,7 @@ const { safeEmit } = useSocket();  const emojiRef = useRef();
   };
 
   const handleSendMessage = async () => {
-    if (!socket || !socket.emit) return;
+  
     if (!message.trim() && !selectedFile) return;
 
     setIsUploading(true);
