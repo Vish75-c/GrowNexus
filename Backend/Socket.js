@@ -2,14 +2,14 @@ import { Server as SocketIOServer } from "socket.io";
 import Message from "./Models/MessageModel.js";
 import Channel from "./Models/ChannelModel.js";
 export const SetupSocket = (server) => {
-    const io = new SocketIOServer(server, {
-        cors: {
-            origin: "https://grow-nexus.vercel.app",
-            // origin:process.env.ORIGIN,
-            methods: ["GET", "POST"],
-            credentials: true
-        }
-    })
+   const io = new SocketIOServer(server, {
+    cors: {
+        origin: "https://grow-nexus.vercel.app",
+        methods: ["GET", "POST"],
+        credentials: true
+    },
+    transports: ["websocket", "polling"]
+})
 
     const userSocketMap = new Map();
     const disconnect = (socket) => {
@@ -62,8 +62,7 @@ export const SetupSocket = (server) => {
         console.log("Completed");
     }
     io.on("connection", (socket) => {
-        const userId = socket.handshake.query.userId;
-        if (userId) {
+const userId = socket.handshake.auth.userId;        if (userId) {
             userSocketMap.set(userId, socket.id);
             console.log(`User Connected:${userId} with socket Id:${socket.id}`)
         } else {

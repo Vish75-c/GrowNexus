@@ -14,9 +14,10 @@ export const SocketProvider = ({ children }) => {
   useEffect(() => {
     if (!userInfo) return;
     const s = io(HOST, {
-      withCredentials: true,
-      query: { userId: userInfo._id },
-    });
+  withCredentials: true,
+  transports: ["websocket"],
+  auth: { userId: userInfo._id },
+});
 
     socketRef.current = s;
     setSocket(s);
