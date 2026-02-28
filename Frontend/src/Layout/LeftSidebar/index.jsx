@@ -75,7 +75,7 @@ const LeftSidebar = ({ setIsOpen }) => {
   );
 
   return (
-    <div className="w-full h-full flex flex-col bg-slate-800 border-r border-gray-700">
+    <div className="w-full h-full flex flex-col bg-gray-800/90  border-r border-gray-700">
       
       {/* --- HEADER --- */}
       <div className="py-3 flex items-center px-6 bg-gray-800 border-b border-gray-700">

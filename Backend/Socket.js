@@ -9,6 +9,7 @@ export const SetupSocket = (server) => {
         "https://grow-nexus.vercel.app",
         "http://localhost:3002",
       ],
+      // origin:process.env.ORIGIN,
       methods: ["GET", "POST"],
       credentials: true,
     },
