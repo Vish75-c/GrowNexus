@@ -108,7 +108,7 @@ const { safeEmit } = useSocket();  const emojiRef = useRef();
             content: message,
             fileUrl: undefined,
           };
-          socket.emit("sendMessage", payload);
+          await safeEmit("sendMessage", payload);
         } else if (selectedChatType === "channel") {
           await safeEmit("send-channel-message", {
             sender: userInfo._id,
