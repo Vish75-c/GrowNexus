@@ -21,6 +21,7 @@ import ShareExperience from "./pages/Blog/ShareExperience";
 import Feed from "./pages/Blog/Feed";
 import MyPost from "./pages/Blog/My-Post";
 import FeedCard from "./pages/Blog/FeedCard";
+import ChatBot from "./pages/Chatbot";
 
 const PrivateRoute = ({ children }) => {
   const { userInfo } = useAppStore();
@@ -72,12 +73,13 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<LandingPage/>}/>
+        <Route path="/" element={<><LandingPage/><ChatBot/></>}/>
         <Route
           path="/auth"
           element={
             <AuthRoute>
               <Auth />
+              <ChatBot/>
             </AuthRoute>
           }
         />
