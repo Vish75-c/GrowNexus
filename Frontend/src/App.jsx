@@ -78,7 +78,7 @@ const App = () => {
           element={
             <AuthRoute>
               <Auth />
-              <ChatBot/>
+              
             </AuthRoute>
           }
         />
